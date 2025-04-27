@@ -1,0 +1,101 @@
+name: WebGL Build ✨
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: Build my project 🏗️
+    runs-on: ubuntu-latest
+    steps:
+      - name: Free up disk space 🧹
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo apt-get clean
+          df -h
+
+      - name: Clean up Docker system 🐳🧹
+        run: |
+          docker system prune --all --force
+          df -h
+
+      - name: Checkout repository 📥
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          
+      - name: Enable Decompression Fallback in ProjectSettings.asset 🔧
+        run: |
+          sed -i 's/WebGLLinkerTarget: 0/WebGLLinkerTarget: 1/' ProjectSettings/ProjectSettings.asset
+          sed -i 's/DecompressionFallback: 0/DecompressionFallback: 1/' ProjectSettings/ProjectSettings.asset
+
+      - name: Cache Unity Library 📦
+        uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-
+
+#      - name: Run tests 🧪
+#        uses: game-ci/unity-test-runner@v4
+#        env:
+#         UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+#         UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+#         UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+#        with:
+#         githubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build project 🏗️
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: WebGL
+          unityVersion: 6000.0.30f1
+          allowDirtyBuild: true
+          buildsPath: CIBuilds
+          buildName: build
+          
+      - name: Prepare artifact for deployment 🎯
+        run: |
+          sudo mkdir -p ./public
+          sudo mv CIBuilds/WebGL/build/* ./public/
+          sudo chown -R $USER:$USER ./public
+
+      - name: Upload GitHub Pages artifact 🚀
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+  deploy:
+    name: Deploy to GitHub Pages 🚀
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+
+    steps:
+      - name: Deploy to GitHub Pages 🌐
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  discord:
+    name: Notify Discord 🤖
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
+      - name: Notify Discord 🚨
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+        run: |
+          curl -X POST -H "Content-Type: application/json" -d "{
+          \"content\": \"ゲームがアップデートされました!:partying_face: \n https://void2610.github.io/merge-rogue/ \n コミット作成者: ${GITHUB_ACTOR} \n コミットメッセージ: ${COMMIT_MESSAGE}\"
+          }" $DISCORD_WEBHOOK_URL
