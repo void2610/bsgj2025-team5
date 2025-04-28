@@ -103,15 +103,13 @@ jobs:
           # PR ならプル元ブランチ、そうでなければ ref_name
           BRANCH: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
           # PR の番号
-          PR_NUMBER: ${{ github.event_name == 'pull_request' && github.event.pull_request.number || '' }}
+          PR_NUMBER: ${{ github.event_name == 'pull_request' && github.event.pull_request.number || 'none' }}
         run: |
           # URL を組み立て
           if [ -z "$BRANCH" ]; then
             URL="https://void2610.github.io/bsgj2025-team5/"
-            elif [ "$PR_NUMBER" != "" ]; then
-            URL="https://void2610.github.io/bsgj2025-team5/$PR_NUMBER/merge/$PR_NUMBER/merge/"
           else
-            URL="https://void2610.github.io/bsgj2025-team5/$BRANCH/$BRANCH/"
+            URL="https://void2610.github.io/bsgj2025-team5/$PR_NUMBER/merge/$PR_NUMBER/merge/"
           fi
 
           # Discord 通知
