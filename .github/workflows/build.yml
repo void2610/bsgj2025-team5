@@ -2,8 +2,7 @@ name: WebGL Build ✨
 
 on:
   push:
-    branches:
-      - '**'     # どのブランチでもトリガー
+    branches: ['**']
   pull_request:
 
 jobs:
@@ -27,8 +26,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           lfs: true
-          
-      - name: Enable Decompression Fallback in ProjectSettings.asset 🔧
+
+      - name: Enable Decompression Fallback 🔧
         run: |
           sed -i 's/WebGLLinkerTarget: 0/WebGLLinkerTarget: 1/' ProjectSettings/ProjectSettings.asset
           sed -i 's/DecompressionFallback: 0/DecompressionFallback: 1/' ProjectSettings/ProjectSettings.asset
@@ -38,49 +37,48 @@ jobs:
         with:
           path: Library
           key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
-          restore-keys: |
-            Library-
-
-#      - name: Run tests 🧪
-#        uses: game-ci/unity-test-runner@v4
-#        env:
-#         UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-#         UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-#         UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-#        with:
-#         githubToken: ${{ secrets.GITHUB_TOKEN }}
+          restore-keys: Library-
 
       - name: Build project 🏗️
         uses: game-ci/unity-builder@v4
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_EMAIL:   ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD:${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: WebGL
-          unityVersion: 6000.0.30f1
+          unityVersion:   6000.0.30f1
           allowDirtyBuild: true
-          buildsPath: CIBuilds
-          buildName: build
-          
+          buildsPath:     CIBuilds
+          buildName:      build
+
       - name: Prepare artifact for deployment 🎯
         run: |
+          # ブランチ名取得
           BRANCH=${GITHUB_REF_NAME#refs/heads/}
-          DEST_DIR="public${BRANCH!=main && '/'$BRANCH || ''}"
-          echo "##[debug] Branch=$BRANCH DestDir=$DEST_DIR"
+          # 出力先フォルダを決定
+          if [ "$BRANCH" = "main" ]; then
+            DEST_DIR="public"
+            PUBLISH_DEST=""
+          else
+            DEST_DIR="public/$BRANCH"
+            PUBLISH_DEST="$BRANCH"
+          fi
+          echo "Branch=$BRANCH -> DEST_DIR=$DEST_DIR PUBLISH_DEST=$PUBLISH_DEST"
+          # 環境変数として後続ステップに渡す
+          echo "PUBLISH_DEST=$PUBLISH_DEST" >> $GITHUB_ENV
 
+          # 配置準備
           mkdir -p "$DEST_DIR"
           mv CIBuilds/WebGL/build/* "$DEST_DIR/"
 
       - name: Deploy to gh-pages branch 📤
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          # public配下に「main」ならルート、それ以外なら /<branch>/ が配置される
-          publish_dir: public
-          publish_branch: gh-pages
-          # destination_dir を空文字 or ブランチ名に
-          destination_dir: ${{ github.ref_name == 'main' && '' || github.ref_name }}
+          github_token:    ${{ secrets.GITHUB_TOKEN }}
+          publish_dir:     public
+          publish_branch:  gh-pages
+          destination_dir: ${{ env.PUBLISH_DEST }}
 
   discord:
     name: Notify Discord 🤖
@@ -89,14 +87,19 @@ jobs:
     steps:
       - name: Notify Discord 🚨
         env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_WEBHOOK_URL:  ${{ secrets.DISCORD_WEBHOOK_URL }}
           GITHUB_ACTOR:         ${{ github.actor }}
           COMMIT_MESSAGE:       ${{ github.event.head_commit.message }}
-          BRANCH:               ${{ github.ref_name }}
+          PUBLISH_DEST:         ${{ env.PUBLISH_DEST }}
         run: |
-          # ビルド成果物公開 URL を組み立て
-          URL="https://<your-user>.github.io/<your-repo>/${BRANCH==main && '' || BRANCH}"
-          # Discord に通知
+          # URL を組み立て
+          if [ -z "$PUBLISH_DEST" ]; then
+            URL="https://<your-user>.github.io/<your-repo>/"
+          else
+            URL="https://<your-user>.github.io/<your-repo>/$PUBLISH_DEST/"
+          fi
+
+          # Discord 通知
           curl -X POST -H "Content-Type: application/json" -d "{
-            \"content\": \"🔥 ビルド完了: <${URL}> (branch: ${BRANCH})\n👤 コミット作成者: ${GITHUB_ACTOR}\n💬 コミットメッセージ: ${COMMIT_MESSAGE}\"
+            \"content\": \"🔥 ビルド完了: <${URL}> (branch: ${PUBLISH_DEST:-main})\n👤 コミット作成者: ${GITHUB_ACTOR}\n💬 コミットメッセージ: ${COMMIT_MESSAGE}\"
           }" $DISCORD_WEBHOOK_URL
