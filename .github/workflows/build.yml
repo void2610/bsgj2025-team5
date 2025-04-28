@@ -67,10 +67,11 @@ jobs:
           echo "Branch=$BRANCH -> DEST_DIR=$DEST_DIR PUBLISH_DEST=$PUBLISH_DEST"
           # 環境変数として後続ステップに渡す
           echo "PUBLISH_DEST=$PUBLISH_DEST" >> $GITHUB_ENV
-
-          # 配置準備
-          mkdir -p "$DEST_DIR"
-          mv CIBuilds/WebGL/build/* "$DEST_DIR/"
+          # root 権限でディレクトリ作成・移動
+          sudo mkdir -p "$DEST_DIR"
+          sudo mv CIBuilds/WebGL/build/* "$DEST_DIR/"
+          # public 以下を現在のユーザー所有に変更
+          sudo chown -R $USER:$USER public
 
       - name: Deploy to gh-pages branch 📤
         uses: peaceiris/actions-gh-pages@v3
