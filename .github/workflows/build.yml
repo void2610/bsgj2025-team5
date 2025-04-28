@@ -2,8 +2,7 @@ name: WebGL Build ✨
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   pull_request:
   workflow_dispatch:
 
@@ -86,6 +85,33 @@ jobs:
           publish_dir:     public
           publish_branch:  gh-pages
           destination_dir: ${{ env.PUBLISH_DEST }}
+          keep_files: true
+
+  preview:
+    name: Deploy Preview 🌐
+    if: github.event_name == 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    
+    # PR 向けに「preview」環境を指定すると、GitHub に Deployment レコードが作成される
+    environment:
+      name: preview
+      # PR 番号＋mergeフォルダ構造に合わせたプレビュー URL を返す
+      url: https://void2610.github.io/bsgj2025-team5/${{ github.event.pull_request.number }}/merge/${{ github.event.pull_request.number }}/merge/
+    
+    steps:
+      - name: Download built artifact 📥
+        uses: actions/download-pages-artifact@v3
+        with:
+          path: public
+
+      - name: Deploy Preview to gh-pages (subdir) 📤
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: public/${{ github.event.pull_request.number }}/merge/${{ github.event.pull_request.number }}/merge
+          publish_branch: gh-pages
+          destination_dir: ${{ github.event.pull_request.number }}/merge/${{ github.event.pull_request.number }}/merge
           keep_files: true
 
   discord:
