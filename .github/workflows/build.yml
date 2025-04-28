@@ -5,6 +5,10 @@ on:
     branches: ['**']
   pull_request:
 
+permissions:
+    contents: write    # リポジトリの内容をプッシュする権限
+    pages: write       # GitHub Pages ブランチへの書き込み権限
+
 jobs:
   build:
     name: Build my project 🏗️
