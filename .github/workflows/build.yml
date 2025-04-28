@@ -2,13 +2,14 @@ name: WebGL Build ✨
 
 on:
   push:
-    branches: 
+    branches:
       - main
   pull_request:
+  workflow_dispatch:
 
 permissions:
-    contents: write    # リポジトリの内容をプッシュする権限
-    pages: write       # GitHub Pages ブランチへの書き込み権限
+  contents: write    # リポジトリの内容をプッシュする権限
+  pages: write       # GitHub Pages ブランチへの書き込み権限
 
 jobs:
   build:
@@ -101,15 +102,17 @@ jobs:
           COMMIT_MESSAGE: ${{ github.event_name == 'pull_request' && github.event.pull_request.title || github.event.head_commit.message }}
           # PR ならプル元ブランチ、そうでなければ ref_name
           BRANCH: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
+          # PR の番号
+          PR_NUMBER: ${{ github.event_name == 'pull_request' && github.event.pull_request.number || 'none' }}
         run: |
           # URL を組み立て
           if [ -z "$BRANCH" ]; then
             URL="https://void2610.github.io/bsgj2025-team5/"
           else
-            URL="https://void2610.github.io/bsgj2025-team5/$BRANCH/$BRANCH/"
+            URL="https://void2610.github.io/bsgj2025-team5/$PR_NUMBER/merge/$PR_NUMBER/merge/"
           fi
 
           # Discord 通知
           curl -X POST -H "Content-Type: application/json" -d "{
-            \"content\": \"🔥 ビルド完了: <${URL}> (branch: ${BRANCH})\n👤 コミット作成者: ${GITHUB_ACTOR}\n💬 コミットメッセージ: ${COMMIT_MESSAGE}\"
+            \"content\": \"🔥 ビルド完了: <${URL}>\n🌲ブランチ: ${BRANCH}\n👤 コミット作成者: ${GITHUB_ACTOR}\n💬 コミットメッセージ: ${COMMIT_MESSAGE}\"
           }" $DISCORD_WEBHOOK_URL
