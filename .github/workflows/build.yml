@@ -2,7 +2,8 @@ name: WebGL Build ✨
 
 on:
   push:
-    branches: ['**']
+    branches: 
+      - main
   pull_request:
 
 permissions:
@@ -99,9 +100,9 @@ jobs:
         run: |
           # URL を組み立て
           if [ -z "$PUBLISH_DEST" ]; then
-            URL="https://<your-user>.github.io/<your-repo>/"
+            URL="https://void2610.github.io/bsgj2025-team5/"
           else
-            URL="https://<your-user>.github.io/<your-repo>/$PUBLISH_DEST/"
+            URL="https://void2610.github.io/bsgj2025-team5/$PUBLISH_DEST/"
           fi
 
           # Discord 通知
