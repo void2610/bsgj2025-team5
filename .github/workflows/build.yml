@@ -2,13 +2,13 @@ name: WebGL Build ✨
 
 on:
   push:
-    branches: 
+    branches:
       - main
   pull_request:
 
 permissions:
-    contents: write    # リポジトリの内容をプッシュする権限
-    pages: write       # GitHub Pages ブランチへの書き込み権限
+  contents: write    # リポジトリの内容をプッシュする権限
+  pages: write       # GitHub Pages ブランチへの書き込み権限
 
 jobs:
   build:
@@ -49,28 +49,27 @@ jobs:
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL:   ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_PASSWORD:${{ secrets.UNITY_PASSWORD }}
         with:
-          targetPlatform: WebGL
-          unityVersion:   6000.0.30f1
+          targetPlatform:  WebGL
+          unityVersion:    6000.0.30f1
           allowDirtyBuild: true
-          buildsPath:     CIBuilds
-          buildName:      build
+          buildsPath:      CIBuilds
+          buildName:       build
 
       - name: Prepare artifact for deployment 🎯
         run: |
           # ブランチ名取得
           BRANCH=${GITHUB_REF_NAME#refs/heads/}
-          # 出力先フォルダを決定
           if [ "$BRANCH" = "main" ]; then
             DEST_DIR="public"
-            PUBLISH_DEST=""
+            PUBLISH_DEST="" 
           else
             DEST_DIR="public/$BRANCH"
             PUBLISH_DEST="$BRANCH"
           fi
-          echo "Branch=$BRANCH -> DEST_DIR=$DEST_DIR PUBLISH_DEST=$PUBLISH_DEST"
           # 環境変数として後続ステップに渡す
+          echo "Branch=$BRANCH -> DEST_DIR=$DEST_DIR"
           echo "PUBLISH_DEST=$PUBLISH_DEST" >> $GITHUB_ENV
           # root 権限でディレクトリ作成・移動
           sudo mkdir -p "$DEST_DIR"
@@ -81,11 +80,10 @@ jobs:
       - name: Deploy to gh-pages branch 📤
         uses: peaceiris/actions-gh-pages@v4
         with:
-          github_token:    ${{ secrets.GITHUB_TOKEN }}
-          publish_dir:     public
-          publish_branch:  gh-pages
-          destination_dir: ${{ env.PUBLISH_DEST }}
-          keep_files: true
+          github_token:   ${{ secrets.GITHUB_TOKEN }}
+          publish_dir:    public
+          publish_branch: gh-pages
+          keep_files:     true
 
   discord:
     name: Notify Discord 🤖
@@ -95,18 +93,18 @@ jobs:
       - name: Notify Discord 🚨
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          # PR なら author は PR 作成者、そうでなければ GITHUB_ACTOR
-          GITHUB_ACTOR: ${{ github.event_name == 'pull_request' && github.event.pull_request.user.login || github.actor }}
-          # PR ならタイトル、そうでなければ最後のコミットメッセージ
-          COMMIT_MESSAGE: ${{ github.event_name == 'pull_request' && github.event.pull_request.title || github.event.head_commit.message }}
-          # PR ならプル元ブランチ、そうでなければ ref_name
-          BRANCH: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
+          # PRならPR作成者、そうでなければgithub.actor
+          GITHUB_ACTOR:    ${{ github.event_name == 'pull_request' && github.event.pull_request.user.login || github.actor }}
+          # PRならPRタイトル、そうでなければ最後のコミットメッセージ
+          COMMIT_MESSAGE:  ${{ github.event_name == 'pull_request' && github.event.pull_request.title   || github.event.head_commit.message }}
+          # PRならソースブランチ、そうでなければref_name
+          BRANCH:          ${{ github.event_name == 'pull_request' && github.head_ref                 || github.ref_name }}
         run: |
-          # URL を組み立て
+          # Pages URL を組み立て
           if [ -z "$BRANCH" ]; then
             URL="https://void2610.github.io/bsgj2025-team5/"
           else
-            URL="https://void2610.github.io/bsgj2025-team5/$BRANCH/$BRANCH/"
+            URL="https://void2610.github.io/bsgj2025-team5/$BRANCH/"
           fi
 
           # Discord 通知
