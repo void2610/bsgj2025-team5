@@ -76,3 +76,11 @@ crashlytics-build.properties
 .DS_Store
 
 .idea/
+
+#  Assets 配下は全部 ignore
+/Assets/*
+
+# ただし Project フォルダとその中身だけは追跡する
+!/Assets/Project/
+!/Assets/Project/**
+!/Assets/Project/**/*.meta
