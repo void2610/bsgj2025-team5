@@ -93,19 +93,22 @@ jobs:
     steps:
       - name: Notify Discord 🚨
         env:
-          DISCORD_WEBHOOK_URL:  ${{ secrets.DISCORD_WEBHOOK_URL }}
-          GITHUB_ACTOR:         ${{ github.actor }}
-          COMMIT_MESSAGE:       ${{ github.event.head_commit.message }}
-          PUBLISH_DEST:         ${{ env.PUBLISH_DEST }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          # PR なら author は PR 作成者、そうでなければ GITHUB_ACTOR
+          GITHUB_ACTOR: ${{ github.event_name == 'pull_request' && github.event.pull_request.user.login || github.actor }}
+          # PR ならタイトル、そうでなければ最後のコミットメッセージ
+          COMMIT_MESSAGE: ${{ github.event_name == 'pull_request' && github.event.pull_request.title || github.event.head_commit.message }}
+          # PR ならプル元ブランチ、そうでなければ ref_name
+          BRANCH: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
         run: |
           # URL を組み立て
-          if [ -z "$PUBLISH_DEST" ]; then
+          if [ -z "$BRANCH" ]; then
             URL="https://void2610.github.io/bsgj2025-team5/"
           else
-            URL="https://void2610.github.io/bsgj2025-team5/$PUBLISH_DEST/"
+            URL="https://void2610.github.io/bsgj2025-team5/$BRANCH/"
           fi
 
           # Discord 通知
           curl -X POST -H "Content-Type: application/json" -d "{
-            \"content\": \"🔥 ビルド完了: <${URL}> (branch: ${PUBLISH_DEST:-main})\n👤 コミット作成者: ${GITHUB_ACTOR}\n💬 コミットメッセージ: ${COMMIT_MESSAGE}\"
+            \"content\": \"🔥 ビルド完了: <${URL}> (branch: ${BRANCH})\n👤 コミット作成者: ${GITHUB_ACTOR}\n💬 コミットメッセージ: ${COMMIT_MESSAGE}\"
           }" $DISCORD_WEBHOOK_URL
