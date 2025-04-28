@@ -79,12 +79,13 @@ jobs:
           sudo chown -R $USER:$USER public
 
       - name: Deploy to gh-pages branch 📤
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token:    ${{ secrets.GITHUB_TOKEN }}
           publish_dir:     public
           publish_branch:  gh-pages
           destination_dir: ${{ env.PUBLISH_DEST }}
+          keep_files: true
 
   discord:
     name: Notify Discord 🤖
@@ -105,7 +106,7 @@ jobs:
           if [ -z "$BRANCH" ]; then
             URL="https://void2610.github.io/bsgj2025-team5/"
           else
-            URL="https://void2610.github.io/bsgj2025-team5/$BRANCH/"
+            URL="https://void2610.github.io/bsgj2025-team5/$BRANCH/$BRANCH/"
           fi
 
           # Discord 通知
