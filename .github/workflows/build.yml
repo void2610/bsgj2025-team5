@@ -95,7 +95,11 @@ jobs:
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           GITHUB_ACTOR:         ${{ github.actor }}
-          COMMIT_MESSAGE:       ${{ github.event.head_commit.message }}
+          if [ "$BRANCH" = "main" ]; then
+            URL="https://<your-user>.github.io/<your-repo>/"
+          else
+            URL="https://<your-user>.github.io/<your-repo>/$BRANCH"
+          fi
           BRANCH:               ${{ github.ref_name }}
         run: |
           # ビルド成果物公開 URL を組み立て
