@@ -15,7 +15,23 @@ public class UniTaskTutorial : MonoBehaviour
         Debug.Log(message);
     }
     
-    // MonoBehaviourのイベント関数もasync関数にすることができる
+    // UniTask<T>を使うと返り値を返せる
+    private async UniTask<int> WaitAndReturn(int value)
+    {
+        // 1000ミリ秒待ってから、値を返す
+        await UniTask.Delay(1000);
+        return value;
+    }
+    
+    // UniTaskVoidを使うと、外部でawaitできない非同期関数を作れる
+    private async UniTaskVoid WaitAndPrintVoid(string message)
+    {
+        // 1000ミリ秒待ってから、メッセージを表示する
+        await UniTask.Delay(1000);
+        Debug.Log(message);
+    }
+    
+    // MonoBehaviourのイベント関数も非同期関数にすることができる
     private async UniTask Start()
     {
         // UniTaskを使って非同期処理を行う
@@ -27,5 +43,11 @@ public class UniTaskTutorial : MonoBehaviour
         // 非同期処理はawaitを使わずに呼び出すこともできる
         // その場合、警告が出るので、Forget()をつけて警告を消す
         WaitAndPrint("Goodbye, UniTask!").Forget();
+        
+        // 非同期関数から帰ってきた値を使うこともできる
+        Debug.Log(await WaitAndReturn(100));
+
+        // これはawaitできないのでエラーになる
+        // await WaitAndPrintVoid("Hello, UniTask!");
     }
 }
