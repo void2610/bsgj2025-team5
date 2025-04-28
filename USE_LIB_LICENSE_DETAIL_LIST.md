@@ -1,25 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Library List</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
-<div style="padding: 20px; margi: 100px;">
+このUnityプロジェクトが利用しているライブラリ一覧(詳細)です。
 
 
-<h1>Library List</h1>
-Thanks for the useful library
-<hr>
+更新日時：2025/04/29_00:34:25
+
+
+-------
+## LitMotion
+### メモ１：
+
+```
+
+```
 
 
 
-<hr>
-<h2>LitMotion</h2>
+* 追加日：2025/04/28_22:06:23
+* ライセンス：MIT
+* 料金タイプ：Unknown
+* ライセンス表記が必要？：True
+* チームメンバーごとにライセンス購入が必要か？：False
+* チームメンバー全員が把握する必要があるライブラリか？：False
 
-<div style="padding: 20px; margin-bottom: 30px; border: 1px dotted #333333; border-radius: 5px;">
-<p style="white-space : pre-wrap;">
+
+* バージョン：None
+
+
+* WebURL1：https://github.com/AnnulusGames/LitMotion
+* WebURL2：
+* 使用しているライブラリ
+
+
+* カスタム１：
+* カスタム2：
+
+### ライセンス表記内容：
+
+```
 
 MIT License
 
@@ -43,15 +59,45 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-</p>
+```
 
-</div>
+---------------------------------------
+---------------------------------------
+---------------------------------------
 
-<hr>
-<h2>NuGetForUnity</h2>
 
-<div style="padding: 20px; margin-bottom: 30px; border: 1px dotted #333333; border-radius: 5px;">
-<p style="white-space : pre-wrap;">
+-------
+## NuGetForUnity
+### メモ１：
+
+```
+
+```
+
+
+
+* 追加日：2025/04/28_22:06:23
+* ライセンス：MIT
+* 料金タイプ：Unknown
+* ライセンス表記が必要？：True
+* チームメンバーごとにライセンス購入が必要か？：False
+* チームメンバー全員が把握する必要があるライブラリか？：False
+
+
+* バージョン：None
+
+
+* WebURL1：https://github.com/GlitchEnzo/NuGetForUnity
+* WebURL2：
+* 使用しているライブラリ
+
+
+* カスタム１：
+* カスタム2：
+
+### ライセンス表記内容：
+
+```
 
 Copyright (c) 2018 Patrick McCarthy
 
@@ -73,15 +119,45 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-</p>
+```
 
-</div>
+---------------------------------------
+---------------------------------------
+---------------------------------------
 
-<hr>
-<h2>R3</h2>
 
-<div style="padding: 20px; margin-bottom: 30px; border: 1px dotted #333333; border-radius: 5px;">
-<p style="white-space : pre-wrap;">
+-------
+## R3
+### メモ１：
+
+```
+
+```
+
+
+
+* 追加日：2025/04/28_22:06:23
+* ライセンス：MIT
+* 料金タイプ：Unknown
+* ライセンス表記が必要？：True
+* チームメンバーごとにライセンス購入が必要か？：False
+* チームメンバー全員が把握する必要があるライブラリか？：False
+
+
+* バージョン：None
+
+
+* WebURL1：https://github.com/Cysharp/R3
+* WebURL2：
+* 使用しているライブラリ
+
+
+* カスタム１：
+* カスタム2：
+
+### ライセンス表記内容：
+
+```
 
 MIT License
 
@@ -105,15 +181,45 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-</p>
+```
 
-</div>
+---------------------------------------
+---------------------------------------
+---------------------------------------
 
-<hr>
-<h2>UniTask</h2>
 
-<div style="padding: 20px; margin-bottom: 30px; border: 1px dotted #333333; border-radius: 5px;">
-<p style="white-space : pre-wrap;">
+-------
+## UniTask
+### メモ１：
+
+```
+
+```
+
+
+
+* 追加日：2025/04/28_22:06:23
+* ライセンス：MIT
+* 料金タイプ：Unknown
+* ライセンス表記が必要？：True
+* チームメンバーごとにライセンス購入が必要か？：False
+* チームメンバー全員が把握する必要があるライブラリか？：False
+
+
+* バージョン：None
+
+
+* WebURL1：https://github.com/Cysharp/UniTask
+* WebURL2：
+* 使用しているライブラリ
+
+
+* カスタム１：
+* カスタム2：
+
+### ライセンス表記内容：
+
+```
 
 The MIT License (MIT)
 
@@ -137,15 +243,45 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-</p>
+```
 
-</div>
+---------------------------------------
+---------------------------------------
+---------------------------------------
 
-<hr>
-<h2>LicenseMaster</h2>
 
-<div style="padding: 20px; margin-bottom: 30px; border: 1px dotted #333333; border-radius: 5px;">
-<p style="white-space : pre-wrap;">
+-------
+## LicenseMaster
+### メモ１：
+
+```
+
+```
+
+
+
+* 追加日：2023/04/14_01:32:26
+* ライセンス：MIT
+* 料金タイプ：Free
+* ライセンス表記が必要？：True
+* チームメンバーごとにライセンス購入が必要か？：False
+* チームメンバー全員が把握する必要があるライブラリか？：False
+
+
+* バージョン：1.8.0
+
+
+* WebURL1：https://github.com/syskentokyo/unitylicensemaster
+* WebURL2：
+* 使用しているライブラリ
+
+
+* カスタム１：
+* カスタム2：
+
+### ライセンス表記内容：
+
+```
 
 MIT License
 
@@ -170,11 +306,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-</p>
+```
 
-</div>
+---------------------------------------
+---------------------------------------
+---------------------------------------
 
-<hr>
-</div>
-</body>
-</html>
+
+-------
