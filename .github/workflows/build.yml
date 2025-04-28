@@ -1,6 +1,10 @@
 name: WebGL Build ✨
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - '**'     # どのブランチでもトリガー
+  pull_request:
 
 jobs:
   build:
@@ -61,41 +65,38 @@ jobs:
           
       - name: Prepare artifact for deployment 🎯
         run: |
-          sudo mkdir -p ./public
-          sudo mv CIBuilds/WebGL/build/* ./public/
-          sudo chown -R $USER:$USER ./public
+          BRANCH=${GITHUB_REF_NAME#refs/heads/}
+          DEST_DIR="public${BRANCH!=main && '/'$BRANCH || ''}"
+          echo "##[debug] Branch=$BRANCH DestDir=$DEST_DIR"
 
-      - name: Upload GitHub Pages artifact 🚀
-        uses: actions/upload-pages-artifact@v3
+          mkdir -p "$DEST_DIR"
+          mv CIBuilds/WebGL/build/* "$DEST_DIR/"
+
+      - name: Deploy to gh-pages branch 📤
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          path: public
-
-  deploy:
-    name: Deploy to GitHub Pages 🚀
-    runs-on: ubuntu-latest
-    needs: build
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-
-    steps:
-      - name: Deploy to GitHub Pages 🌐
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # public配下に「main」ならルート、それ以外なら /<branch>/ が配置される
+          publish_dir: public
+          publish_branch: gh-pages
+          # destination_dir を空文字 or ブランチ名に
+          destination_dir: ${{ github.ref_name == 'main' && '' || github.ref_name }}
 
   discord:
     name: Notify Discord 🤖
     runs-on: ubuntu-latest
-    needs: deploy
+    needs: build
     steps:
       - name: Notify Discord 🚨
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          GITHUB_ACTOR: ${{ github.actor }}
-          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+          GITHUB_ACTOR:         ${{ github.actor }}
+          COMMIT_MESSAGE:       ${{ github.event.head_commit.message }}
+          BRANCH:               ${{ github.ref_name }}
         run: |
+          # ビルド成果物公開 URL を組み立て
+          URL="https://<your-user>.github.io/<your-repo>/${BRANCH==main && '' || BRANCH}"
+          # Discord に通知
           curl -X POST -H "Content-Type: application/json" -d "{
-          \"content\": \"ゲームがアップデートされました!:partying_face: \n https://void2610.github.io/bsgj2025-team5 \n コミット作成者: ${GITHUB_ACTOR} \n コミットメッセージ: ${COMMIT_MESSAGE}\"
+            \"content\": \"🔥 ビルド完了: <${URL}> (branch: ${BRANCH})\n👤 コミット作成者: ${GITHUB_ACTOR}\n💬 コミットメッセージ: ${COMMIT_MESSAGE}\"
           }" $DISCORD_WEBHOOK_URL
