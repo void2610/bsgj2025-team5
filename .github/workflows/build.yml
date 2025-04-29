@@ -100,19 +100,21 @@ jobs:
       url: https://void2610.github.io/bsgj2025-team5/${{ github.event.pull_request.number }}/merge/${{ github.event.pull_request.number }}/merge/
     
     steps:
-      - name: Download built artifact 📥
-        uses: actions/download-pages-artifact@v3
+      - name: Download GitHub Pages artifact 📥
+        uses: actions/download-artifact@v4
         with:
+          name: github-pages
           path: public
 
-      - name: Deploy Preview to gh-pages (subdir) 📤
+      - name: Deploy Preview to gh-pages 📤
+        id: deploy
         uses: peaceiris/actions-gh-pages@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: public/${{ github.event.pull_request.number }}/merge/${{ github.event.pull_request.number }}/merge
-          publish_branch: gh-pages
+          github_token:    ${{ secrets.GITHUB_TOKEN }}
+          publish_dir:     public/${{ github.event.pull_request.number }}/merge/${{ github.event.pull_request.number }}/merge
+          publish_branch:  gh-pages
           destination_dir: ${{ github.event.pull_request.number }}/merge/${{ github.event.pull_request.number }}/merge
-          keep_files: true
+          keep_files:      true
 
   discord:
     name: Notify Discord 🤖
