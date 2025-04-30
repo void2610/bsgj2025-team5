@@ -10,6 +10,6 @@ public class TestPlayer : MonoBehaviour
             this.GetComponent<Rigidbody2D>().AddForce(Vector2.up * 5f, ForceMode2D.Impulse);
         }
 
-        playerState.Position.Value = this.transform.position;
+        playerState.SetPosition(this.transform.position);
     }
 }
