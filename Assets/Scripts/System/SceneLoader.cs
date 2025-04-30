@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using R3;
@@ -6,7 +7,6 @@ using Cysharp.Threading.Tasks;
 
 public sealed class SceneLoader : MonoBehaviour
 {
-    [Header("Bootstrap を除いて Additive でロードするシーン名")]
     [SerializeField] private List<string> scenesToLoad = new();
 
     public ReactiveProperty<float> Progress { get; } = new(0f);
@@ -18,14 +18,16 @@ public sealed class SceneLoader : MonoBehaviour
 
     private async UniTaskVoid Start()
     {
+        // 不正な値を防止
+        # if UNITY_EDITOR
         if (scenesToLoad.Count == 0)
-        {
-            Debug.LogError("scenesToLoad が空です");
-            return;
-        }
-
+            throw new System.Exception("シーン名が設定されていません。");
+        var sceneNames = new HashSet<string>();
+        foreach (var sceneName in scenesToLoad.Where(sceneName => !sceneNames.Add(sceneName)))
+            throw new System.Exception($"シーン名 '{sceneName}' が重複しています。");
+        # endif
+        
         var activeName = scenesToLoad[0];
-
         await LoadAdditiveScenesAsync();
 
         var activeScene = SceneManager.GetSceneByName(activeName);
@@ -48,10 +50,7 @@ public sealed class SceneLoader : MonoBehaviour
             var sceneName = scenesToLoad[i];
             var op = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
             var tmp = i;
-            var reporter = new System.Progress<float>(p =>
-            {
-                Progress.Value = (tmp + p) / total;
-            });
+            var reporter = new System.Progress<float>(p => Progress.Value = (tmp + p) / total);
             await op.ToUniTask(progress: reporter);
             // isLoaded==true になるまで待機
             await UniTask.WaitUntil(() => SceneManager.GetSceneByName(sceneName).isLoaded);
@@ -65,11 +64,10 @@ public sealed class SceneLoader : MonoBehaviour
         for (var i = scenesToLoad.Count - 1; i >= 0; i--)
         {
             var scn = SceneManager.GetSceneByName(scenesToLoad[i]);
-            if (scn.isLoaded)
-            {
-                var op = SceneManager.UnloadSceneAsync(scn);
-                await op.ToUniTask();
-            }
+            if (!scn.isLoaded) continue;
+            
+            var op = SceneManager.UnloadSceneAsync(scn);
+            await op.ToUniTask();
         }
     }
 }
