@@ -7,7 +7,7 @@ using Cysharp.Threading.Tasks;
 public sealed class SceneLoader : MonoBehaviour
 {
     [Header("Bootstrap を除いて Additive でロードするシーン名")]
-    [SerializeField] private List<string> scenesToLoad = new() { "TestPlayer", "TestUI" };
+    [SerializeField] private List<string> scenesToLoad = new();
 
     public ReactiveProperty<float> Progress { get; } = new(0f);
 
