@@ -146,5 +146,5 @@ jobs:
             URL="https://void2610.github.io/bsgj2025-team5/$REF_DIR/merge/$REF_DIR/merge/"
           fi
           curl -X POST -H "Content-Type: application/json" -d "{
-            \"content\": \"🔥 ビルド完了: <${URL}>\n🌲ブランチ: ${BRANCH}\n👤 作成者: ${GITHUB_ACTOR}\n💬 タイトル: ${COMMIT_MESSAGE}\"
+            \"content\": \"🔥 ビルド完了: <${URL}>\n💬 タイトル: ${COMMIT_MESSAGE}\n👤 作成者: ${GITHUB_ACTOR}\n🌲ブランチ: ${BRANCH}\"
           }" $DISCORD_WEBHOOK_URL
