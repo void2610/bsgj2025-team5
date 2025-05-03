@@ -8,6 +8,7 @@ namespace Izumi.Scripts.Prototype
         [SerializeField] private Camera _camera;
         [SerializeField] private bool isInverted = false;
         [SerializeField] private float torqueMultiplier = 0.25f;
+        [SerializeField] private float maxLinerVelocity = 10f; // 速度上限 (m/s)
         [SerializeField] private float maxAngularVelocity = 50f;
 
         private Rigidbody _rb;
@@ -21,6 +22,11 @@ namespace Izumi.Scripts.Prototype
 
         private void FixedUpdate()
         {
+            // 演出を更新
+            var v = _rb.linearVelocity.magnitude / maxLinerVelocity;
+            Debug.Log($"v: {v}");
+            VolumeManager.Instance.SetValue(v);
+            
             // トラックボールの瞬間移動量 (ピクセル単位)
             var delta = Mouse.current?.delta.ReadValue() ?? Vector2.zero;
             if (delta.sqrMagnitude < 0.0001f) return; // タッチ無し
@@ -45,10 +51,6 @@ namespace Izumi.Scripts.Prototype
 
             // Impulse にすると「瞬間トルクを毎フレーム加える」イメージ
             _rb.AddTorque(torqueDir * strength, ForceMode.Impulse);
-            
-            // 演出を更新
-            var v = _rb.angularVelocity.magnitude / maxAngularVelocity;
-            VolumeManager.Instance.SetValue(v);
         }
     }
 }
