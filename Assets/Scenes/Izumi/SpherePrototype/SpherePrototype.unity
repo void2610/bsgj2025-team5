@@ -469,7 +469,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -2, z: 0}
-  m_LocalScale: {x: 100, y: 2, z: 100}
+  m_LocalScale: {x: 500, y: 2, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -642,7 +642,7 @@ MonoBehaviour:
   volume: {fileID: 397567097}
   saturationRange: {x: 0, y: 50}
   exposureRange: {x: 0, y: 2}
-  hueShiftSpeedRange: {x: 0, y: 25}
+  hueShiftSpeedRange: {x: 0, y: 40}
   hueShiftThreshold: 0.25
   caIntensityRange: {x: 0, y: 1}
   ldIntensityRange: {x: 0, y: -0.75}
