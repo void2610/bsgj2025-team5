@@ -45,6 +45,10 @@ namespace Izumi.Scripts.Prototype
 
             // Impulse にすると「瞬間トルクを毎フレーム加える」イメージ
             _rb.AddTorque(torqueDir * strength, ForceMode.Impulse);
+            
+            // 演出を更新
+            var v = _rb.angularVelocity.magnitude / maxAngularVelocity;
+            VolumeManager.Instance.SetValue(v);
         }
     }
 }
