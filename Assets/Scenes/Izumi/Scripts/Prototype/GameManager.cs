@@ -13,8 +13,17 @@ namespace Izumi.Prototype
         private readonly ReactiveProperty<int> _itemCount = new(0);
         
         public Player Player => player;
-        public void AddItemCount() => _itemCount.Value++;
         
+        public void AddItemCount()
+        {
+            _itemCount.Value++;
+            if (_itemCount.Value >= 5)
+            {
+                Debug.Log("Clear!!");
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            }
+        }
+
         public void GameOver()
         {
             Debug.Log("Game Over");
