@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace Izumi.Prototype
+namespace Izumi.Scripts.Prototype
 {
-    public class GameManager : MonoBehaviour
+    public class HideableObject : MonoBehaviour
     {
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()

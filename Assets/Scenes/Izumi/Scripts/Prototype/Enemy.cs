@@ -8,7 +8,6 @@ namespace Izumi.Scripts.Prototype
         [SerializeField] private float rotationSpeed = 360f; // 回転速度 (deg/s)
         [SerializeField] private Transform target; // 追従対象
         [SerializeField] private float attackRange = 1f; // 攻撃範囲
-        [SerializeField] private float attackForce = 1f;
         
         private void FixedUpdate()
         {
@@ -24,12 +23,7 @@ namespace Izumi.Scripts.Prototype
             var distance = Vector3.Distance(transform.position, target.position);
             if (distance < attackRange)
             {
-                // 力を加える
-                var rb = target.GetComponent<Rigidbody>();
-                var forceDirection = (target.position - transform.position).normalized;
-                forceDirection.y = 0.5f; // 上方向の力を加える
-                rb.AddForce(forceDirection * attackForce, ForceMode.Impulse);
-                target.GetComponent<Player>().TakeDamage(1); // プレイヤーにダメージを与える
+                GameManager.Instance.GameOver();
             }
         }
     }

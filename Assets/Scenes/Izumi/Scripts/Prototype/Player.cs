@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using R3;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,37 +12,18 @@ namespace Izumi.Scripts.Prototype
         [SerializeField] private float torqueMultiplier = 0.25f;
         [SerializeField] private float maxLinearVelocity = 10f;
         [SerializeField] private float maxAngularVelocity = 50f;
-        [SerializeField] private int maxHp = 5;
-        [SerializeField] private float invincibleTime = 1f;
-
+        
+        // プレイヤーの現在の速度を0~4で表す
+        public ReadOnlyReactiveProperty<int> PlayerSpeed => _playerSpeed;
+        
+        private ReactiveProperty<int> _playerSpeed = new (0);
         private Rigidbody _rb;
-        private int _hp;
-        private bool _isInvincible = false;
         
-        public void TakeDamage(int damage)
-        {
-            if (_isInvincible) return; // 無敵中はダメージ無効
-            _hp -= damage;
-            if (_hp <= 0)
-            {
-                Debug.Log("Player is dead!");
-            }
-            SetInvincible().Forget(); // 無敵時間を開始
-        }
-        
-        private async UniTask SetInvincible()
-        {
-            _isInvincible = true;
-            await UniTask.Delay((int)(invincibleTime * 1000));
-            _isInvincible = false;
-        }
-
         private void Awake()
         {
             _rb  = GetComponent<Rigidbody>();
             // ちゃんと転がるように上限を引き上げ
             _rb.maxAngularVelocity = maxAngularVelocity;
-            _hp  = maxHp;
         }
 
         private void FixedUpdate()
@@ -74,6 +56,9 @@ namespace Izumi.Scripts.Prototype
 
             // Impulse にすると「瞬間トルクを毎フレーム加える」イメージ
             _rb.AddTorque(torqueDir * strength, ForceMode.Impulse);
+            
+            // プレイヤー速度を更新
+            _playerSpeed.Value = Mathf.FloorToInt(Mathf.Clamp(v * 4f, 0f, 4f));
         }
     }
 }
