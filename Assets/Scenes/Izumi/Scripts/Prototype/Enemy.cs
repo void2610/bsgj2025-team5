@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Izumi.Scripts.Prototype
+namespace Izumi.Prototype
 {
     public class Enemy : MonoBehaviour
     {

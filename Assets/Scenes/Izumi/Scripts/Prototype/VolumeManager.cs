@@ -1,10 +1,11 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using R3;
 
-namespace Izumi.Scripts.Prototype
+namespace Izumi.Prototype
 {
-    public class VolumeManager : SingletonMonoBehaviour<VolumeManager>
+    public class VolumeManager : MonoBehaviour
     {
         [SerializeField] private Volume volume;
 
@@ -26,12 +27,16 @@ namespace Izumi.Scripts.Prototype
         private ChromaticAberration _ca;
         private LensDistortion      _ld;
 
-        protected override void Awake()
+        private void Awake()
         {
-            base.Awake();
             volume.profile.TryGet(out _cAdj);
             volume.profile.TryGet(out _ca);
             volume.profile.TryGet(out _ld);
+        }
+
+        private void Start()
+        {
+            GameManager.Instance.Player.PlayerSpeedNorm.Subscribe(SetValue);
         }
 
         public void SetValue(float v)

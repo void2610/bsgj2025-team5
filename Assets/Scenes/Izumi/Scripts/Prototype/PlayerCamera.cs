@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Izumi.Scripts.Prototype
+namespace Izumi.Prototype
 {
     public class PlayerCamera : MonoBehaviour
     {

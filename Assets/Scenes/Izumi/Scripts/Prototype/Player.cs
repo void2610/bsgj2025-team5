@@ -1,64 +1,63 @@
-using Cysharp.Threading.Tasks;
 using R3;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Izumi.Scripts.Prototype
+namespace Izumi.Prototype
 {
+    [RequireComponent(typeof(Rigidbody))]
     public class Player : MonoBehaviour
     {
+        [Header("Camera & Control")]
         [SerializeField] private Camera playerCamera;
-        [SerializeField] private bool isInverted = false;
-        [SerializeField] private float torqueMultiplier = 0.25f;
-        [SerializeField] private float maxLinearVelocity = 10f;
-        [SerializeField] private float maxAngularVelocity = 50f;
-        
-        // プレイヤーの現在の速度を0~4で表す
-        public ReadOnlyReactiveProperty<int> PlayerSpeed => _playerSpeed;
-        
-        private ReactiveProperty<int> _playerSpeed = new (0);
+        [SerializeField] private bool   isInverted = false;
+
+        [Header("Physics")]
+        [SerializeField] private float  torqueMultiplier   = 0.25f;
+        [SerializeField] private float  maxLinearVelocity  = 10f;
+        [SerializeField] private float  maxAngularVelocity = 50f;
+
+        /// <summary>
+        /// プレイヤーの速度を0-1のfloatで表す
+        /// </summary>
+        public ReadOnlyReactiveProperty<float> PlayerSpeedNorm => _speedNorm;
+        /// <summary>
+        /// プレイヤーの速度を0-4のintで表す
+        /// </summary>
+        public ReadOnlyReactiveProperty<int>  PlayerSpeedInt  { get; private set; }
+
+        private readonly ReactiveProperty<float> _speedNorm = new(0f);
+
         private Rigidbody _rb;
-        
+
         private void Awake()
         {
-            _rb  = GetComponent<Rigidbody>();
-            // ちゃんと転がるように上限を引き上げ
+            _rb = GetComponent<Rigidbody>();
             _rb.maxAngularVelocity = maxAngularVelocity;
+
+            // 正規化された速度を別のReactivePropertyに変換して公開する
+            PlayerSpeedInt = _speedNorm
+                .Select(n => Mathf.Clamp(Mathf.FloorToInt((n + 0.3f) * 4f), 0, 4))
+                .ToReadOnlyReactiveProperty()
+                .AddTo(this);
         }
 
         private void FixedUpdate()
         {
-            // 演出を更新
-            var v = _rb.linearVelocity.magnitude / maxLinearVelocity;
-            VolumeManager.Instance.SetValue(v);
-            
-            // トラックボールの瞬間移動量 (ピクセル単位)
+            var vNorm = Mathf.Clamp01(_rb.linearVelocity.magnitude / maxLinearVelocity);
+            _speedNorm.Value = vNorm;
+
             var delta = Mouse.current?.delta.ReadValue() ?? Vector2.zero;
-            if (delta.sqrMagnitude < 0.0001f) return; // タッチ無し
+            if (delta.sqrMagnitude < 1e-4f) return;
 
-            // カメラ基準の水平ベクトルを取得
-            var camForward = playerCamera.transform.forward;
-            var camRight   = playerCamera.transform.right;
-            camForward.y = camRight.y = 0f;
-            camForward.Normalize();
-            camRight.Normalize();
+            var camF = playerCamera.transform.forward;
+            var camR = playerCamera.transform.right;
+            camF.y = camR.y = 0f; camF.Normalize(); camR.Normalize();
 
-            // ――― マッピング方針 ―――
-            //   右へボールを強く回す (delta.x>0) → カメラ前方へ転がしたい
-            //   上へボールを強く回す (delta.y>0) → カメラ右方へ転がしたい
-            //   （好みで符号反転してください）
-            var torqueDir = camForward *  delta.x     // 横回転 → 前後トルク
-                            + camRight   * -delta.y;    // 縦回転 → 左右トルク
-            if (isInverted) torqueDir *= -1f; // 符号反転
+            var torqueDir = camF * delta.x + camR * -delta.y;
+            if (isInverted) torqueDir = -torqueDir;
 
-            // delta の大きさ ≒ 回す勢い (ピクセル/フレーム)
             var strength = delta.magnitude * torqueMultiplier;
-
-            // Impulse にすると「瞬間トルクを毎フレーム加える」イメージ
             _rb.AddTorque(torqueDir * strength, ForceMode.Impulse);
-            
-            // プレイヤー速度を更新
-            _playerSpeed.Value = Mathf.FloorToInt(Mathf.Clamp(v * 4f, 0f, 4f));
         }
     }
 }
