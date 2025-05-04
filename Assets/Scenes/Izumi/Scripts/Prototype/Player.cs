@@ -36,7 +36,7 @@ namespace Izumi.Prototype
 
             // 正規化された速度を別のReactivePropertyに変換して公開する
             PlayerSpeedInt = _speedNorm
-                .Select(n => Mathf.Clamp(Mathf.FloorToInt((n + 0.3f) * 4f), 0, 4))
+                .Select(n => Mathf.Clamp(Mathf.FloorToInt((n + 0.25f) * 4f), 0, 4))
                 .ToReadOnlyReactiveProperty()
                 .AddTo(this);
         }
