@@ -330,9 +330,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerCamera: {fileID: 1446638061}
   isInverted: 1
-  torqueMultiplier: 20
-  maxLinearVelocity: 27
-  maxAngularVelocity: 50
+  torqueMultiplier: 25
+  maxLinearVelocity: 30
+  maxAngularVelocity: 25
 --- !u!54 &152768973
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2343,8 +2343,8 @@ MonoBehaviour:
   lookSensitivity: 150
   minPitch: -20
   maxPitch: 80
-  posLerpSpeed: 5
-  rotLerpSpeed: 10
+  posLerpSpeed: 2.5
+  rotLerpSpeed: 2.5
   autoAlign: 1
   alignSpeed: 4
   velThreshold: 0.2
