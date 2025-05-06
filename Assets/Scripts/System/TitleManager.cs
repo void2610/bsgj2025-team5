@@ -1,13 +1,10 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Izumi.Prototype
+public class TitleManager : MonoBehaviour
 {
-    public class TitleManager : MonoBehaviour
+    public void StartGame()
     {
-        public void StartGame()
-        {
-            SceneManager.LoadScene("MainScene");
-        }
+        SceneManager.LoadScene("MainScene");
     }
 }

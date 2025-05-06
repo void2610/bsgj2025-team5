@@ -1,16 +1,13 @@
 using UnityEngine;
 
-namespace Izumi.Prototype
+public class Item : MonoBehaviour
 {
-    public class Item : MonoBehaviour
+    private void OnTriggerEnter(Collider other)
     {
-        private void OnTriggerEnter(Collider other)
+        if (other.TryGetComponent<Player>(out _))
         {
-            if (other.TryGetComponent<Player>(out _))
-            {
-                GameManager.Instance.AddItemCount();
-                Destroy(gameObject);
-            }
+            GameManager.Instance.AddItemCount();
+            Destroy(gameObject);
         }
     }
 }
