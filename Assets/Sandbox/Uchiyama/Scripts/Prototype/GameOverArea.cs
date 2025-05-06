@@ -2,8 +2,8 @@ using UnityEngine;
 
 namespace Uchiyama.Prototype
 {
-public class GameOverArea : MonoBehaviour
-{
+    public class GameOverArea : MonoBehaviour
+    {
         private void OnTriggerEnter(Collider other)
         {
             if (other.TryGetComponent<Izumi.Prototype.Player>(out _))
