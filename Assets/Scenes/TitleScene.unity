@@ -378,22 +378,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2028653098262169808, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 2028653098262169808, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: StartGame
-      objectReference: {fileID: 0}
-    - target: {fileID: 2028653098262169808, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: Izumi.Prototype.TitleManager, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 2028653098262169808, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
     - target: {fileID: 7615835358442042621, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
       propertyPath: m_Name
       value: TitleCanvas
