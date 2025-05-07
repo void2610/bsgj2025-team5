@@ -89,8 +89,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemy: {fileID: 0}
+  player: {fileID: 0}
   mainCamera: {fileID: 0}
   canvasRect: {fileID: 0}
-  indicator: {fileID: 0}
   yawOffset: -90
   screenEdgeBuffer: 50
+  minScale: 0.25
+  maxScale: 2.5
+  minDistance: 10
+  maxDistance: 50
