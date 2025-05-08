@@ -1,9 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Audio;
 
+/// <summary>
+/// 効果音（SE）を一括管理するシングルトンマネージャー
+/// AudioSource のプールを使って、複数同時再生やボリューム制御に対応する
+/// SeDataを入力することでSEの再生を行う
+/// </summary>
 public class SeManager : SingletonMonoBehaviour<SeManager>
 {
     [SerializeField] private AudioMixerGroup seMixerGroup;
@@ -12,6 +18,9 @@ public class SeManager : SingletonMonoBehaviour<SeManager>
     private readonly List<AudioSource> _seAudioSourceList = new();
     private float _seVolume = 0.5f;
 
+    /// <summary>
+    /// SEのボリューム（0.0〜1.0）。変更時はAudioMixerのパラメータに反映され、PlayerPrefsにも保存される。
+    /// </summary>
     public float SeVolume
     {
         get => _seVolume;
@@ -27,6 +36,13 @@ public class SeManager : SingletonMonoBehaviour<SeManager>
         }
     }
 
+    /// <summary>
+    /// 指定のAudioClipを再生する。AudioSourceプールから空きがない場合、importantでなければ再生されない。
+    /// </summary>
+    /// <param name="clip">再生するAudioClip</param>
+    /// <param name="volume">ボリューム（0.0〜1.0）</param>
+    /// <param name="pitch">ピッチ（デフォルト1.0）</param>
+    /// <param name="important">trueの場合は再生中のSEを中断してでも再生する</param>
     public void PlaySe(AudioClip clip, float volume = 1.0f, float pitch = 1.0f, bool important = false)
     {
         if (clip == null)
@@ -54,6 +70,13 @@ public class SeManager : SingletonMonoBehaviour<SeManager>
         audioSource.Play();
     }
 
+    /// <summary>
+    /// SeData を使ってSEを再生する。ピッチに負の値を指定するとランダムピッチになる。
+    /// </summary>
+    /// <param name="data">SEデータ（AudioClipと基準ボリューム）</param>
+    /// <param name="volume">追加のスケール倍率（0.0〜1.0）</param>
+    /// <param name="pitch">ピッチ（負の値でランダムピッチ）</param>
+    /// <param name="important">trueの場合、空きがなくても強制再生</param>
     public void PlaySe(SeData data, float volume = 1.0f, float pitch = -1.0f, bool important = false)
     {
         // 空いている AudioSource を探す
@@ -68,6 +91,7 @@ public class SeManager : SingletonMonoBehaviour<SeManager>
 
         audioSource.clip   = data.audioClip;
         audioSource.volume = data.volume * volume;
+        
         // pitch 引数が負ならランダムピッチ
         if (pitch < 0f)
             pitch = Random.Range(0.9f, 1.1f);
@@ -76,15 +100,24 @@ public class SeManager : SingletonMonoBehaviour<SeManager>
         audioSource.Play();
     }
     
-    public void WaitAndPlaySe(SeData data, float delay, float volume = 1.0f, float pitch = 1.0f) => WaitAndPlaySeAsync(data, delay, volume, pitch).Forget();
-    
-    private async UniTaskVoid WaitAndPlaySeAsync(SeData data, float delay, float volume = 1.0f, float pitch = 1.0f)
+    /// <summary>
+    /// 指定時間待機してからSEを再生する。
+    /// </summary>
+    /// <param name="data">SEデータ（AudioClipと基準ボリューム）</param>
+    /// <param name="delay">待機時間（秒）</param>
+    /// <param name="volume">追加のスケール倍率（0.0〜1.0）</param>
+    /// <param name="pitch">ピッチ（負の値でランダムピッチ）</param>
+    /// <param name="important">trueの場合、空きがなくても強制再生</param>
+    public async UniTask WaitAndPlaySe(SeData data, float delay, float volume = 1.0f, float pitch = 1.0f, bool important = false)
     {
         await UniTask.Delay((int)(delay * 1000));
-        PlaySe(data, volume, pitch);
+        PlaySe(data, volume, pitch, important);
     }
 
-    private AudioSource GetUnusedAudioSource() => _seAudioSourceList.FirstOrDefault(t => t.isPlaying == false);
+    /// <summary>
+    /// 再生中でないAudioSourceをリストから取得する。なければnull。
+    /// </summary>
+    [CanBeNull] private AudioSource GetUnusedAudioSource() => _seAudioSourceList.FirstOrDefault(t => !t.isPlaying);
 
     protected override void Awake()
     {
