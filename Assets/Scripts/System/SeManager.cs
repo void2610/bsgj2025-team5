@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -6,8 +7,9 @@ using UnityEngine.Audio;
 public class SeManager : SingletonMonoBehaviour<SeManager>
 {
     [SerializeField] private AudioMixerGroup seMixerGroup;
+    [SerializeField] private int audioSourcePoolSize = 20;
 
-    private readonly AudioSource[] _seAudioSourceList = new AudioSource[20];
+    private readonly List<AudioSource> _seAudioSourceList = new();
     private float _seVolume = 0.5f;
 
     public float SeVolume
@@ -90,10 +92,11 @@ public class SeManager : SingletonMonoBehaviour<SeManager>
         // シーン遷移時に破棄されないようにする
         DontDestroyOnLoad(this.gameObject);
         // AudioSource の初期化
-        for (var i = 0; i < _seAudioSourceList.Length; ++i)
+        for (var i = 0; i < audioSourcePoolSize; ++i)
         {
-            _seAudioSourceList[i] = gameObject.AddComponent<AudioSource>();
-            _seAudioSourceList[i].outputAudioMixerGroup = seMixerGroup;
+            var audioSource = this.gameObject.AddComponent<AudioSource>();
+            audioSource.outputAudioMixerGroup = seMixerGroup;
+            _seAudioSourceList.Add(audioSource);
         }
     }
     
