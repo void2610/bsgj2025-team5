@@ -520,6 +520,34 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5689828155364070144, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
+      propertyPath: enemy
+      value: 
+      objectReference: {fileID: 1458799558}
+    - target: {fileID: 5689828155364070144, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 997455250}
+    - target: {fileID: 5689828155364070144, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
+      propertyPath: maxScale
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5689828155364070144, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
+      propertyPath: minScale
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5689828155364070144, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
+      propertyPath: mainCamera
+      value: 
+      objectReference: {fileID: 123485802}
+    - target: {fileID: 5689828155364070144, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
+      propertyPath: maxDistance
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 5689828155364070144, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
+      propertyPath: minDistance
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6866070582696165679, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
       propertyPath: m_Name
       value: UICanvas
@@ -654,6 +682,11 @@ Transform:
   - {fileID: 5405920941094511471}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1458799558 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5145788490129973675, guid: 19236cbb32d8e4156878121eb1701576, type: 3}
+  m_PrefabInstance: {fileID: 295842230}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2059127660
 GameObject:
   m_ObjectHideFlags: 0
