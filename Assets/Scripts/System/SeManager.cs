@@ -8,6 +8,7 @@ using UnityEngine.Audio;
 /// <summary>
 /// 効果音（SE）を一括管理するシングルトンマネージャー
 /// AudioSource のプールを使って、複数同時再生やボリューム制御に対応する
+/// プールのサイズを超えて再生できないので、パフォーマンスや音量を圧迫することがない
 /// SeDataを入力することでSEの再生を行う
 /// </summary>
 public class SeManager : SingletonMonoBehaviour<SeManager>
