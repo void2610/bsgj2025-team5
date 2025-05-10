@@ -124,6 +124,7 @@ public class SeManager : SingletonMonoBehaviour<SeManager>
     {
         base.Awake();
         // シーン遷移時に破棄されないようにする
+        this.transform.parent = null;
         DontDestroyOnLoad(this.gameObject);
         // AudioSource の初期化
         for (var i = 0; i < audioSourcePoolSize; ++i)
