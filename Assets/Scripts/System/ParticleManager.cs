@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 /// <summary>
@@ -15,12 +16,13 @@ public class ParticleManager : SingletonMonoBehaviour<ParticleManager>
     
     public bool IsFull => _particlePool.Count >= maxParticleCount;
 
-    public void CreateParticle(ParticleData particleData, Vector3 position, Quaternion rotation, bool important = false)
+    [CanBeNull]
+    public GameObject CreateParticle(ParticleData particleData, Vector3 position, Quaternion rotation = default, bool important = false)
     {
         if (!important && IsFull)
         {
             Debug.LogWarning("パーティクルプールがいっぱいです。");
-            return;
+            return null;
         }
 
         if (important && IsFull)
@@ -36,5 +38,7 @@ public class ParticleManager : SingletonMonoBehaviour<ParticleManager>
         p.SetActive(true);
         _particlePool.Add(p);
         p.AddComponent<EventMethodAttacher>().OnDestroyAction += () => _particlePool.Remove(p);
+        
+        return p;
     }
 }
