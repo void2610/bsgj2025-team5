@@ -1,3 +1,4 @@
+using System;
 using R3;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -13,6 +14,9 @@ public class Player : MonoBehaviour
     [SerializeField] private float  torqueMultiplier   = 0.25f;
     [SerializeField] private float  maxLinearVelocity  = 10f;
     [SerializeField] private float  maxAngularVelocity = 50f;
+    
+    [Header("Visual")]
+    [SerializeField] private ParticleData sandParticleData;
 
     /// <summary>
     /// プレイヤーの速度を0-1のfloatで表す
@@ -56,5 +60,16 @@ public class Player : MonoBehaviour
 
         var strength = delta.magnitude * torqueMultiplier;
         _rb.AddTorque(torqueDir * strength, ForceMode.Impulse);
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        // 一定以上の速度で衝突した場合、砂のパーティクルを生成する
+        // このようにコードから生成する場合はParticleManagerを通して生成すると、万が一、大量にこのコードが呼ばれても過剰な生成を防げる
+        if (_rb.linearVelocity.magnitude > 0.2f)
+        {
+            var quaternion = Quaternion.FromToRotation(Vector3.up, other.contacts[0].normal);
+            ParticleManager.Instance.CreateParticle(sandParticleData, this.transform.position + Vector3.down * 0.5f, quaternion);
+        }
     }
 }
