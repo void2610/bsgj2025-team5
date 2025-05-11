@@ -30,10 +30,6 @@ public class PlayerCamera : MonoBehaviour
         _yaw   = target.eulerAngles.y;
         _pitch = 15f;
         _rb   = target.GetComponent<Rigidbody>();
-
-        // カーソルロック（必要に応じて解除）
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible   = false;
     }
 
     private void LateUpdate()

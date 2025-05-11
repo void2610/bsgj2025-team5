@@ -525,6 +525,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3139544947062774879, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 7156760634923837135}
     - target: {fileID: 5689828155364070144, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
       propertyPath: enemy
       value: 
@@ -534,25 +538,9 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 997455250}
     - target: {fileID: 5689828155364070144, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
-      propertyPath: maxScale
-      value: 2.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5689828155364070144, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
-      propertyPath: minScale
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 5689828155364070144, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 123485802}
-    - target: {fileID: 5689828155364070144, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
-      propertyPath: maxDistance
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 5689828155364070144, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
-      propertyPath: minDistance
-      value: 10
-      objectReference: {fileID: 0}
     - target: {fileID: 6866070582696165679, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
       propertyPath: m_Name
       value: UICanvas
@@ -1062,6 +1050,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 829706966501938029, guid: e7960efeaae96482da914062fc0009be, type: 3}
   m_PrefabInstance: {fileID: 4350316088308705659}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7156760634923837135 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8785554058055454799, guid: e7960efeaae96482da914062fc0009be, type: 3}
+  m_PrefabInstance: {fileID: 4350316088308705659}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bfd954a057514525b652f928d677abb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &8812524124514674380
 PrefabInstance:
   m_ObjectHideFlags: 0
