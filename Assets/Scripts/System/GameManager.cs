@@ -27,6 +27,11 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         Debug.Log("Game Over");
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
+    
+    public void GoToTitleScene()
+    {
+        SceneManager.LoadScene("TitleScene");
+    }
 
     private void Update()
     {

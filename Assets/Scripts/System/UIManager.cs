@@ -20,6 +20,9 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
         pauseCanvasGroup.alpha = _isPaused ? 1 : 0;
         pauseCanvasGroup.interactable = _isPaused;
         pauseCanvasGroup.blocksRaycasts = _isPaused;
+        
+        Cursor.lockState = p ? CursorLockMode.None : CursorLockMode.Locked;
+        Cursor.visible   = p;
     }
 
     protected override void Awake()
