@@ -27,4 +27,12 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         Debug.Log("Game Over");
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            UIManager.Instance.TogglePause();
+        }
+    }
 }

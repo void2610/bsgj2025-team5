@@ -525,6 +525,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2627303713878855735, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
+      propertyPath: pauseCanvasGroup
+      value: 
+      objectReference: {fileID: 1844649770}
     - target: {fileID: 5689828155364070144, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
       propertyPath: enemy
       value: 
@@ -637,6 +641,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7985037696956430798, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7985037696956430798, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -693,6 +705,11 @@ Transform:
 Transform:
   m_CorrespondingSourceObject: {fileID: 5145788490129973675, guid: 19236cbb32d8e4156878121eb1701576, type: 3}
   m_PrefabInstance: {fileID: 295842230}
+  m_PrefabAsset: {fileID: 0}
+--- !u!225 &1844649770 stripped
+CanvasGroup:
+  m_CorrespondingSourceObject: {fileID: 6392740713541646142, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
+  m_PrefabInstance: {fileID: 1412241353}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2013322655
 PrefabInstance:
