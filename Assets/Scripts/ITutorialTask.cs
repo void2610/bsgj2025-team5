@@ -1,3 +1,13 @@
+/// <summary>
+/// ゲーム上のチュートリアルクラスに使用するインターフェース
+/// 
+/// 実装進捗
+/// 五月十一日：作成
+/// 
+/// 
+/// 
+/// </summary> 
+
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;

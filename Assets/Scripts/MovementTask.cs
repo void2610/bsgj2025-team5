@@ -1,3 +1,13 @@
+/// <summary>
+/// 移動のチュートリアルを管理するクラス
+/// 
+/// 実装進捗
+/// 五月十一日：作成
+/// 
+/// 
+/// 
+/// </summary> 
+
 using UnityEngine;
 
 public class MovementTask : ITutorialTask
