@@ -29,11 +29,7 @@ public class TitleButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         {
             _focusTime += Time.deltaTime;
 
-            if (_focusTime >= requiredTime)
-            {
-                action?.Invoke();
-                _focusTime = 0f;
-            }
+            if (_focusTime >= requiredTime) action?.Invoke();
         }
         
         // fillAmountの値をなめらかに補完して更新
