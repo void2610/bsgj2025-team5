@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using LitMotion;
+using Cysharp.Threading.Tasks;
 
 public class PlayerCamera : MonoBehaviour
 {
@@ -23,6 +25,30 @@ public class PlayerCamera : MonoBehaviour
     private float _yaw;   // 水平角 (deg)
     private float _pitch; // 垂直角 (deg)
     private Rigidbody _rb;
+    private MotionHandle _shakeHandle;
+    private Vector3 _shakeOffset;
+    
+    public void ShakeCamera(float magnitude, float duration, int frequency = 10, float dampingRatio = 0.5f) => 
+        ShakeCameraAsync(magnitude, duration, frequency, dampingRatio).Forget();
+
+    /// <summary>
+    /// カメラを一定時間揺らし、完了後に await できる
+    /// </summary>
+    public async UniTask ShakeCameraAsync(float magnitude, float duration, int frequency = 10, float dampingRatio = 0.5f)
+    {
+        if(_shakeHandle.IsPlaying()) _shakeHandle.Complete(); // 前の揺れを停止
+
+        // 揺れMotionの開始
+        _shakeHandle = LMotion.Shake.Create(startValue: Vector3.zero, strength: Vector3.one * magnitude, duration: duration)
+            .WithFrequency(frequency)
+            .WithDampingRatio(dampingRatio)
+            .Bind(offset => _shakeOffset = offset)
+            .AddTo(this);
+
+        await _shakeHandle.ToUniTask();
+
+        _shakeOffset = Vector3.zero; // 終了後リセット
+    }
 
     private void Start()
     {
@@ -34,20 +60,7 @@ public class PlayerCamera : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (!target) return;
-
-        /* ── 入力（右クリック押下時のみ） ── */
-        var delta = Mouse.current.delta.ReadValue();
-        if (Mouse.current.rightButton.isPressed)
-        {
-            _yaw   += delta.x * lookSensitivity * Time.unscaledDeltaTime;
-            _pitch -= delta.y * lookSensitivity * Time.unscaledDeltaTime;
-            _pitch  = Mathf.Clamp(_pitch, minPitch, maxPitch);
-        }
-        
-        var manualLook = Mouse.current.rightButton.isPressed;
-        
-        if (autoAlign && !manualLook && _rb)
+        if (autoAlign)
         {
             var v = _rb.linearVelocity;
             v.y = 0f;                                // 水平面へ投影
@@ -62,18 +75,18 @@ public class PlayerCamera : MonoBehaviour
             }
         }
 
-        /* ── カメラの目標回転 ── */
         var targetRot = Quaternion.Euler(_pitch, _yaw, 0f);
-
-        /* ── カメラの目標位置 ── */
         var pivot   = target.position + Vector3.up * height;
         var desired = pivot - targetRot * Vector3.forward * distance;
 
-        /* ── スムージング適用 ── */
+        // カメラの位置と回転を補間
         transform.position = Vector3.Lerp(
             transform.position, desired, 1 - Mathf.Exp(-posLerpSpeed * Time.deltaTime));
 
         transform.rotation = Quaternion.Slerp(
             transform.rotation, targetRot, 1 - Mathf.Exp(-rotLerpSpeed * Time.deltaTime));
+        
+        // カメラの揺れを適用
+        transform.position += _shakeOffset;
     }
 }

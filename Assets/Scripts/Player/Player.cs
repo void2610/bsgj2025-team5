@@ -70,6 +70,9 @@ public class Player : MonoBehaviour
         {
             var quaternion = Quaternion.FromToRotation(Vector3.up, other.contacts[0].normal);
             ParticleManager.Instance.CreateParticle(sandParticleData, this.transform.position + Vector3.down * 0.5f, quaternion);
+            
+            // カメラを揺らす
+            playerCamera.GetComponent<PlayerCamera>().ShakeCamera(0.2f, 0.3f);
         }
     }
 }
