@@ -17,4 +17,10 @@ public class TitleManager : MonoBehaviour
             Application.Quit();
         #endif
     }
+
+    private void Awake()
+    {
+        Time.timeScale = 1;
+        Cursor.visible = false;
+    }
 }
