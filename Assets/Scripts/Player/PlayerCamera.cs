@@ -28,6 +28,9 @@ public class PlayerCamera : MonoBehaviour
     private MotionHandle _shakeHandle;
     private Vector3 _shakeOffset;
     
+    public void ShakeCamara(float magnitude, float duration, int frequency = 10, float dampingRatio = 0.5f) => 
+        ShakeCameraAsync(magnitude, duration, frequency, dampingRatio).Forget();
+
     /// <summary>
     /// カメラを一定時間揺らし、完了後に await できる
     /// </summary>
