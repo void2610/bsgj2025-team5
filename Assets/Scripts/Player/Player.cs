@@ -72,7 +72,7 @@ public class Player : MonoBehaviour
             ParticleManager.Instance.CreateParticle(sandParticleData, this.transform.position + Vector3.down * 0.5f, quaternion);
             
             // カメラを揺らす
-            playerCamera.GetComponent<PlayerCamera>().ShakeCamara(0.2f, 0.3f);
+            playerCamera.GetComponent<PlayerCamera>().ShakeCamera(0.2f, 0.3f);
         }
     }
 }
