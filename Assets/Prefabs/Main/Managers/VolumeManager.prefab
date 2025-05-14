@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   volume: {fileID: 0}
   saturationRange: {x: 0, y: 50}
-  exposureRange: {x: 0, y: 5}
+  exposureRange: {x: 0, y: 3.5}
   hueShiftSpeedRange: {x: 0, y: 40}
   hueShiftThreshold: 0.5
   caIntensityRange: {x: 0, y: 1}
