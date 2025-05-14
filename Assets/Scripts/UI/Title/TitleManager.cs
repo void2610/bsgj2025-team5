@@ -8,6 +8,16 @@ public class TitleManager : MonoBehaviour
     {
         SceneManager.LoadScene("MainScene");
     }
+    
+    public void GoToTutorial()
+    {
+        SceneManager.LoadScene("TutorialScene");
+    }
+    
+    public void GoToTitle()
+    {
+        SceneManager.LoadScene("TitleScene");
+    }
 
     public void ExitGame()
     {
