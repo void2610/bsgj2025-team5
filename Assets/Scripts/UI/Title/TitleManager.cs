@@ -1,3 +1,4 @@
+using R3;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -15,5 +16,11 @@ public class TitleManager : MonoBehaviour
         #else 
             Application.Quit();
         #endif
+    }
+
+    private void Awake()
+    {
+        Time.timeScale = 1;
+        Cursor.visible = false;
     }
 }
