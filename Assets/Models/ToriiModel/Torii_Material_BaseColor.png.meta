@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Torii_Material_BaseColor_0: -1580968647804265943
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

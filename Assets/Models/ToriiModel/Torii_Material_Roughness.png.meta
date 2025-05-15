@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Torii_Material_Roughness_0: 2396249952010574806
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
