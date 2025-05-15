@@ -2,11 +2,21 @@ using R3;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class TitleManager : MonoBehaviour
+public class MenuSceneManager : MonoBehaviour
 {
-    public void StartGame()
+    public void GoToMainScene()
     {
         SceneManager.LoadScene("MainScene");
+    }
+    
+    public void GoToTutorialScene()
+    {
+        SceneManager.LoadScene("TutorialScene");
+    }
+    
+    public void GoToTitleScene()
+    {
+        SceneManager.LoadScene("TitleScene");
     }
 
     public void ExitGame()
@@ -22,5 +32,6 @@ public class TitleManager : MonoBehaviour
     {
         Time.timeScale = 1;
         Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.None;
     }
 }

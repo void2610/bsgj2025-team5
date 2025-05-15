@@ -18,14 +18,14 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         if (_itemCount.Value >= 5)
         {
             Debug.Log("Clear!!");
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            SceneManager.LoadScene("ClearScene");
         }
     }
 
     public void GameOver()
     {
         Debug.Log("Game Over");
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene("GameOverScene");
     }
     
     public void GoToTitleScene()

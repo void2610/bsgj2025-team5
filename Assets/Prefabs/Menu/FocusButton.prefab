@@ -87,7 +87,7 @@ GameObject:
   - component: {fileID: 8624932113958721976}
   - component: {fileID: 5496838663090027307}
   m_Layer: 5
-  m_Name: TitleButton
+  m_Name: FocusButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
