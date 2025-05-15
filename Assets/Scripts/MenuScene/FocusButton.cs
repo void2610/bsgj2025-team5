@@ -3,7 +3,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class TitleButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class FocusButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private float requiredTime = 1f;
     [SerializeField] private Image fillImage;
