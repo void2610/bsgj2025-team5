@@ -51,6 +51,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 97eef2e023190435d90deae17357b798, type: 3}
   - {fileID: 8300000, guid: 2f42bb430d0a9497195b0adbabe1c9cb, type: 3}
   - {fileID: 8300000, guid: f9e3f851fc4df4af7b81af69d3820072, type: 3}
+  fadeTime: 0.3
+  throttleTime: 2
 --- !u!82 &213679661002261011
 AudioSource:
   m_ObjectHideFlags: 0
