@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using R3;
@@ -35,6 +36,9 @@ public class BGMManager : MonoBehaviour
     private void Start()
     {
         // プレイヤーの速度を監視
-        GameManager.Instance.Player.PlayerSpeedInt.Subscribe(OnChangePlayerSpeedInt).AddTo(this);
+        GameManager.Instance.Player.PlayerSpeedInt
+            .DistinctUntilChanged()
+            .ThrottleFirst(TimeSpan.FromSeconds(2)) // 最低2秒間隔で切り替え
+            .Subscribe(OnChangePlayerSpeedInt).AddTo(this);
     }
 }
