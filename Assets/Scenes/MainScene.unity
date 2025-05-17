@@ -1047,10 +1047,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: BGMManager
       objectReference: {fileID: 0}
-    - target: {fileID: 5452417040009759082, guid: 74999ef6428184e6db9594fd23bdd182, type: 3}
-      propertyPath: fadeTime
-      value: 0.25
-      objectReference: {fileID: 0}
     - target: {fileID: 6180725383135422174, guid: 74999ef6428184e6db9594fd23bdd182, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
