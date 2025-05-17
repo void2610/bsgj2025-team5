@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks.Linq;
 using LitMotion;
 using R3;
 using UnityEngine.Serialization;
@@ -13,10 +14,10 @@ using UnityEngine.Serialization;
 public class BGMManager : MonoBehaviour
 {
     [SerializeField] private List<AudioClip> bgmClips;
-    [SerializeField] private float fadeTime = 1f; // フェード時間
-    [SerializeField] private float throttleTime = 2f; // スロットル時間
+    [SerializeField] private float fadeTime = 0.5f; // フェード時間
+    [SerializeField] private float bgmUpdateInterval = 1f; // スロットル時間
     
-    private int _currentBGMIndex = 0;
+    private int _currentBGMIndex;
     private AudioSource _audioSource;
     private MotionHandle _fadeHandle;
     
@@ -57,17 +58,20 @@ public class BGMManager : MonoBehaviour
         _audioSource = this.GetComponent<AudioSource>();
         _audioSource.loop = true;
         
+        if (bgmClips == null || bgmClips.Count == 0) throw new ArgumentNullException(nameof(bgmClips));
+        
         _audioSource.clip = bgmClips[0];
         _audioSource.Play();
     }
 
     private void Start()
     {
-        // プレイヤーの速度を監視
-        GameManager.Instance.Player.PlayerSpeedInt
-            .DistinctUntilChanged()
-            .ThrottleFirst(TimeSpan.FromSeconds(throttleTime)) // スロットル時間を設定
-            .Subscribe(async index => await CrossFadeToAsync(index))
-            .AddTo(this);
+        // タイマーで指定した間隔ごとにBGMを更新
+        UniTaskAsyncEnumerable.Timer(TimeSpan.Zero, TimeSpan.FromSeconds(bgmUpdateInterval))
+            .ForEachAsync(_ =>
+            {
+                var nextIndex = GameManager.Instance.Player.PlayerSpeedInt.CurrentValue;
+                CrossFadeToAsync(nextIndex).Forget();
+            }, this.GetCancellationTokenOnDestroy()).Forget();
     }
 }
