@@ -10,9 +10,13 @@
 // 05/19:Enemy.csを使わずに単体で敵が状態遷移に応じた行動をするようにした
 //       探索状態を削除して２つの状態に変更した
 //       モードを四つにして、アイテム取得数に応じてスピードや行動を変更するようにした
-// 
-//  
-
+// 05/20:以下の問題点を修正
+//      ・privateな変数名をアンダーバーから始めるように
+//      ・コメントの位置を統一
+//      ・メソッドにアクセス修飾子（private）をつける
+//      ・NavMeshAgentをAwakeで作成する
+//      ・巡回場所をAwakeで初期化させる
+//      ・速度をインスペクトから設定するように
 
 
 using UnityEngine;
@@ -29,61 +33,90 @@ public enum EnemyState { Patrol, Chase }
 /// 敵AIの状態ごとのアルゴリズムを記述
 /// </summary>
 public class EnemyAI : MonoBehaviour
-{
-    [SerializeField] private GameManager gameManager;   // アイテム獲得数を取得するためにインスタンスを持っておく
-    [SerializeField] private Transform player;          // プレイヤー
-    [SerializeField] public Transform[] patrolPoints;   // 巡回する場所
-    [SerializeField] public float sightRange = 10f;     // プレイヤーを視認する距離
-    [SerializeField] private EnemySpeedData speedData;  // スピードデータ
-    [SerializeField] private float attackRange = 1f;    // 攻撃範囲
+{    
+    [SerializeField] private Transform _player;
 
+    // 巡回する場所
+    [SerializeField] public Transform[] patrolPoints;
 
-    private NavMeshAgent agent;                             // NavMeshAgentから敵AIを使わせてもらう
-    private int patrolIndex = 0;                            // パトロールスポットの巡回
-    private int _itemCount = 0;                             // プレイヤーのアイテムカウント
+    // プレイヤーを視認する距離
+    [SerializeField] public float sightRange = 10f;
 
-    private float chaseTimer = 0f;  //追跡タイム計算用変数
-    private readonly float forcedChaseDuration = 5f;        // 強制追跡状態になる時間
-    private bool isForcedChase = false;                     // 強制追跡状態かどうか
+    // アイテム数に応じた速度設定
+    [SerializeField] private float[] _speed;  
 
-    public EnemyState currentState = EnemyState.Patrol;     // 現在の状態（Patrol,Chase）
+    // 攻撃範囲
+    [SerializeField] private float _attackRange = 1f;
+
+    // NavMeshAgentから敵AIを使わせてもらう
+    private NavMeshAgent _agent;           
+
+    // パトロールスポットの巡回
+    private int _patrolIndex = 0;
+
+    // プレイヤーのアイテムカウント
+    private int _itemCount = 0;                             
+
+    //追跡タイム計算用変数
+    private float _chaseTimer = 0f;  
+    
+    private readonly float _forcedChaseDuration = 5f;        
+
+    // 強制追跡状態かどうか
+    private bool _isForcedChase = false;                     
+
+    // 現在の状態（Patrol,Chase）
+    public EnemyState currentState = EnemyState.Patrol;
 
     /// <summary>
-    /// 初期化時に一度NavMeshAgentを取得
+    /// 初期化時に一度NavMeshAgentを取得（なければ作成する）
     /// </summary>
-    void Start()
+    private void Awake()
     {
-        agent = GetComponent<NavMeshAgent>();
-        GoToNextPatrolPoint();
+        // エージェントの初期化
+        _agent = GetComponent<NavMeshAgent>();
+        if (_agent == null)
+        {
+            Debug.Log("NavMeshAgentを作成");
+            _agent = gameObject.AddComponent<NavMeshAgent>();
+        }
+        // 巡回場所の初期化
+        InitPatrolPoint();
+        // ステートの初期化
         currentState = EnemyState.Patrol;
+    }
 
+    /// <summary>
+    /// アイテム取得後の処理を読み込む
+    /// </summary>
+    private void Start()
+    {
         // アイテム取得数後の処理
-        gameManager.ItemCount.Subscribe(newValue =>
+        GameManager.Instance.ItemCount.Subscribe(newValue =>
         {
             // アイテム取得後は速度を変更する
             _itemCount = newValue;
             SetSpeed(newValue);
 
             //　強制追跡状態にする
-            isForcedChase = true;
-            chaseTimer = forcedChaseDuration;
-            currentState = EnemyState.Chase;
+            _isForcedChase = true;
+            // 時間制限のリセット
+            _chaseTimer = _forcedChaseDuration;
         });
     }
 
     /// <summary>
     /// 状態応じてそれぞれの処理へ遷移
-    /// プレイヤーがアイテムを取得すると強制機に5秒間Chaseする
     /// </summary>
-    void Update()
+    private void Update()
     {
         // 強制追跡タイマーのリセット
-        if (isForcedChase)
+        if (_isForcedChase)
         {
-            chaseTimer -= Time.fixedDeltaTime;
-            if (chaseTimer <= 0f)
+            _chaseTimer -= Time.fixedDeltaTime;
+            if (_chaseTimer <= 0f)
             {
-                isForcedChase = false;
+                _isForcedChase = false;
             }
         }
 
@@ -104,10 +137,10 @@ public class EnemyAI : MonoBehaviour
     /// アイテム数が0~2の場合のみ巡回をする
     /// プレイヤーが視界内に入ると追跡状態に遷移
     /// </summary>
-    /// <param name="item"></param>
-    void Patrol(int item)
+    /// <param name="item">アイテム取得数</param>
+    private void Patrol(int item)
     {
-        Debug.Log("Patroling"); //デバッグ用
+        Debug.Log("Patroling" + _patrolIndex); //デバッグ用
 
         if (item >= 3)
         {
@@ -118,7 +151,7 @@ public class EnemyAI : MonoBehaviour
         /// <summary>
         /// ある程度目的地に着いた場合、到着したと判断して次のポイントへ移動させる
         /// </summary>
-        if (!agent.pathPending && agent.remainingDistance < 0.001f)
+        if (!_agent.pathPending && _agent.remainingDistance < 0.001f)
             GoToNextPatrolPoint();
 
         if (CanSeePlayer())
@@ -129,26 +162,26 @@ public class EnemyAI : MonoBehaviour
     /// 強制追跡状態の場合、追跡状態の場合にプレイヤーを追跡する
     /// アイテム数が3以上から常に追跡状態
     /// </summary>
-    /// <param name="item"></param>
-    void Chase(int item)
+    /// <param name="item">アイテム取得数</param>
+    private void Chase(int item)
     {
         Debug.Log("Chasing"); //デバッグ用
 
-        if (item <= 2 && !CanSeePlayer() && !isForcedChase)
+        if (item <= 2 && !CanSeePlayer() && !_isForcedChase)
         {
-            currentState = EnemyState.Patrol;           // 探索状態に遷移
+            // 探索状態に遷移させる
+            currentState = EnemyState.Patrol;           
             return;
         }
 
-        Vector3 position = player.transform.position;   // プレイヤーの位置を目的地に
-        agent.destination = position;                   // プレイヤーを追跡
-
+        // プレイヤーの位置を目的地にして追跡する
+        _agent.destination = _player.transform.position; 
 
         /// <summary>
         /// ターゲットとの距離を計算してゲームオーバー判定をする
         /// </summary>
-        var distance = Vector3.Distance(transform.position, player.position);
-        if (distance < attackRange)
+        var distance = Vector3.Distance(transform.position, _player.position);
+        if (distance < _attackRange)
         {
             GameManager.Instance.GameOver();
         }
@@ -156,35 +189,59 @@ public class EnemyAI : MonoBehaviour
     }
 
     /// <summary>
-    /// 巡回場所を順にセットしていく
+    /// 巡回場所の初期化
     /// </summary>
-    void GoToNextPatrolPoint()
+    private void InitPatrolPoint()
     {
-        if (patrolPoints.Length == 0)   // 巡回場所がセットされてない場合
+        // 巡回場所がセットされてない場合
+        if (patrolPoints.Length == 0)
         {
             Debug.LogError("巡回場所がセットされていません!");
             return;
         }
 
-        agent.destination = patrolPoints[patrolIndex].position; // 巡回する場所をセット
-        patrolIndex = (patrolIndex + 1) % patrolPoints.Length;  // 巡回する順序を進める
+        //巡回場所を初期化
+        _agent.destination = patrolPoints[_patrolIndex].position;
+    }
+
+    /// <summary>
+    /// 巡回場所を順にセットしていく
+    /// </summary>
+    private void GoToNextPatrolPoint()
+    {
+        // 巡回する場所を更新
+        _patrolIndex = (_patrolIndex + 1) % patrolPoints.Length;
+        // 巡回する順序を進める
+        _agent.destination = patrolPoints[_patrolIndex].position;
     }
 
     /// <summary>
     /// プレイヤーが視界内に入ったかどうかを判定する
     /// </summary>
     /// <returns></returns>
-    bool CanSeePlayer()
+    private bool CanSeePlayer()
     {
-        return Vector3.Distance(transform.position, player.position) <= sightRange;  // 距離が視認距離以内ならTrue
+        // 距離が視認距離以内ならTrue
+        return Vector3.Distance(transform.position, _player.position) <= sightRange; 
     }
 
+
+    /// <summary>
+    /// 敵速度の初期化
+    /// </summary>
+    /// <param name="item">アイテム取得数</param>
+    private void InitSetSpeed()
+    {
+    }
+
+
+    
     /// <summary>
     /// 取得アイテム数に応じた速度の変更
     /// </summary>
-    /// <param name="item"></param>
-    void SetSpeed(int item)
+    /// <param name="item">アイテム取得数</param>
+    private void SetSpeed(int item)
     {
-        agent.speed = speedData.GetSpeed(item);
+        _agent.speed = _speed[item];
     }
 }
