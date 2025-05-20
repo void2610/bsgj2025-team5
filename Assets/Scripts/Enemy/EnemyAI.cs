@@ -33,40 +33,42 @@ public enum EnemyState { Patrol, Chase }
 /// 敵AIの状態ごとのアルゴリズムを記述
 /// </summary>
 public class EnemyAI : MonoBehaviour
-{    
-    [SerializeField] private Transform _player;
+{
+    [SerializeField] private Transform player;
 
     // 巡回する場所
     [SerializeField] public Transform[] patrolPoints;
 
+    // 現在の状態（Patrol,Chase）
+    [SerializeField] private EnemyState currentState = EnemyState.Patrol;
+    
     // プレイヤーを視認する距離
     [SerializeField] public float sightRange = 10f;
 
     // アイテム数に応じた速度設定
-    [SerializeField] private float[] _speed;  
+    [SerializeField] private float[] speed;
 
     // 攻撃範囲
-    [SerializeField] private float _attackRange = 1f;
+    [SerializeField] private float attackRange = 1f;
 
     // NavMeshAgentから敵AIを使わせてもらう
-    private NavMeshAgent _agent;           
+    private NavMeshAgent _agent;
 
     // パトロールスポットの巡回
     private int _patrolIndex = 0;
 
     // プレイヤーのアイテムカウント
-    private int _itemCount = 0;                             
+    private int _itemCount = 0;
 
-    //追跡タイム計算用変数
-    private float _chaseTimer = 0f;  
-    
-    private readonly float _forcedChaseDuration = 5f;        
+    //　追跡タイム計算用変数
+    private float _chaseTimer = 0f;
+
+    // 強制追跡時間
+    private readonly float _forcedChaseDuration = 5f;
 
     // 強制追跡状態かどうか
-    private bool _isForcedChase = false;                     
+    private bool _isForcedChase = false;
 
-    // 現在の状態（Patrol,Chase）
-    public EnemyState currentState = EnemyState.Patrol;
 
     /// <summary>
     /// 初期化時に一度NavMeshAgentを取得（なければ作成する）
@@ -81,7 +83,7 @@ public class EnemyAI : MonoBehaviour
             _agent = gameObject.AddComponent<NavMeshAgent>();
         }
         // 巡回場所の初期化
-        InitPatrolPoint();
+        SetInitialPatrolDestination();
         // ステートの初期化
         currentState = EnemyState.Patrol;
     }
@@ -120,15 +122,14 @@ public class EnemyAI : MonoBehaviour
             }
         }
 
-
         // 状態に応じた処理
         switch (currentState)
         {
             case EnemyState.Patrol:
-                Patrol(_itemCount);
+                Patrol();
                 break;
             case EnemyState.Chase:
-                Chase(_itemCount);
+                Chase();
                 break;
         }
     }
@@ -138,19 +139,17 @@ public class EnemyAI : MonoBehaviour
     /// プレイヤーが視界内に入ると追跡状態に遷移
     /// </summary>
     /// <param name="item">アイテム取得数</param>
-    private void Patrol(int item)
+    private void Patrol()
     {
-        Debug.Log("Patroling" + _patrolIndex); //デバッグ用
+        Debug.Log("Patrolling" + _patrolIndex); //デバッグ用
 
-        if (item >= 3)
+        if (_itemCount >= 3)
         {
             currentState = EnemyState.Chase;
             return;
         }
 
-        /// <summary>
-        /// ある程度目的地に着いた場合、到着したと判断して次のポイントへ移動させる
-        /// </summary>
+        // ある程度目的地に着いた場合、到着したと判断して次のポイントへ移動させる
         if (!_agent.pathPending && _agent.remainingDistance < 0.001f)
             GoToNextPatrolPoint();
 
@@ -163,25 +162,23 @@ public class EnemyAI : MonoBehaviour
     /// アイテム数が3以上から常に追跡状態
     /// </summary>
     /// <param name="item">アイテム取得数</param>
-    private void Chase(int item)
+    private void Chase()
     {
         Debug.Log("Chasing"); //デバッグ用
 
-        if (item <= 2 && !CanSeePlayer() && !_isForcedChase)
+        if (_itemCount <= 2 && !CanSeePlayer() && !_isForcedChase)
         {
             // 探索状態に遷移させる
-            currentState = EnemyState.Patrol;           
+            currentState = EnemyState.Patrol;
             return;
         }
 
         // プレイヤーの位置を目的地にして追跡する
-        _agent.destination = _player.transform.position; 
+        _agent.destination = player.transform.position;
 
-        /// <summary>
-        /// ターゲットとの距離を計算してゲームオーバー判定をする
-        /// </summary>
-        var distance = Vector3.Distance(transform.position, _player.position);
-        if (distance < _attackRange)
+        // ターゲットとの距離を計算してゲームオーバー判定をする
+        var distance = Vector3.Distance(transform.position, player.position);
+        if (distance < attackRange)
         {
             GameManager.Instance.GameOver();
         }
@@ -191,7 +188,7 @@ public class EnemyAI : MonoBehaviour
     /// <summary>
     /// 巡回場所の初期化
     /// </summary>
-    private void InitPatrolPoint()
+    private void SetInitialPatrolDestination()
     {
         // 巡回場所がセットされてない場合
         if (patrolPoints.Length == 0)
@@ -222,26 +219,22 @@ public class EnemyAI : MonoBehaviour
     private bool CanSeePlayer()
     {
         // 距離が視認距離以内ならTrue
-        return Vector3.Distance(transform.position, _player.position) <= sightRange; 
+        return Vector3.Distance(transform.position, player.position) <= sightRange;
     }
 
 
-    /// <summary>
-    /// 敵速度の初期化
-    /// </summary>
-    /// <param name="item">アイテム取得数</param>
-    private void InitSetSpeed()
-    {
-    }
-
-
-    
     /// <summary>
     /// 取得アイテム数に応じた速度の変更
     /// </summary>
     /// <param name="item">アイテム取得数</param>
     private void SetSpeed(int item)
     {
-        _agent.speed = _speed[item];
+        if (speed == null || item < 0 || item >= speed.Length)
+        {
+            Debug.LogWarning($"速度設定に失敗：_speed[{item}] は無効です");
+            return;
+        }
+
+        _agent.speed = speed[item];
     }
 }
