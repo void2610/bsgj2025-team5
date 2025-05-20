@@ -98,7 +98,9 @@ public class EnemyAI : MonoBehaviour
         {
             // アイテム取得後は速度を変更する
             _itemCount = newValue;
-            SetSpeed(newValue);
+            SetSpeed(_itemCount);
+
+            Debug.Log("アイテム"+ _itemCount + "個ゲットたぜ！");
 
             //　強制追跡状態にする
             _isForcedChase = true;
