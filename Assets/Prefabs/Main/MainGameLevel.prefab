@@ -408,6 +408,7 @@ Transform:
   - {fileID: 7369256307778890364}
   - {fileID: 7518735088174916545}
   - {fileID: 2691617119495069360}
+<<<<<<< HEAD
   - {fileID: 8181214623097578830}
   - {fileID: 6971446596821718843}
   - {fileID: 721089380352997391}
@@ -463,6 +464,8 @@ Transform:
   - {fileID: 457864044625707482}
   - {fileID: 5605210629086165332}
   - {fileID: 8072863931582835347}
+=======
+>>>>>>> origin/put-player-temporary-model
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8196729428098853113
@@ -6292,7 +6295,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2211114886507741430, guid: bb1a0db6233d445f5830f900f978c414, type: 3}
   m_PrefabInstance: {fileID: 1311101322342632368}
   m_PrefabAsset: {fileID: 0}
+<<<<<<< HEAD
 --- !u!1001 &1342243550927057792
+=======
+--- !u!1001 &1806456954122668217
+>>>>>>> origin/put-player-temporary-model
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -6302,11 +6309,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3963317384460717235, guid: 30b76eeea1c2dad49b5e4d4c0c7108e7, type: 3}
       propertyPath: m_Name
+<<<<<<< HEAD
       value: Torii (19)
       objectReference: {fileID: 0}
     - target: {fileID: 4344663594761786889, guid: 30b76eeea1c2dad49b5e4d4c0c7108e7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 161.2
+=======
+      value: Torii
+      objectReference: {fileID: 0}
+    - target: {fileID: 4344663594761786889, guid: 30b76eeea1c2dad49b5e4d4c0c7108e7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 43.208824
+>>>>>>> origin/put-player-temporary-model
       objectReference: {fileID: 0}
     - target: {fileID: 4344663594761786889, guid: 30b76eeea1c2dad49b5e4d4c0c7108e7, type: 3}
       propertyPath: m_LocalPosition.y
@@ -6314,7 +6329,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4344663594761786889, guid: 30b76eeea1c2dad49b5e4d4c0c7108e7, type: 3}
       propertyPath: m_LocalPosition.z
+<<<<<<< HEAD
       value: 4
+=======
+      value: 8.91
+>>>>>>> origin/put-player-temporary-model
       objectReference: {fileID: 0}
     - target: {fileID: 4344663594761786889, guid: 30b76eeea1c2dad49b5e4d4c0c7108e7, type: 3}
       propertyPath: m_LocalRotation.w
@@ -6349,12 +6368,21 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 30b76eeea1c2dad49b5e4d4c0c7108e7, type: 3}
+<<<<<<< HEAD
 --- !u!4 &3381011315824387465 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4344663594761786889, guid: 30b76eeea1c2dad49b5e4d4c0c7108e7, type: 3}
   m_PrefabInstance: {fileID: 1342243550927057792}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1370994581020444381
+=======
+--- !u!4 &2691617119495069360 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4344663594761786889, guid: 30b76eeea1c2dad49b5e4d4c0c7108e7, type: 3}
+  m_PrefabInstance: {fileID: 1806456954122668217}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &2729103923006513191
+>>>>>>> origin/put-player-temporary-model
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
