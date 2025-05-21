@@ -41,7 +41,7 @@ public class EnemyAI : MonoBehaviour
 
     // 現在の状態（Patrol,Chase）
     [SerializeField] private EnemyState currentState = EnemyState.Patrol;
-    
+
     // プレイヤーを視認する距離
     [SerializeField] public float sightRange = 10f;
 
@@ -84,6 +84,17 @@ public class EnemyAI : MonoBehaviour
         }
         // ステートの初期化
         currentState = EnemyState.Patrol;
+
+
+        // 巡回場所がセットされてない場合
+        if (patrolPoints.Length == 0)
+        {
+            Debug.LogError("巡回場所がセットされていません!");
+            return;
+        }
+
+        //巡回場所を初期化
+        _agent.destination = patrolPoints[_patrolIndex].position;
     }
 
     /// <summary>
@@ -91,17 +102,31 @@ public class EnemyAI : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        // 巡回場所の初期化
-        SetInitialPatrolDestination();
-        
+
         // アイテム取得数後の処理
         GameManager.Instance.ItemCount.Subscribe(newValue =>
         {
             // アイテム取得後は速度を変更する
             _itemCount = newValue;
-            SetSpeed(_itemCount);
 
-            Debug.Log("アイテム"+ _itemCount + "個ゲットたぜ！");
+            if (speed == null || _itemCount < 0)
+            {
+                Debug.LogWarning($"速度設定に失敗：_speed[{_itemCount}] は無効です");
+                return;
+            }
+
+            // indexが設定した数より大きいと、最大値で固定にする
+            if (_itemCount >= speed.Length)
+            {
+                _agent.speed = speed[speed.Length - 1]; 
+            }
+            else
+            {
+                _agent.speed = speed[_itemCount];
+            }
+
+
+            Debug.Log("アイテム" + _itemCount + "個ゲットたぜ！"); // デバッグ用
 
             //　強制追跡状態にする
             _isForcedChase = true;
@@ -154,7 +179,7 @@ public class EnemyAI : MonoBehaviour
 
         // ある程度目的地に着いた場合、到着したと判断して次のポイントへ移動させる
         if (!_agent.pathPending && _agent.remainingDistance < 0.001f)
-            GoToNextPatrolPoint();
+            SetNextPatrolPoint();
 
         if (CanSeePlayer())
             currentState = EnemyState.Chase;
@@ -189,25 +214,9 @@ public class EnemyAI : MonoBehaviour
     }
 
     /// <summary>
-    /// 巡回場所の初期化
-    /// </summary>
-    private void SetInitialPatrolDestination()
-    {
-        // 巡回場所がセットされてない場合
-        if (patrolPoints.Length == 0)
-        {
-            Debug.LogError("巡回場所がセットされていません!");
-            return;
-        }
-
-        //巡回場所を初期化
-        _agent.destination = patrolPoints[_patrolIndex].position;
-    }
-
-    /// <summary>
     /// 巡回場所を順にセットしていく
     /// </summary>
-    private void GoToNextPatrolPoint()
+    private void SetNextPatrolPoint()
     {
         // 巡回する場所を更新
         _patrolIndex = (_patrolIndex + 1) % patrolPoints.Length;
@@ -223,21 +232,5 @@ public class EnemyAI : MonoBehaviour
     {
         // 距離が視認距離以内ならTrue
         return Vector3.Distance(transform.position, player.position) <= sightRange;
-    }
-
-
-    /// <summary>
-    /// 取得アイテム数に応じた速度の変更
-    /// </summary>
-    /// <param name="item">アイテム取得数</param>
-    private void SetSpeed(int item)
-    {
-        if (speed == null || item < 0 || item >= speed.Length)
-        {
-            Debug.LogWarning($"速度設定に失敗：_speed[{item}] は無効です");
-            return;
-        }
-
-        _agent.speed = speed[item];
     }
 }
