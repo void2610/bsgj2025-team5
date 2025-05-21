@@ -82,8 +82,6 @@ public class EnemyAI : MonoBehaviour
             Debug.Log("NavMeshAgentを作成");
             _agent = gameObject.AddComponent<NavMeshAgent>();
         }
-        // 巡回場所の初期化
-        SetInitialPatrolDestination();
         // ステートの初期化
         currentState = EnemyState.Patrol;
     }
@@ -93,6 +91,9 @@ public class EnemyAI : MonoBehaviour
     /// </summary>
     private void Start()
     {
+        // 巡回場所の初期化
+        SetInitialPatrolDestination();
+        
         // アイテム取得数後の処理
         GameManager.Instance.ItemCount.Subscribe(newValue =>
         {
