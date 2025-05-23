@@ -17,6 +17,7 @@
 //      ・NavMeshAgentをAwakeで作成する
 //      ・巡回場所をAwakeで初期化させる
 //      ・速度をインスペクトから設定するように
+// 05/23:Agentを取得する前にBakeする必要があるため、Start()で取得するようにした
 
 
 using UnityEngine;
@@ -75,6 +76,34 @@ public class EnemyAI : MonoBehaviour
     /// </summary>
     private void Awake()
     {
+        // // エージェントの初期化
+        // _agent = GetComponent<NavMeshAgent>();
+        // if (_agent == null)
+        // {
+        //     Debug.Log("NavMeshAgentを作成");
+        //     _agent = gameObject.AddComponent<NavMeshAgent>();
+        // }
+        // // ステートの初期化
+        // currentState = EnemyState.Patrol;
+
+
+        // // 巡回場所がセットされてない場合
+        // if (patrolPoints.Length == 0)
+        // {
+        //     Debug.LogError("巡回場所がセットされていません!");
+        //     return;
+        // }
+
+        // //巡回場所を初期化
+        // _agent.destination = patrolPoints[_patrolIndex].position;
+    }
+
+    /// <summary>
+    /// アイテム取得後の処理を読み込む
+    /// </summary>
+    private void Start()
+    {
+
         // エージェントの初期化
         _agent = GetComponent<NavMeshAgent>();
         if (_agent == null)
@@ -95,13 +124,6 @@ public class EnemyAI : MonoBehaviour
 
         //巡回場所を初期化
         _agent.destination = patrolPoints[_patrolIndex].position;
-    }
-
-    /// <summary>
-    /// アイテム取得後の処理を読み込む
-    /// </summary>
-    private void Start()
-    {
 
         // アイテム取得数後の処理
         GameManager.Instance.ItemCount.Subscribe(newValue =>
