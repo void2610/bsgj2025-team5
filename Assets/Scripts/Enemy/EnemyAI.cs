@@ -50,7 +50,7 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private float[] speed;
 
     // 攻撃範囲
-    [SerializeField] private float attackRange = 1f;
+    [SerializeField] private float attackRange = 15f;
 
     // NavMeshAgentから敵AIを使わせてもらう
     private NavMeshAgent _agent;
@@ -140,7 +140,7 @@ public class EnemyAI : MonoBehaviour
             // indexが設定した数より大きいと、最大値で固定にする
             if (_itemCount >= speed.Length)
             {
-                _agent.speed = speed[speed.Length - 1]; 
+                _agent.speed = speed[speed.Length - 1];
             }
             else
             {
@@ -197,6 +197,13 @@ public class EnemyAI : MonoBehaviour
         {
             currentState = EnemyState.Chase;
             return;
+        }
+
+        // 仮
+        var distance = Vector3.Distance(transform.position, player.position);
+        if (distance < attackRange)
+        {
+            GameManager.Instance.GameOver();
         }
 
         // ある程度目的地に着いた場合、到着したと判断して次のポイントへ移動させる
