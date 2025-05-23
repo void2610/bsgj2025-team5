@@ -1,0 +1,5 @@
+Material
+
+TreeObj
+Render Face -> Both
+Alpha Clipping -> check
