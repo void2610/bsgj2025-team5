@@ -174,8 +174,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_Version: 3
   m_UsePipelineSettings: 1
   m_AdditionalLightsShadowResolutionTier: 2
@@ -304,7 +304,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1573497707450298354, guid: 8e0ca241b87f04648b2ec51650b6608e, type: 3}
       propertyPath: target
-      value: 
+      value:
       objectReference: {fileID: 997455250}
     - target: {fileID: 5067676933441973044, guid: 8e0ca241b87f04648b2ec51650b6608e, type: 3}
       propertyPath: m_Name
@@ -610,7 +610,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6552426755877833165, guid: 19236cbb32d8e4156878121eb1701576, type: 3}
       propertyPath: target
-      value: 
+      value:
       objectReference: {fileID: 997455250}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -813,8 +813,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_SendPointerHoverToParent: 1
   m_MoveRepeatDelay: 0.5
   m_MoveRepeatRate: 0.1
@@ -844,8 +844,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
@@ -1223,7 +1223,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3935310138754294399, guid: 53a717c9050e34307b93f5e777290533, type: 3}
       propertyPath: playerCamera
-      value: 
+      value:
       objectReference: {fileID: 123485802}
     - target: {fileID: 3935310138754294399, guid: 53a717c9050e34307b93f5e777290533, type: 3}
       propertyPath: torqueMultiplier
@@ -1462,19 +1462,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3139544947062774879, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
+      value:
       objectReference: {fileID: 7156760634923837135}
     - target: {fileID: 5689828155364070144, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
       propertyPath: enemy
-      value: 
+      value:
       objectReference: {fileID: 1458799558}
     - target: {fileID: 5689828155364070144, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
       propertyPath: player
-      value: 
+      value:
       objectReference: {fileID: 997455250}
     - target: {fileID: 5689828155364070144, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
       propertyPath: mainCamera
-      value: 
+      value:
       objectReference: {fileID: 123485802}
     - target: {fileID: 6866070582696165679, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
       propertyPath: m_Name
@@ -1574,8 +1574,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0c306fccd261b44718e91c8f6f6b5d0e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
 --- !u!1 &1449118185
 GameObject:
   m_ObjectHideFlags: 0
@@ -1959,8 +1959,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 078cf4d4ea7294c7ab8edfecd3ded400, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
 --- !u!1 &2073489548 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -5407603617888191358, guid: cc8a3cb250c3fc84480a333a34e36c8b, type: 3}
@@ -2124,7 +2124,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3980535131468680562, guid: 2540937b5163f407ca016c114981b389, type: 3}
       propertyPath: volume
-      value: 
+      value:
       objectReference: {fileID: 6943145281269625769}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2185,7 +2185,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8785554058055454799, guid: e7960efeaae96482da914062fc0009be, type: 3}
       propertyPath: player
-      value: 
+      value:
       objectReference: {fileID: 1432960161}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2325,8 +2325,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
 --- !u!4 &7156760634923837134 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 829706966501938029, guid: e7960efeaae96482da914062fc0009be, type: 3}
@@ -2341,8 +2341,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1bfd954a057514525b652f928d677abb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
 --- !u!1001 &7397097838650861075
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2353,7 +2353,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 599546075908407162, guid: f95fadf9f51604c7cb2e8837680446ba, type: 3}
       propertyPath: playerSphere
-      value: 
+      value:
       objectReference: {fileID: 1362242712}
     - target: {fileID: 5944294995566947375, guid: f95fadf9f51604c7cb2e8837680446ba, type: 3}
       propertyPath: m_LocalPosition.x
