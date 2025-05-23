@@ -1,10 +1,16 @@
 fileFormatVersion: 2
-guid: c8c78b1134e7d254097f09c6db854705
+guid: cdc2adb767b674d9e9840ea87832cb30
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 2059449395356108994
-    second: TreeObj_TreeObj_BaseColor_0
+      213: 256741273142560433
+    second: Onmyoji_0
+  - first:
+      213: 681519046506102797
+    second: Onmyoji_1
+  - first:
+      213: 6748124655839512557
+    second: Onmyoji_2
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +52,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -113,13 +119,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: TreeObj_TreeObj_BaseColor_0
+      name: Onmyoji_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1024
-        height: 1024
+        x: 196
+        y: 69
+        width: 405
+        height: 537
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +134,52 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 2c8081b4052a49c10800000000000000
-      internalID: 2059449395356108994
+      spriteID: 1b608d0e3d0209300800000000000000
+      internalID: 256741273142560433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Onmyoji_1
+      rect:
+        serializedVersion: 2
+        x: 543
+        y: 174
+        width: 388
+        height: 848
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d00c8a246fd357900800000000000000
+      internalID: 681519046506102797
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Onmyoji_2
+      rect:
+        serializedVersion: 2
+        x: 852
+        y: 31
+        width: 304
+        height: 415
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de78e531f9726ad50800000000000000
+      internalID: 6748124655839512557
       vertices: []
       indices: 
       edges: []
@@ -138,7 +188,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +198,9 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      TreeObj_TreeObj_BaseColor_0: 2059449395356108994
+      Onmyoji_0: 256741273142560433
+      Onmyoji_1: 681519046506102797
+      Onmyoji_2: 6748124655839512557
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
