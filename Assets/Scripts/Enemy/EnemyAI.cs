@@ -144,7 +144,10 @@ public class EnemyAI : MonoBehaviour
                 Chase();
                 break;
             default:
-                throw new ArgumentOutOfRangeException();
+                Debug.LogError($"Unexpected state: {currentState}. Defaulting to Patrol.");
+                currentState = EnemyState.Patrol;
+                Patrol();
+                break;
         }
     }
 
