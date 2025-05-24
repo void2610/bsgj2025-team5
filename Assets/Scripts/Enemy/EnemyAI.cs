@@ -21,6 +21,7 @@
 
 
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using R3;
@@ -44,8 +45,10 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private EnemyState currentState = EnemyState.Patrol;
     // プレイヤーを視認する距離
     [SerializeField] public float sightRange = 10f;
+    // ベースの速度
+    [SerializeField] private float baseSpeed = 1f;
     // アイテム数に応じた速度設定
-    [SerializeField] private float[] speed;
+    [SerializeField] private List<float> speeds = new List<float> { 1f, 1.5f, 2f, 2.5f, 3f };
     // 攻撃範囲
     [SerializeField] private float attackRange = 15f;
 
@@ -67,14 +70,14 @@ public class EnemyAI : MonoBehaviour
             // アイテム取得後は速度を変更する
             _itemCount = s;
 
-            if (speed == null || _itemCount < 0)
+            if (speeds == null || _itemCount < 0)
             {
                 Debug.LogWarning($"速度設定に失敗：_speed[{_itemCount}] は無効です");
                 return;
             }
 
             // indexが設定した数より大きいと、最大値で固定にする
-            _agent.speed = _itemCount >= speed.Length ? speed[^1] : speed[_itemCount];
+            _agent.speed = _itemCount >= speeds.Count ? speeds[^1] : speeds[_itemCount];
 
             Debug.Log($"アイテムを{_itemCount}個ゲット!"); // デバッグ用
 
