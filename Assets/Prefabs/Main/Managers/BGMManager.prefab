@@ -45,14 +45,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e45fc9d7174ff49a68a53df813992bee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bgmClips:
-  - {fileID: 8300000, guid: 2e1b7bd680fa54e528811b74f3a0444e, type: 3}
-  - {fileID: 8300000, guid: cb91f4566a2d8444b8e9495e3f29d2cf, type: 3}
-  - {fileID: 8300000, guid: 97eef2e023190435d90deae17357b798, type: 3}
-  - {fileID: 8300000, guid: 2f42bb430d0a9497195b0adbabe1c9cb, type: 3}
-  - {fileID: 8300000, guid: f9e3f851fc4df4af7b81af69d3820072, type: 3}
+  bgmClip: {fileID: 8300000, guid: 97eef2e023190435d90deae17357b798, type: 3}
   fadeTime: 0.25
-  bgmUpdateInterval: 1
+  bgmUpdateInterval: 0.2
+  basePitch: 1
+  pitchMultipliers:
+  - 0.5
+  - 0.75
+  - 1
+  - 1.25
+  - 1.5
 --- !u!82 &213679661002261011
 AudioSource:
   m_ObjectHideFlags: 0

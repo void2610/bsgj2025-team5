@@ -20,6 +20,8 @@
 // 05/23:Agentを取得する前にBakeする必要があるため、Start()で取得するようにした
 
 
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using R3;
@@ -33,128 +35,83 @@ public enum EnemyState { Patrol, Chase }
 /// <summary>
 /// 敵AIの状態ごとのアルゴリズムを記述
 /// </summary>
+[RequireComponent(typeof(NavMeshAgent))]
 public class EnemyAI : MonoBehaviour
 {
     [SerializeField] private Transform player;
-
     // 巡回する場所
     [SerializeField] public Transform[] patrolPoints;
-
     // 現在の状態（Patrol,Chase）
     [SerializeField] private EnemyState currentState = EnemyState.Patrol;
-
     // プレイヤーを視認する距離
     [SerializeField] public float sightRange = 10f;
-
+    // ベースの速度
+    [SerializeField] private float baseSpeed = 1f;
     // アイテム数に応じた速度設定
-    [SerializeField] private float[] speed;
-
+    [SerializeField] private List<float> speeds = new List<float> { 1f, 1.5f, 2f, 2.5f, 3f };
     // 攻撃範囲
     [SerializeField] private float attackRange = 15f;
 
     // NavMeshAgentから敵AIを使わせてもらう
     private NavMeshAgent _agent;
-
+    private Camera _camera;
     // パトロールスポットの巡回
     private int _patrolIndex = 0;
-
     // プレイヤーのアイテムカウント
     private int _itemCount = 0;
-
     //　追跡タイム計算用変数
     private float _chaseTimer = 0f;
-
     // 強制追跡時間
     private readonly float _forcedChaseDuration = 5f;
-
     // 強制追跡状態かどうか
     private bool _isForcedChase = false;
-
-
-    /// <summary>
-    /// 初期化時に一度NavMeshAgentを取得（なければ作成する）
-    /// </summary>
-    private void Awake()
+    
+    private void OnChangePlayerSpeed(int v)
     {
-        // // エージェントの初期化
-        // _agent = GetComponent<NavMeshAgent>();
-        // if (_agent == null)
-        // {
-        //     Debug.Log("NavMeshAgentを作成");
-        //     _agent = gameObject.AddComponent<NavMeshAgent>();
-        // }
-        // // ステートの初期化
-        // currentState = EnemyState.Patrol;
-
-
-        // // 巡回場所がセットされてない場合
-        // if (patrolPoints.Length == 0)
-        // {
-        //     Debug.LogError("巡回場所がセットされていません!");
-        //     return;
-        // }
-
-        // //巡回場所を初期化
-        // _agent.destination = patrolPoints[_patrolIndex].position;
-    }
-
-    /// <summary>
-    /// アイテム取得後の処理を読み込む
-    /// </summary>
-    private void Start()
-    {
-
-        // エージェントの初期化
-        _agent = GetComponent<NavMeshAgent>();
-        if (_agent == null)
-        {
-            Debug.Log("NavMeshAgentを作成");
-            _agent = gameObject.AddComponent<NavMeshAgent>();
-        }
-        // ステートの初期化
-        currentState = EnemyState.Patrol;
-
-
-        // 巡回場所がセットされてない場合
-        if (patrolPoints.Length == 0)
-        {
-            Debug.LogError("巡回場所がセットされていません!");
-            return;
-        }
-
-        //巡回場所を初期化
-        _agent.destination = patrolPoints[_patrolIndex].position;
-
-        // アイテム取得数後の処理
-        GameManager.Instance.ItemCount.Subscribe(newValue =>
-        {
             // アイテム取得後は速度を変更する
-            _itemCount = newValue;
+            _itemCount = v;
 
-            if (speed == null || _itemCount < 0)
+            if (speeds == null || _itemCount < 0)
             {
                 Debug.LogWarning($"速度設定に失敗：_speed[{_itemCount}] は無効です");
                 return;
             }
 
             // indexが設定した数より大きいと、最大値で固定にする
-            if (_itemCount >= speed.Length)
-            {
-                _agent.speed = speed[speed.Length - 1];
-            }
-            else
-            {
-                _agent.speed = speed[_itemCount];
-            }
+            var newSpeed = _itemCount >= speeds.Count ? speeds[^1] : speeds[_itemCount];
+            _agent.speed = baseSpeed * newSpeed;
 
-
-            Debug.Log("アイテム" + _itemCount + "個ゲットたぜ！"); // デバッグ用
+            Debug.Log($"アイテムを{_itemCount}個ゲット!"); // デバッグ用
 
             //　強制追跡状態にする
             _isForcedChase = true;
             // 時間制限のリセット
             _chaseTimer = _forcedChaseDuration;
-        });
+    }
+
+    private void Awake()
+    {
+        // 巡回場所がセットされてない場合
+        if (patrolPoints.Length == 0) throw new ArgumentNullException(nameof(patrolPoints), "巡回場所がセットされていません!");
+        
+        _camera = Camera.main;
+        if (!TryGetComponent(out _agent))
+        {
+            Debug.Log("NavMeshAgentを作成");
+            _agent = this.gameObject.AddComponent<NavMeshAgent>();
+        }
+    }
+
+    private void Start()
+    {
+        // エージェントの初期化
+        // ステートの初期化
+        currentState = EnemyState.Patrol;
+        //巡回場所を初期化
+        _agent.destination = patrolPoints[_patrolIndex].position;
+
+        // アイテム取得数後の処理
+        GameManager.Instance.ItemCount.Subscribe(OnChangePlayerSpeed).AddTo(this);
     }
 
     /// <summary>
@@ -171,6 +128,11 @@ public class EnemyAI : MonoBehaviour
                 _isForcedChase = false;
             }
         }
+        
+        // カメラ方向にビルボードを向ける
+        var lookPos = player.position - _camera.transform.position;
+        lookPos.y = 0;
+        transform.rotation = Quaternion.LookRotation(lookPos);
 
         // 状態に応じた処理
         switch (currentState)
@@ -181,6 +143,11 @@ public class EnemyAI : MonoBehaviour
             case EnemyState.Chase:
                 Chase();
                 break;
+            default:
+                Debug.LogError($"Unexpected state: {currentState}. Defaulting to Patrol.");
+                currentState = EnemyState.Patrol;
+                Patrol();
+                break;
         }
     }
 
@@ -188,10 +155,9 @@ public class EnemyAI : MonoBehaviour
     /// アイテム数が0~2の場合のみ巡回をする
     /// プレイヤーが視界内に入ると追跡状態に遷移
     /// </summary>
-    /// <param name="item">アイテム取得数</param>
     private void Patrol()
     {
-        Debug.Log("Patrolling" + _patrolIndex); //デバッグ用
+        // Debug.Log("Patrolling" + _patrolIndex); //デバッグ用
 
         if (_itemCount >= 3)
         {
@@ -218,10 +184,9 @@ public class EnemyAI : MonoBehaviour
     /// 強制追跡状態の場合、追跡状態の場合にプレイヤーを追跡する
     /// アイテム数が3以上から常に追跡状態
     /// </summary>
-    /// <param name="item">アイテム取得数</param>
     private void Chase()
     {
-        Debug.Log("Chasing"); //デバッグ用
+        // Debug.Log("Chasing"); //デバッグ用
 
         if (_itemCount <= 2 && !CanSeePlayer() && !_isForcedChase)
         {

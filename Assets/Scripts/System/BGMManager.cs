@@ -5,50 +5,42 @@ using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
 using LitMotion;
 using R3;
-using UnityEngine.Serialization;
 
 /// <summary>
-/// プレイヤーの速度に応じてBGMを変更するクラス
+/// プレイヤーの速度に応じてBGMのテンポを変更するクラス
 /// </summary>
 [RequireComponent(typeof(AudioSource))]
 public class BGMManager : MonoBehaviour
 {
-    [SerializeField] private List<AudioClip> bgmClips;
+    [SerializeField] private AudioClip bgmClip;
     [SerializeField] private float fadeTime = 0.5f; // フェード時間
     [SerializeField] private float bgmUpdateInterval = 1f; // スロットル時間
     
-    private int _currentBGMIndex;
-    private AudioSource _audioSource;
-    private MotionHandle _fadeHandle;
+    [SerializeField] private float basePitch = 1.0f; // 基本ピッチ（スピード0）
+    [SerializeField] private List<float> pitchMultipliers = new() { 1.0f, 1.1f, 1.2f, 1.35f, 1.5f }; // 各スピードレベルでのピッチ倍率
     
-    private async UniTask CrossFadeToAsync(int newIndex)
+    private int _currentSpeedLevel;
+    private AudioSource _audioSource;
+    private MotionHandle _pitchHandle;
+
+    private async UniTask ChangePitchAsync(int newSpeedLevel)
     {
-        if (newIndex < 0 || newIndex >= bgmClips.Count) throw new ArgumentOutOfRangeException(nameof(newIndex));
-        if (_currentBGMIndex == newIndex) return;
+        if (newSpeedLevel < 0 || newSpeedLevel >= pitchMultipliers.Count) return;
+        if (_currentSpeedLevel == newSpeedLevel) return;
+
+        var startPitch = _audioSource.pitch;
+        var targetPitch = basePitch * pitchMultipliers[newSpeedLevel];
         
-        _currentBGMIndex = newIndex;
+        _currentSpeedLevel = newSpeedLevel;
 
         try
         {
-            await LMotion.Create(1f, 0f, fadeTime)
-                .WithEase(Ease.OutSine)
-                .Bind(v => _audioSource.volume = v)
-                .AddTo(this)
-                .ToUniTask();
-        }
-        catch (OperationCanceledException) {}
-
-        _audioSource.Stop();
-        _audioSource.clip = bgmClips[_currentBGMIndex];
-        _audioSource.Play();
-
-        try
-        {
-            _fadeHandle = LMotion.Create(0f, 1f, fadeTime)
-                .WithEase(Ease.InSine)
-                .Bind(v => _audioSource.volume = v)
+            _pitchHandle = LMotion.Create(startPitch, targetPitch, fadeTime)
+                .WithEase(Ease.InOutQuad)
+                .Bind(v => _audioSource.pitch = v)
                 .AddTo(this);
-            await _fadeHandle.ToUniTask();
+            
+            await _pitchHandle.ToUniTask();
         }
         catch (OperationCanceledException) {}
     }
@@ -57,21 +49,22 @@ public class BGMManager : MonoBehaviour
     {
         _audioSource = this.GetComponent<AudioSource>();
         _audioSource.loop = true;
-        
-        if (bgmClips == null || bgmClips.Count == 0) throw new ArgumentNullException(nameof(bgmClips));
-        
-        _audioSource.clip = bgmClips[0];
+
+        if (bgmClip == null) throw new ArgumentNullException(nameof(bgmClip));
+
+        _audioSource.clip = bgmClip;
+        _audioSource.pitch = basePitch * pitchMultipliers[0];
         _audioSource.Play();
     }
 
     private void Start()
     {
-        // タイマーで指定した間隔ごとにBGMを更新
+        // タイマーで指定した間隔ごとにBGMのテンポを更新
         UniTaskAsyncEnumerable.Timer(TimeSpan.Zero, TimeSpan.FromSeconds(bgmUpdateInterval))
             .ForEachAsync(_ =>
             {
-                var nextIndex = GameManager.Instance.Player.PlayerSpeedInt.CurrentValue;
-                CrossFadeToAsync(nextIndex).Forget();
+                var nextSpeedLevel = GameManager.Instance.Player.PlayerSpeedInt.CurrentValue;
+                ChangePitchAsync(nextSpeedLevel).Forget();
             }, this.GetCancellationTokenOnDestroy()).Forget();
     }
 }
