@@ -2692,6 +2692,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: BGMManager
       objectReference: {fileID: 0}
+    - target: {fileID: 5452417040009759082, guid: 74999ef6428184e6db9594fd23bdd182, type: 3}
+      propertyPath: bgmClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 97eef2e023190435d90deae17357b798, type: 3}
+    - target: {fileID: 5452417040009759082, guid: 74999ef6428184e6db9594fd23bdd182, type: 3}
+      propertyPath: bgmUpdateInterval
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5452417040009759082, guid: 74999ef6428184e6db9594fd23bdd182, type: 3}
+      propertyPath: 'pitchMultipliers.Array.data[0]'
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5452417040009759082, guid: 74999ef6428184e6db9594fd23bdd182, type: 3}
+      propertyPath: 'pitchMultipliers.Array.data[1]'
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 5452417040009759082, guid: 74999ef6428184e6db9594fd23bdd182, type: 3}
+      propertyPath: 'pitchMultipliers.Array.data[2]'
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5452417040009759082, guid: 74999ef6428184e6db9594fd23bdd182, type: 3}
+      propertyPath: 'pitchMultipliers.Array.data[3]'
+      value: 1.25
+      objectReference: {fileID: 0}
     - target: {fileID: 6180725383135422174, guid: 74999ef6428184e6db9594fd23bdd182, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
