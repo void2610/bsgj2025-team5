@@ -54,6 +54,7 @@ public class EnemyAI : MonoBehaviour
 
     // NavMeshAgentから敵AIを使わせてもらう
     private NavMeshAgent _agent;
+    private Camera _camera;
     // パトロールスポットの巡回
     private int _patrolIndex = 0;
     // プレイヤーのアイテムカウント
@@ -65,10 +66,10 @@ public class EnemyAI : MonoBehaviour
     // 強制追跡状態かどうか
     private bool _isForcedChase = false;
     
-    private void OnChangePlayerSpeed(int s)
+    private void OnChangePlayerSpeed(int v)
     {
             // アイテム取得後は速度を変更する
-            _itemCount = s;
+            _itemCount = v;
 
             if (speeds == null || _itemCount < 0)
             {
@@ -77,7 +78,8 @@ public class EnemyAI : MonoBehaviour
             }
 
             // indexが設定した数より大きいと、最大値で固定にする
-            _agent.speed = _itemCount >= speeds.Count ? speeds[^1] : speeds[_itemCount];
+            var newSpeed = _itemCount >= speeds.Count ? speeds[^1] : speeds[_itemCount];
+            _agent.speed = baseSpeed * newSpeed;
 
             Debug.Log($"アイテムを{_itemCount}個ゲット!"); // デバッグ用
 
@@ -87,18 +89,22 @@ public class EnemyAI : MonoBehaviour
             _chaseTimer = _forcedChaseDuration;
     }
 
-    private void Start()
+    private void Awake()
     {
         // 巡回場所がセットされてない場合
         if (patrolPoints.Length == 0) throw new ArgumentNullException(nameof(patrolPoints), "巡回場所がセットされていません!");
         
-        // エージェントの初期化
-        _agent = this.GetComponent<NavMeshAgent>();
-        if (_agent == null)
+        _camera = Camera.main;
+        if (!TryGetComponent(out _agent))
         {
             Debug.Log("NavMeshAgentを作成");
             _agent = this.gameObject.AddComponent<NavMeshAgent>();
         }
+    }
+
+    private void Start()
+    {
+        // エージェントの初期化
         // ステートの初期化
         currentState = EnemyState.Patrol;
         //巡回場所を初期化
@@ -122,6 +128,11 @@ public class EnemyAI : MonoBehaviour
                 _isForcedChase = false;
             }
         }
+        
+        // カメラ方向にビルボードを向ける
+        var lookPos = player.position - _camera.transform.position;
+        lookPos.y = 0;
+        transform.rotation = Quaternion.LookRotation(lookPos);
 
         // 状態に応じた処理
         switch (currentState)
