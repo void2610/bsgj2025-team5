@@ -14,8 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_GroupName: Localization-String-Tables-Japanese (ja)
   m_GUID: c8713e69953634d7cb8097376beba537
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 76dc44e2c92514b92850719d1868f86a
+    m_Address: Main_ja
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ja
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 81d9843d996924995b1c06fd0287139e, type: 2}
   m_SchemaSet:
-    m_Schemas: []
+    m_Schemas:
+    - {fileID: 11400000, guid: 505e177b062da4e569e234a84e671a90, type: 2}
+    - {fileID: 11400000, guid: eb2d969c36c01431d8b3501ab1b49cee, type: 2}

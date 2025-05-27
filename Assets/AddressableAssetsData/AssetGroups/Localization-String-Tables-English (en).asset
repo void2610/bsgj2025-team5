@@ -14,8 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_GroupName: Localization-String-Tables-English (en)
   m_GUID: b5608d31c57a84394bb376d74ca3dbee
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: d1cf9dfdd4b5d4db6b59f9e151acbb72
+    m_Address: Main_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 81d9843d996924995b1c06fd0287139e, type: 2}
   m_SchemaSet:
-    m_Schemas: []
+    m_Schemas:
+    - {fileID: 11400000, guid: cf282018db65042f7934a462e1adc8ce, type: 2}
+    - {fileID: 11400000, guid: fd3a9b9ed746b441ea7cae806f903652, type: 2}
