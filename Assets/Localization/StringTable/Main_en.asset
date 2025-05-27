@@ -22,6 +22,38 @@ MonoBehaviour:
     m_Localized: Test
     m_Metadata:
       m_Items: []
+  - m_Id: 3758191796224
+    m_Localized: Start
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3758191796225
+    m_Localized: Quit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3758191796226
+    m_Localized: Gameover
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3758208573440
+    m_Localized: Game clear
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3758208573441
+    m_Localized: Tutorial
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3758208573442
+    m_Localized: Retry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3758208573443
+    m_Localized: Resume
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3758208573444
+    m_Localized: Title
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

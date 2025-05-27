@@ -19,6 +19,38 @@ MonoBehaviour:
     m_Key: TEST
     m_Metadata:
       m_Items: []
+  - m_Id: 3758191796224
+    m_Key: START_GAME
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3758191796225
+    m_Key: QUIT_GAME
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3758191796226
+    m_Key: GAMEOVER
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3758208573440
+    m_Key: GAME_CLEAR
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3758208573441
+    m_Key: TUTORIAL
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3758208573442
+    m_Key: RETRY
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3758208573443
+    m_Key: RESUME
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3758208573444
+    m_Key: TITLE
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
