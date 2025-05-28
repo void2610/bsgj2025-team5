@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -11,6 +12,10 @@ public class FocusButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     private bool _isPointerOver;
     private float _focusTime;
+    private TextMeshProUGUI _text;
+    
+    public void SetText(string text) => _text.text = text;
+    public void SetAction(UnityAction a) => action.AddListener(a.Invoke);
     
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -21,6 +26,11 @@ public class FocusButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     {
         _isPointerOver = false;
         _focusTime = 0f;
+    }
+
+    private void Awake()
+    {
+        _text = this.GetComponentInChildren<TextMeshProUGUI>();
     }
     
     private void Update()
