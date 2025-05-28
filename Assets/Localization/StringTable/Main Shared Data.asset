@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: Main Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: Main
+  m_TableCollectionNameGuidString: 9c8c0df04e469443f9091642eb20b41b
+  m_Entries:
+  - m_Id: 560852885504
+    m_Key: TEST
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3758191796224
+    m_Key: START_GAME
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3758191796225
+    m_Key: QUIT_GAME
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3758191796226
+    m_Key: GAMEOVER
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3758208573440
+    m_Key: GAME_CLEAR
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3758208573441
+    m_Key: TUTORIAL
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3758208573442
+    m_Key: RETRY
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3758208573443
+    m_Key: RESUME
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3758208573444
+    m_Key: TITLE
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 6341671425451491551
+  references:
+    version: 2
+    RefIds:
+    - rid: 6341671425451491551
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1748328880756
