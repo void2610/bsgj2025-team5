@@ -308,14 +308,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1189942491}
     m_Modifications:
-    - target: {fileID: 464546135259377132, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
-      propertyPath: m_StringReference.m_TableEntryReference.m_KeyId
-      value: 3758191796225
-      objectReference: {fileID: 0}
-    - target: {fileID: 464546135259377132, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
-      propertyPath: m_StringReference.m_TableReference.m_TableCollectionName
-      value: GUID:9c8c0df04e469443f9091642eb20b41b
-      objectReference: {fileID: 0}
     - target: {fileID: 1867553516881644330, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -395,30 +387,6 @@ PrefabInstance:
     - target: {fileID: 1867553516881644330, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2400422115381009561, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 370
-      objectReference: {fileID: 0}
-    - target: {fileID: 2400422115381009561, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 240
-      objectReference: {fileID: 0}
-    - target: {fileID: 2470353646862822269, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
-      propertyPath: m_StringReference.m_TableEntryReference.m_KeyId
-      value: 3758191796224
-      objectReference: {fileID: 0}
-    - target: {fileID: 2470353646862822269, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
-      propertyPath: m_StringReference.m_TableReference.m_TableCollectionName
-      value: GUID:9c8c0df04e469443f9091642eb20b41b
-      objectReference: {fileID: 0}
-    - target: {fileID: 6615909016294826294, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
-      propertyPath: m_StringReference.m_TableEntryReference.m_KeyId
-      value: 3758208573441
-      objectReference: {fileID: 0}
-    - target: {fileID: 6615909016294826294, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
-      propertyPath: m_StringReference.m_TableReference.m_TableCollectionName
-      value: GUID:9c8c0df04e469443f9091642eb20b41b
       objectReference: {fileID: 0}
     - target: {fileID: 7615835358442042621, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
       propertyPath: m_Name
