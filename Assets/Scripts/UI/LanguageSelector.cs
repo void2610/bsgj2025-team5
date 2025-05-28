@@ -28,7 +28,6 @@ public class LanguageSelector : MonoBehaviour
             
             fb.SetText(locale.LocaleName);
             fb.SetAction(() => LocalizationSettings.SelectedLocale = locale);
-            _focusButtons.Add(fb);
             index++;
         }
     }
