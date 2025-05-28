@@ -55,6 +55,7 @@ GameObject:
   - component: {fileID: 6561209809923292533}
   - component: {fileID: 8851857628120812015}
   - component: {fileID: 4436231236839184540}
+  - component: {fileID: 8629934652883475846}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -180,6 +181,46 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8629934652883475846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4035107331115990639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:9c8c0df04e469443f9091642eb20b41b
+    m_TableEntryReference:
+      m_KeyId: 3758208573440
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4436231236839184540}
+        m_TargetAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &7615835358442042621
 GameObject:
   m_ObjectHideFlags: 0
@@ -190,7 +231,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1867553516881644330}
   m_Layer: 5
-  m_Name: CearContent
+  m_Name: ClearContent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -309,7 +350,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 788211441163681178, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: m_fontSize
-      value: 65
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 788211441163681178, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: m_fontSizeBase
@@ -443,6 +484,14 @@ PrefabInstance:
       propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 5529971322441732579, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
+      propertyPath: m_StringReference.m_TableEntryReference.m_KeyId
+      value: 3758208573444
+      objectReference: {fileID: 0}
+    - target: {fileID: 5529971322441732579, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
+      propertyPath: m_StringReference.m_TableReference.m_TableCollectionName
+      value: GUID:9c8c0df04e469443f9091642eb20b41b
+      objectReference: {fileID: 0}
     - target: {fileID: 7942446902432864239, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: m_SizeDelta.x
       value: 350
@@ -475,7 +524,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 788211441163681178, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: m_fontSize
-      value: 65
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 788211441163681178, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: m_fontSizeBase
@@ -608,6 +657,14 @@ PrefabInstance:
     - target: {fileID: 5496838663090027307, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 5529971322441732579, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
+      propertyPath: m_StringReference.m_TableEntryReference.m_KeyId
+      value: 3758208573442
+      objectReference: {fileID: 0}
+    - target: {fileID: 5529971322441732579, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
+      propertyPath: m_StringReference.m_TableReference.m_TableCollectionName
+      value: GUID:9c8c0df04e469443f9091642eb20b41b
       objectReference: {fileID: 0}
     - target: {fileID: 7942446902432864239, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: m_SizeDelta.x

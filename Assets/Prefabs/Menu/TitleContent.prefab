@@ -344,6 +344,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2400422115381009561}
   - {fileID: 5708772893052026216}
   - {fileID: 3936631010789783331}
   - {fileID: 7711201605421218809}
@@ -523,7 +524,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 788211441163681178, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: m_fontSize
-      value: 65
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 788211441163681178, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: m_fontSizeBase
@@ -653,6 +654,14 @@ PrefabInstance:
       propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 5529971322441732579, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
+      propertyPath: m_StringReference.m_TableEntryReference.m_KeyId
+      value: 3758208573441
+      objectReference: {fileID: 0}
+    - target: {fileID: 5529971322441732579, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
+      propertyPath: m_StringReference.m_TableReference.m_TableCollectionName
+      value: GUID:9c8c0df04e469443f9091642eb20b41b
+      objectReference: {fileID: 0}
     - target: {fileID: 7942446902432864239, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: m_SizeDelta.x
       value: 350
@@ -685,7 +694,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 788211441163681178, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: m_fontSize
-      value: 65
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 788211441163681178, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: m_fontSizeBase
@@ -819,6 +828,14 @@ PrefabInstance:
       propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 5529971322441732579, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
+      propertyPath: m_StringReference.m_TableEntryReference.m_KeyId
+      value: 3758191796225
+      objectReference: {fileID: 0}
+    - target: {fileID: 5529971322441732579, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
+      propertyPath: m_StringReference.m_TableReference.m_TableCollectionName
+      value: GUID:9c8c0df04e469443f9091642eb20b41b
+      objectReference: {fileID: 0}
     - target: {fileID: 7942446902432864239, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: m_SizeDelta.x
       value: 350
@@ -837,6 +854,68 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2436360128620611574, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
   m_PrefabInstance: {fileID: 5389684648443313167}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &5879735601475468844
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1867553516881644330}
+    m_Modifications:
+    - target: {fileID: 5308468050877095683, guid: 8a2a7047e6da14428ae0bc90ac5003d5, type: 3}
+      propertyPath: m_Name
+      value: LanguageSelector
+      objectReference: {fileID: 0}
+    - target: {fileID: 8127035054312350389, guid: 8a2a7047e6da14428ae0bc90ac5003d5, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 370
+      objectReference: {fileID: 0}
+    - target: {fileID: 8127035054312350389, guid: 8a2a7047e6da14428ae0bc90ac5003d5, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 240
+      objectReference: {fileID: 0}
+    - target: {fileID: 8127035054312350389, guid: 8a2a7047e6da14428ae0bc90ac5003d5, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8127035054312350389, guid: 8a2a7047e6da14428ae0bc90ac5003d5, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8127035054312350389, guid: 8a2a7047e6da14428ae0bc90ac5003d5, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8127035054312350389, guid: 8a2a7047e6da14428ae0bc90ac5003d5, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8127035054312350389, guid: 8a2a7047e6da14428ae0bc90ac5003d5, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8127035054312350389, guid: 8a2a7047e6da14428ae0bc90ac5003d5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8127035054312350389, guid: 8a2a7047e6da14428ae0bc90ac5003d5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8127035054312350389, guid: 8a2a7047e6da14428ae0bc90ac5003d5, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 8a2a7047e6da14428ae0bc90ac5003d5, type: 3}
+--- !u!4 &2400422115381009561 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8127035054312350389, guid: 8a2a7047e6da14428ae0bc90ac5003d5, type: 3}
+  m_PrefabInstance: {fileID: 5879735601475468844}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7995598064526424734
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -851,7 +930,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 788211441163681178, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: m_fontSize
-      value: 65
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 788211441163681178, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: m_fontSizeBase
@@ -984,6 +1063,14 @@ PrefabInstance:
     - target: {fileID: 5496838663090027307, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 5529971322441732579, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
+      propertyPath: m_StringReference.m_TableEntryReference.m_KeyId
+      value: 3758191796224
+      objectReference: {fileID: 0}
+    - target: {fileID: 5529971322441732579, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
+      propertyPath: m_StringReference.m_TableReference.m_TableCollectionName
+      value: GUID:9c8c0df04e469443f9091642eb20b41b
       objectReference: {fileID: 0}
     - target: {fileID: 7942446902432864239, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: m_SizeDelta.x
