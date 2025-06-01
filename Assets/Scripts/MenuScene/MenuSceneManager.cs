@@ -1,5 +1,6 @@
 using R3;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 public class MenuSceneManager : MonoBehaviour
@@ -31,12 +32,14 @@ public class MenuSceneManager : MonoBehaviour
     private void Awake()
     {
         Time.timeScale = 1;
-        Cursor.visible = false;
         Cursor.lockState = CursorLockMode.None;
-    }
-
-    private void Update()
-    {
-        Cursor.visible = false; // 常に非表示
+        
+        // 毎フレームをストリーム化
+        Observable.EveryUpdate()
+            // 左クリック or 任意キー押下を検知
+            .Where(_ => Input.GetMouseButtonDown(0) || Input.anyKeyDown)
+            .Take(1)                      // 最初の1回だけ
+            .Subscribe(_ => Cursor.visible   = false)
+            .AddTo(this);                 // GameObject が破棄されたら自動Dispose
     }
 }
