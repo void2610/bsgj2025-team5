@@ -34,4 +34,9 @@ public class MenuSceneManager : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.None;
     }
+
+    private void Update()
+    {
+        Cursor.visible = false; // 常に非表示
+    }
 }
