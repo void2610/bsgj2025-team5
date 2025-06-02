@@ -37,7 +37,7 @@ public class FocusButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     {
         if (_isPointerOver)
         {
-            _focusTime += Time.deltaTime;
+            _focusTime += Time.unscaledDeltaTime;
 
             if (_focusTime >= requiredTime)
             {
@@ -47,6 +47,6 @@ public class FocusButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         }
         
         // fillAmountの値をなめらかに補完して更新
-        fillImage.fillAmount = Mathf.Lerp(fillImage.fillAmount, _focusTime / requiredTime, Time.deltaTime * 10f);
+        fillImage.fillAmount = Mathf.Lerp(fillImage.fillAmount, _focusTime / requiredTime, Time.unscaledDeltaTime * 10f);
     }
 }

@@ -56,6 +56,8 @@ public class PlayerCamera : MonoBehaviour
         _yaw   = target.eulerAngles.y;
         _pitch = 15f;
         _rb   = target.GetComponent<Rigidbody>();
+
+        Cursor.visible = false;
     }
 
     private void LateUpdate()

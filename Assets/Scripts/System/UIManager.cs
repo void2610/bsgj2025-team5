@@ -22,7 +22,6 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
         pauseCanvasGroup.blocksRaycasts = _isPaused;
         
         Cursor.lockState = p ? CursorLockMode.None : CursorLockMode.Locked;
-        Cursor.visible   = p;
     }
 
     protected override void Awake()
