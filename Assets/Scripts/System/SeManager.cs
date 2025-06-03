@@ -109,7 +109,7 @@ public class SeManager : SingletonMonoBehaviour<SeManager>
     /// <param name="volume">追加のスケール倍率（0.0〜1.0）</param>
     /// <param name="pitch">ピッチ（負の値でランダムピッチ）</param>
     /// <param name="important">trueの場合、空きがなくても強制再生</param>
-    public async UniTask WaitAndPlaySe(SeData data, float delay, float volume = 1.0f, float pitch = 1.0f, bool important = false)
+    public async UniTask WaitAndPlaySe(SeData data, float delay, float volume = 1.0f, float pitch = -1.0f, bool important = false)
     {
         await UniTask.Delay((int)(delay * 1000));
         PlaySe(data, volume, pitch, important);
