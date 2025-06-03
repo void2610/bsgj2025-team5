@@ -23,8 +23,10 @@ public class JumpPad : MonoBehaviour
     {
         if (other.TryGetComponent<Player>(out _))
         {
-            var playerRb = other.GetComponent<Rigidbody>();
-            ApplyJumpForce(playerRb);
+            if (other.TryGetComponent<Rigidbody>(out var playerRb))
+            {
+                ApplyJumpForce(playerRb);
+            }
             PlayFeedback();
         }
     }
