@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class RevealableObject : MonoBehaviour
 {
+    [Tooltip("オブジェクトが表示される最低速度レベル（0:停止〜4:最高速）")]
     [SerializeField, Range(0, 4)] private int requiredSpeed = 0;
 
     private void OnChangePlayerSpeed(int s)

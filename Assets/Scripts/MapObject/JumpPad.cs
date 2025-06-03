@@ -4,10 +4,14 @@ using UnityEngine;
 public class JumpPad : MonoBehaviour
 {
     [Header("Jump Settings")]
+    [Tooltip("ジャンプの強さ。大きいほど高く飛びます")]
     [SerializeField] private float jumpForce = 15f;
     
     [Header("Feedback")]
+    [Tooltip("ジャンプ時に再生する効果音")]
     [SerializeField] private SeData jumpSeData;
+    
+    [Tooltip("ジャンプ時に表示するパーティクルエフェクト")]
     [SerializeField] private ParticleData jumpParticleData;
     
     private void Awake()
