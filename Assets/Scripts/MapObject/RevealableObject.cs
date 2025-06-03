@@ -5,10 +5,14 @@ public class RevealableObject : MonoBehaviour
 {
     [Tooltip("オブジェクトが表示される最低速度レベル（0:停止〜4:最高速）")]
     [SerializeField, Range(0, 4)] private int requiredSpeed = 0;
+    
+    [Tooltip("ONの場合、指定速度以下で表示、OFFの場合、指定速度以上で表示")]
+    [SerializeField] private bool invertBehavior = false;
 
     private void OnChangePlayerSpeed(int s)
     {
-        this.gameObject.SetActive(s >= requiredSpeed);
+        bool shouldBeActive = invertBehavior ? s <= requiredSpeed : s >= requiredSpeed;
+        this.gameObject.SetActive(shouldBeActive);
     }
         
     private void Start()
