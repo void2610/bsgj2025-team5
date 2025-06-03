@@ -5,20 +5,29 @@ using UnityEngine.Rendering.Universal;
 
 public class VolumeManager : MonoBehaviour
 {
+    [Tooltip("ポストプロセスボリューム。ここに設定されたプロファイルのエフェクトを制御します")]
     [SerializeField] private Volume volume;
 
     [Header("Color Adjustments")]
+    [Tooltip("彩度の範囲。X:最低速度時、Y:最高速度時の値")]
     [SerializeField] private Vector2 saturationRange = new (0f, 60f);
+    
+    [Tooltip("露出の範囲。X:最低速度時、Y:最高速度時の値")]
     [SerializeField] private Vector2 exposureRange   = new (0f, 1.5f);
 
     [Header("Hue Shift")]
-    [SerializeField] private Vector2 hueShiftSpeedRange = new (0f, 60f); // ★deg / sec
-    [SerializeField] private float   hueShiftThreshold  = 0.25f;         // ★0-1
+    [Tooltip("色相回転速度の範囲（度/秒）。X:闾値速度時、Y:最高速度時")]
+    [SerializeField] private Vector2 hueShiftSpeedRange = new (0f, 60f);
+    
+    [Tooltip("色相回転が始まる速度の闾値（0-1）")]
+    [SerializeField] private float   hueShiftThreshold  = 0.25f;
 
     [Header("Chromatic Aberration")]
+    [Tooltip("色収差の強度範囲。X:最低速度時、Y:最高速度時の値")]
     [SerializeField] private Vector2 caIntensityRange = new (0f, 1f);
 
     [Header("Lens Distortion")]
+    [Tooltip("レンズ歪みの強度範囲。X:最低速度時、Y:最高速度時の値（マイナス値で歪み）")]
     [SerializeField] private Vector2 ldIntensityRange = new (0f, -0.4f);
 
     private ColorAdjustments    _cAdj;

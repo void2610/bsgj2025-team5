@@ -10,6 +10,7 @@ using UnityEngine;
 /// </summary>
 public class ParticleManager : SingletonMonoBehaviour<ParticleManager>
 { 
+    [Tooltip("同時に存在できるパーティクルの最大数。この数を超えると古いものから削除されます")]
     [SerializeField] private int maxParticleCount = 100;
 
     private readonly List<GameObject> _particlePool = new();

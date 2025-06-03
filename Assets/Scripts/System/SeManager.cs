@@ -13,7 +13,10 @@ using UnityEngine.Audio;
 /// </summary>
 public class SeManager : SingletonMonoBehaviour<SeManager>
 {
+    [Tooltip("SE用のオーディオミキサーグループ。音量調整やエフェクト処理に使用")]
     [SerializeField] private AudioMixerGroup seMixerGroup;
+    
+    [Tooltip("同時に再生できるSEの最大数。大きいほど多くの音を重ねられます")]
     [SerializeField] private int audioSourcePoolSize = 20;
 
     private readonly List<AudioSource> _seAudioSourceList = new();

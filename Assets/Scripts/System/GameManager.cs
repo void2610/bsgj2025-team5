@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : SingletonMonoBehaviour<GameManager>
 {
+    [Tooltip("プレイヤーの参照。ゲーム開始時に設定する必要があります")]
     [SerializeField] private Player player;
 
     public ReadOnlyReactiveProperty<int> ItemCount => _itemCount;

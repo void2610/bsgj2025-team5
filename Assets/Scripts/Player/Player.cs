@@ -7,15 +7,24 @@ using UnityEngine.InputSystem;
 public class Player : MonoBehaviour
 {
     [Header("Camera & Control")]
+    [Tooltip("プレイヤーを追従するカメラ")]
     [SerializeField] private Camera playerCamera;
+    
+    [Tooltip("ONの場合、マウス操作が反転します")]
     [SerializeField] private bool   isInverted = false;
 
     [Header("Physics")]
+    [Tooltip("マウス移動量を回転力に変換する倍率。大きいほど敏感に回転します")]
     [SerializeField] private float  torqueMultiplier   = 0.25f;
+    
+    [Tooltip("最大移動速度。この速度を基準に速度レベルが計算されます")]
     [SerializeField] private float  maxLinearVelocity  = 10f;
+    
+    [Tooltip("最大回転速度。ボールの回転の上限値")]
     [SerializeField] private float  maxAngularVelocity = 50f;
     
     [Header("Visual")]
+    [Tooltip("衝突時に生成する砂のパーティクルエフェクト")]
     [SerializeField] private ParticleData sandParticleData;
 
     /// <summary>
