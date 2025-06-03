@@ -13,7 +13,10 @@ using UnityEngine.Audio;
 /// </summary>
 public class SeManager : SingletonMonoBehaviour<SeManager>
 {
+    [Tooltip("SE用のオーディオミキサーグループ。音量調整やエフェクト処理に使用")]
     [SerializeField] private AudioMixerGroup seMixerGroup;
+    
+    [Tooltip("同時に再生できるSEの最大数。大きいほど多くの音を重ねられます")]
     [SerializeField] private int audioSourcePoolSize = 20;
 
     private readonly List<AudioSource> _seAudioSourceList = new();
@@ -109,7 +112,7 @@ public class SeManager : SingletonMonoBehaviour<SeManager>
     /// <param name="volume">追加のスケール倍率（0.0〜1.0）</param>
     /// <param name="pitch">ピッチ（負の値でランダムピッチ）</param>
     /// <param name="important">trueの場合、空きがなくても強制再生</param>
-    public async UniTask WaitAndPlaySe(SeData data, float delay, float volume = 1.0f, float pitch = 1.0f, bool important = false)
+    public async UniTask WaitAndPlaySe(SeData data, float delay, float volume = 1.0f, float pitch = -1.0f, bool important = false)
     {
         await UniTask.Delay((int)(delay * 1000));
         PlaySe(data, volume, pitch, important);

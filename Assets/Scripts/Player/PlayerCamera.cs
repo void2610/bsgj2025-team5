@@ -6,21 +6,39 @@ using Cysharp.Threading.Tasks;
 public class PlayerCamera : MonoBehaviour
 {
     [Header("Target")]
-    public Transform target;          // 追従対象（ボール）
+    [Tooltip("追従するターゲット（プレイヤーのTransform）")]
+    public Transform target;
+    
     [Header("Offset")]
-    public float distance = 6.0f;     // 背後距離
-    public float height   = 2.0f;     // 目線の高さオフセット
+    [Tooltip("ターゲットからの距離。大きいほど遠くから見ます")]
+    public float distance = 6.0f;
+    
+    [Tooltip("ターゲットからの高さオフセット。大きいほど上から見下ろします")]
+    public float height   = 2.0f;
     [Header("Rotation")]
-    public float lookSensitivity = 150f; // マウス感度 (deg/s)
-    public float minPitch = -20f;        // 俯角下限
-    public float maxPitch =  80f;        // 仰角上限
+    [Tooltip("マウス感度（度/秒）。大きいほど素早く回転します")]
+    public float lookSensitivity = 150f;
+    
+    [Tooltip("下向き角度の下限値（マイナス値）")]
+    public float minPitch = -20f;
+    
+    [Tooltip("上向き角度の上限値（プラス値）")]
+    public float maxPitch =  80f;
     [Header("Smooth")]
-    public float posLerpSpeed   = 10f;   // 位置追従の滑らかさ
-    public float rotLerpSpeed   = 10f;   // 回転追従の滑らかさ
+    [Tooltip("位置追従の滑らかさ。大きいほど素早く追従します")]
+    public float posLerpSpeed   = 10f;
+    
+    [Tooltip("回転追従の滑らかさ。大きいほど素早く回転します")]
+    public float rotLerpSpeed   = 10f;
     [Header("Auto Align")]
-    public bool autoAlign = true;          // ON/OFF
-    public float alignSpeed = 4f;          // 角度収束速度 (1/sec, 高いほど速い)
-    public float velThreshold = 0.2f;      // 速度閾値 (m/s) 以下なら無視
+    [Tooltip("ONの場合、移動方向にカメラが自動的に向きます")]
+    public bool autoAlign = true;
+    
+    [Tooltip("カメラが移動方向に向く速度。大きいほど素早く向きます")]
+    public float alignSpeed = 4f;
+    
+    [Tooltip("この速度以下では自動整列を無視します（m/s）")]
+    public float velThreshold = 0.2f;
 
     private float _yaw;   // 水平角 (deg)
     private float _pitch; // 垂直角 (deg)

@@ -403,11 +403,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3ef09bfb00bb1546be0ca46cc6132cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _repeat: 6
-  _offset: 0
-  _roll: 0
-  _symmetry: 1
-  _shader: {fileID: 4800000, guid: 46ce67666b84e15478d1b6d6cff3f092, type: 3}
 --- !u!4 &602605626 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6541932862363374700, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
@@ -602,22 +597,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2915758770078705743, guid: 53a717c9050e34307b93f5e777290533, type: 3}
-      propertyPath: m_AngularDrag
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 3935310138754294399, guid: 53a717c9050e34307b93f5e777290533, type: 3}
       propertyPath: playerCamera
       value: 
       objectReference: {fileID: 123485802}
-    - target: {fileID: 3935310138754294399, guid: 53a717c9050e34307b93f5e777290533, type: 3}
-      propertyPath: torqueMultiplier
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 3935310138754294399, guid: 53a717c9050e34307b93f5e777290533, type: 3}
-      propertyPath: maxAngularVelocity
-      value: 50
-      objectReference: {fileID: 0}
     - target: {fileID: 7433976897722441484, guid: 53a717c9050e34307b93f5e777290533, type: 3}
       propertyPath: m_Name
       value: Player

@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class UIManager : SingletonMonoBehaviour<UIManager>
 {
+    [Tooltip("アイテム取得数を表示するテキスト")]
     [SerializeField] private TextMeshProUGUI itemCountText;
+    
+    [Tooltip("プレイヤーの速度レベルを表示するテキスト")]
     [SerializeField] private TextMeshProUGUI playerSpeedText;
+    
+    [Tooltip("ポーズ画面のCanvasGroup")]
     [SerializeField] private CanvasGroup pauseCanvasGroup;
 
     private bool _isPaused = false;
