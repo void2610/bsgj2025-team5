@@ -93,16 +93,21 @@ public class VolumeManager : MonoBehaviour
             _cAdj.hueShift.value = rawAngle;
         }
         
-        var adjustedSpeed = Mathf.Max(0f, v - kaleidoscopeSpeedOffset); 
-        _videoPlayer.targetCameraAlpha = Mathf.Lerp(0f, maxKaleidoscopeAlpha, adjustedSpeed);
+        if (_videoPlayer)
+        {
+            var adjustedSpeed = Mathf.Max(0f, v - kaleidoscopeSpeedOffset);
+            _videoPlayer.targetCameraAlpha = Mathf.Lerp(0f, maxKaleidoscopeAlpha, adjustedSpeed);
+        }
     }
 
     private void SetupKaleidoscopeVideo()
     {
-        if (kaleidoscopeClip == null) return;
+        #if UNITY_WEBGL && !UNITY_EDITOR
+                Debug.Log("[VolumeManager] WebGLビルドでは動画再生がサポートされていないため、万華鏡エフェクトは無効化されます。");
+                return;
+        #endif
         
         var mainCamera = Camera.main;
-        if (mainCamera == null) return;
 
         // VideoPlayerコンポーネントを追加
         _videoPlayer = this.gameObject.AddComponent<VideoPlayer>();
