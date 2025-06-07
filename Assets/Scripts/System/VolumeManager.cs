@@ -90,16 +90,11 @@ public class VolumeManager : MonoBehaviour
             var degPerSec  = Mathf.Lerp(hueShiftSpeedRange.x, hueShiftSpeedRange.y, t01);
             var smoothTime = Time.time * 0.3f;                                     // 時間スケールを減少
             var rawAngle   = Mathf.Sin(smoothTime) * degPerSec;                    // sin波でスムーズな変化
-
             _cAdj.hueShift.value = rawAngle;
         }
         
-        /* ── Kaleidoscope Video ──────────────────── */
-        if (_videoPlayer != null)
-        {
-            var adjustedSpeed = Mathf.Max(0f, v - kaleidoscopeSpeedOffset);
-            _videoPlayer.targetCameraAlpha = Mathf.Lerp(0f, maxKaleidoscopeAlpha, adjustedSpeed);
-        }
+        var adjustedSpeed = Mathf.Max(0f, v - kaleidoscopeSpeedOffset); 
+        _videoPlayer.targetCameraAlpha = Mathf.Lerp(0f, maxKaleidoscopeAlpha, adjustedSpeed);
     }
 
     private void SetupKaleidoscopeVideo()
