@@ -98,7 +98,7 @@ public class Player : MonoBehaviour
         if (isInverted) torqueDir = -torqueDir;
 
         var strength = delta.magnitude * torqueMultiplier;
-        _rb.AddTorque(torqueDir * strength, ForceMode.Impulse);
+        _rb.angularVelocity += torqueDir * strength;
     }
 
     private void OnCollisionEnter(Collision other)
