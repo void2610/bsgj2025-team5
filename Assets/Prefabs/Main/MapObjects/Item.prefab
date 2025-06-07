@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 6075313316841502287}
   - component: {fileID: 1182732554201776886}
   - component: {fileID: 8598407350485800582}
-  - component: {fileID: 1198346185420663313}
   - component: {fileID: 4694868776260111491}
   - component: {fileID: 1673168534021675262}
   m_Layer: 0
@@ -111,21 +110,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1198346185420663313
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6131312950028737041}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9dd218e999517455eb71fe575194f3cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  requiredSpeed: 3
-  invertBehavior: 0
-  particlePrefab: {fileID: 3514528225388775477, guid: a016f99fb9a4b46c4a26dfc0ffe1f9e6, type: 3}
 --- !u!114 &4694868776260111491
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -138,6 +122,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 817eccb1ea10d4edea21839184ba6ce2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  requiredSpeed: 3
+  invertBehavior: 0
+  particlePrefab: {fileID: 3514528225388775477, guid: a016f99fb9a4b46c4a26dfc0ffe1f9e6, type: 3}
+  visibleAlpha: 1
+  hiddenAlpha: 0.5
 --- !u!114 &1673168534021675262
 MonoBehaviour:
   m_ObjectHideFlags: 0
