@@ -17,10 +17,10 @@ public class VolumeManager : MonoBehaviour
 
     [Header("Hue Shift")]
     [Tooltip("色相回転速度の範囲（度/秒）。X:闾値速度時、Y:最高速度時")]
-    [SerializeField] private Vector2 hueShiftSpeedRange = new (0f, 60f);
+    [SerializeField] private Vector2 hueShiftSpeedRange = new (0f, 15f);
     
     [Tooltip("色相回転が始まる速度の闾値（0-1）")]
-    [SerializeField] private float   hueShiftThreshold  = 0.25f;
+    [SerializeField] private float   hueShiftThreshold  = 0.5f;
 
     [Header("Chromatic Aberration")]
     [Tooltip("色収差の強度範囲。X:最低速度時、Y:最高速度時の値")]
@@ -64,12 +64,12 @@ public class VolumeManager : MonoBehaviour
             return;
         }
 
-        /* 閾値以上：速度に比例した回転速度で Time.time 分だけ回す */
+        /* 閾値以上：速度に比例した緩やかな色相シフト */
         var t01        = Mathf.InverseLerp(hueShiftThreshold, 1f, v);          // 0→1
         var degPerSec  = Mathf.Lerp(hueShiftSpeedRange.x, hueShiftSpeedRange.y, t01);
-        var rawAngle   = (Time.time * degPerSec) % 360f;                       // 0..360
-        var wrapped    = (rawAngle <= 180f) ? rawAngle : rawAngle - 360f;       // -180..180
+        var smoothTime = Time.time * 0.3f;                                     // 時間スケールを減少
+        var rawAngle   = Mathf.Sin(smoothTime) * degPerSec;                    // sin波でスムーズな変化
 
-        _cAdj.hueShift.value = wrapped;
+        _cAdj.hueShift.value = rawAngle;
     }
 }
