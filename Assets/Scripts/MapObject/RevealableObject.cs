@@ -37,6 +37,16 @@ public class RevealableObject : MonoBehaviour
             color.a = visibleAlpha;
             _material.SetColor(_baseColor, color);
             _collider.isTrigger = false;
+            
+            // 透明度が1の場合は不透明モードに切り替え
+            if (visibleAlpha >= 0.99f)
+            {
+                SetOpaqueMode();
+            }
+            else
+            {
+                SetTransparentMode();
+            }
         }
         else
         {
@@ -44,7 +54,31 @@ public class RevealableObject : MonoBehaviour
             color.a = hiddenAlpha;
             _material.SetColor(_baseColor, color);
             _collider.isTrigger = true;
+            
+            // 半透明の場合は透明モードに切り替え
+            SetTransparentMode();
         }
+    }
+    
+    private void SetOpaqueMode()
+    {
+        _material.SetFloat(_surface, 0); // Opaque
+        _material.SetFloat(_zWrite, 1);
+        _material.DisableKeyword("_SURFACE_TYPE_TRANSPARENT");
+        _material.DisableKeyword("_ALPHABLEND_ON");
+        _material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Geometry;
+    }
+    
+    private void SetTransparentMode()
+    {
+        _material.SetFloat(_surface, 1); // Transparent
+        _material.SetFloat(_blend, 0);
+        _material.SetFloat(_srcBlend, (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
+        _material.SetFloat(_dstBlend, (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+        _material.SetFloat(_zWrite, 0);
+        _material.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+        _material.EnableKeyword("_ALPHABLEND_ON");
+        _material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
     }
 
     private void Awake()
@@ -59,14 +93,8 @@ public class RevealableObject : MonoBehaviour
         
         _originalColor = _material.GetColor(_baseColor);
         
-        // マテリアルを透明にするための設定
-        _material.SetFloat(_surface, 1); // 0 = Opaque, 1 = Transparent
-        _material.SetFloat(_blend, 0);   // 0 = Alpha, 1 = Premultiply, 2 = Additive, 3 = Multiply
-        _material.SetFloat(_srcBlend, (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
-        _material.SetFloat(_dstBlend, (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-        _material.SetFloat(_zWrite, 0);
-        _material.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
-        _material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+        // 初期状態は不透明モードで開始
+        SetOpaqueMode();
     }
         
     private void Start()
