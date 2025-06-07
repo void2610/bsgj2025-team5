@@ -2,6 +2,7 @@ using R3;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using UnityEngine.Video;
 
 public class VolumeManager : MonoBehaviour
 {
@@ -30,15 +31,35 @@ public class VolumeManager : MonoBehaviour
     [Tooltip("レンズ歪みの強度範囲。X:最低速度時、Y:最高速度時の値（マイナス値で歪み）")]
     [SerializeField] private Vector2 ldIntensityRange = new (0f, -0.4f);
 
+    [Header("Kaleidoscope Video")]
+    [Tooltip("万華鏡効果の動画クリップ")]
+    [SerializeField] private VideoClip kaleidoscopeClip;
+    
+    [Tooltip("万華鏡効果の最大透明度（0-1）")]
+    [SerializeField] private float maxKaleidoscopeAlpha = 0.5f;
+    
+    [Tooltip("動画の再生速度")]
+    [SerializeField] private float playbackSpeed = 0.2f;
+    
+    [Tooltip("動画のレンダーモード")]
+    [SerializeField] private VideoRenderMode renderMode = VideoRenderMode.CameraFarPlane;
+    
+    [Tooltip("万華鏡効果が始まる速度のオフセット")]
+    [SerializeField] private float kaleidoscopeSpeedOffset = 0.25f;
+
     private ColorAdjustments    _cAdj;
     private ChromaticAberration _ca;
     private LensDistortion      _ld;
+    
+    private VideoPlayer    _videoPlayer;
 
     private void Awake()
     {
         volume.profile.TryGet(out _cAdj);
         volume.profile.TryGet(out _ca);
         volume.profile.TryGet(out _ld);
+        
+        SetupKaleidoscopeVideo();
     }
 
     private void Start()
@@ -61,15 +82,39 @@ public class VolumeManager : MonoBehaviour
         {
             // 閾値未満：色相固定 0°
             _cAdj.hueShift.value = 0f;
-            return;
         }
-
-        /* 閾値以上：速度に比例した緩やかな色相シフト */
-        var t01        = Mathf.InverseLerp(hueShiftThreshold, 1f, v);          // 0→1
-        var degPerSec  = Mathf.Lerp(hueShiftSpeedRange.x, hueShiftSpeedRange.y, t01);
-        var smoothTime = Time.time * 0.3f;                                     // 時間スケールを減少
-        var rawAngle   = Mathf.Sin(smoothTime) * degPerSec;                    // sin波でスムーズな変化
-
-        _cAdj.hueShift.value = rawAngle;
+        else
+        {
+            /* 閾値以上：速度に比例した緩やかな色相シフト */
+            var t01        = Mathf.InverseLerp(hueShiftThreshold, 1f, v);          // 0→1
+            var degPerSec  = Mathf.Lerp(hueShiftSpeedRange.x, hueShiftSpeedRange.y, t01);
+            var smoothTime = Time.time * 0.3f;                                     // 時間スケールを減少
+            var rawAngle   = Mathf.Sin(smoothTime) * degPerSec;                    // sin波でスムーズな変化
+            _cAdj.hueShift.value = rawAngle;
+        }
+        
+        var adjustedSpeed = Mathf.Max(0f, v - kaleidoscopeSpeedOffset); 
+        _videoPlayer.targetCameraAlpha = Mathf.Lerp(0f, maxKaleidoscopeAlpha, adjustedSpeed);
     }
+
+    private void SetupKaleidoscopeVideo()
+    {
+        if (kaleidoscopeClip == null) return;
+        
+        var mainCamera = Camera.main;
+        if (mainCamera == null) return;
+
+        // VideoPlayerコンポーネントを追加
+        _videoPlayer = this.gameObject.AddComponent<VideoPlayer>();
+        _videoPlayer.clip = kaleidoscopeClip;
+        _videoPlayer.isLooping = true;
+        _videoPlayer.renderMode = renderMode;
+        _videoPlayer.targetCamera = mainCamera;
+        _videoPlayer.aspectRatio = VideoAspectRatio.Stretch;
+        _videoPlayer.targetCameraAlpha = 0f;
+        _videoPlayer.playbackSpeed = playbackSpeed;
+        
+        _videoPlayer.Play();
+    }
+
 }
