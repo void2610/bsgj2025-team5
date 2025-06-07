@@ -8,11 +8,19 @@ public class RevealableObject : MonoBehaviour
     
     [Tooltip("ONの場合、指定速度以下で表示、OFFの場合、指定速度以上で表示")]
     [SerializeField] private bool invertBehavior = false;
+    
+    [Tooltip("パーティクルのプレハブ（オプション）")]
+    [SerializeField] private GameObject particlePrefab;
 
     private void OnChangePlayerSpeed(int s)
     {
         bool shouldBeActive = invertBehavior ? s <= requiredSpeed : s >= requiredSpeed;
         this.gameObject.SetActive(shouldBeActive);
+    }
+
+    private void Awake()
+    {
+        if (particlePrefab) Instantiate(particlePrefab, this.transform.position, Quaternion.identity);
     }
         
     private void Start()
