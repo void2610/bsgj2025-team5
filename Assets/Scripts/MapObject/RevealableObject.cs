@@ -12,6 +12,12 @@ public class RevealableObject : MonoBehaviour
     [Tooltip("パーティクルのプレハブ（オプション）")]
     [SerializeField] private GameObject particlePrefab;
     
+    [Tooltip("表示状態の透明度")]
+    [SerializeField, Range(0f, 1f)] private float visibleAlpha = 1f;
+    
+    [Tooltip("非表示状態の透明度")]
+    [SerializeField, Range(0f, 1f)] private float hiddenAlpha = 0.5f;
+    
     private Material _material;
     private Collider _collider;
     private static readonly int _baseColor = Shader.PropertyToID("_BaseColor");
@@ -28,14 +34,14 @@ public class RevealableObject : MonoBehaviour
         if (shouldBeActive)
         {
             var color = _originalColor;
-            color.a = 1f;
+            color.a = visibleAlpha;
             _material.SetColor(_baseColor, color);
             _collider.isTrigger = false;
         }
         else
         {
             var color = _originalColor;
-            color.a = 0.6f;
+            color.a = hiddenAlpha;
             _material.SetColor(_baseColor, color);
             _collider.isTrigger = true;
         }
