@@ -4,20 +4,23 @@
 /// アイテム数のReactivePropertyをSubscribeして
 /// 状態更新する
 /// </summary>
-// 
-// 開発進捗
-// 05/18:作成、状態を3つで、それぞれの状態についての行動を簡単に記述
-// 05/19:Enemy.csを使わずに単体で敵が状態遷移に応じた行動をするようにした
-//       探索状態を削除して２つの状態に変更した
-//       モードを四つにして、アイテム取得数に応じてスピードや行動を変更するようにした
-// 05/20:以下の問題点を修正
-//      ・privateな変数名をアンダーバーから始めるように
-//      ・コメントの位置を統一
-//      ・メソッドにアクセス修飾子（private）をつける
-//      ・NavMeshAgentをAwakeで作成する
-//      ・巡回場所をAwakeで初期化させる
-//      ・速度をインスペクトから設定するように
-// 05/23:Agentを取得する前にBakeする必要があるため、Start()で取得するようにした
+/// 
+/// 開発進捗
+/// 05/18:作成、状態を3つで、それぞれの状態についての行動を簡単に記述
+/// 05/19:Enemy.csを使わずに単体で敵が状態遷移に応じた行動をするようにした
+///       探索状態を削除して２つの状態に変更した
+///       モードを四つにして、アイテム取得数に応じてスピードや行動を変更するようにした
+/// 05/20:以下の問題点を修正
+///      ・privateな変数名をアンダーバーから始めるように
+///      ・コメントの位置を統一
+///      ・メソッドにアクセス修飾子（private）をつける
+///      ・NavMeshAgentをAwakeで作成する
+///      ・巡回場所をAwakeで初期化させる
+///      ・速度をインスペクトから設定するように
+/// 05/23:Agentを取得する前にBakeする必要があるため、Start()で取得するようにした
+/// 06/01:新たにコメントを追加
+/// 06/07:落下状態を常に維持するようにRigidBody設定を変更した
+///       
 
 
 using System;
@@ -36,8 +39,10 @@ public enum EnemyState { Patrol, Chase }
 /// 敵AIの状態ごとのアルゴリズムを記述
 /// </summary>
 [RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(Rigidbody))]
 public class EnemyAI : MonoBehaviour
 {
+    // プレイヤーをバインド
     [SerializeField] private Transform player;
     // 巡回する場所
     [SerializeField] public Transform[] patrolPoints;
@@ -51,9 +56,11 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private List<float> speeds = new List<float> { 1f, 1.5f, 2f, 2.5f, 3f };
     // 攻撃範囲
     [SerializeField] private float attackRange = 15f;
-
     // NavMeshAgentから敵AIを使わせてもらう
     private NavMeshAgent _agent;
+    // Rigidbodyも追加
+    private Rigidbody _rb; 
+    // カメラのセット
     private Camera _camera;
     // パトロールスポットの巡回
     private int _patrolIndex = 0;
@@ -65,74 +72,62 @@ public class EnemyAI : MonoBehaviour
     private readonly float _forcedChaseDuration = 5f;
     // 強制追跡状態かどうか
     private bool _isForcedChase = false;
-    
-    private void OnChangePlayerSpeed(int v)
-    {
-            // アイテム取得後は速度を変更する
-            _itemCount = v;
-
-            if (speeds == null || _itemCount < 0)
-            {
-                Debug.LogWarning($"速度設定に失敗：_speed[{_itemCount}] は無効です");
-                return;
-            }
-
-            // indexが設定した数より大きいと、最大値で固定にする
-            var newSpeed = _itemCount >= speeds.Count ? speeds[^1] : speeds[_itemCount];
-            _agent.speed = baseSpeed * newSpeed;
-
-            Debug.Log($"アイテムを{_itemCount}個ゲット!"); // デバッグ用
-
-            //　強制追跡状態にする
-            _isForcedChase = true;
-            // 時間制限のリセット
-            _chaseTimer = _forcedChaseDuration;
-    }
 
     private void Awake()
     {
         // 巡回場所がセットされてない場合
         if (patrolPoints.Length == 0) throw new ArgumentNullException(nameof(patrolPoints), "巡回場所がセットされていません!");
-        
+
         _camera = Camera.main;
+
+        // NavMeshAgentの取得
         if (!TryGetComponent(out _agent))
         {
             Debug.Log("NavMeshAgentを作成");
             _agent = this.gameObject.AddComponent<NavMeshAgent>();
         }
+
+        // Rigidbodyの取得と初期設定
+        if (!TryGetComponent(out _rb))
+        {
+            Debug.Log("Rigidbodyを作成");
+            _rb = this.gameObject.AddComponent<Rigidbody>();
+        }
+        _rb.useGravity = true;  // 重力を有効にする
+        _rb.isKinematic = false; // 最初はNavMeshAgentが制御するためKinematicにする
     }
 
     private void Start()
     {
         // エージェントの初期化
-        // ステートの初期化
         currentState = EnemyState.Patrol;
-        //巡回場所を初期化
         _agent.destination = patrolPoints[_patrolIndex].position;
 
-        // アイテム取得数後の処理
+        // アイテム取得数後の処理をSubscribe
         GameManager.Instance.ItemCount.Subscribe(OnChangePlayerSpeed).AddTo(this);
     }
 
     /// <summary>
-    /// 状態応じてそれぞれの処理へ遷移
+    /// カメラの調整をしつつ、状態応じてそれぞれの処理へ遷移
     /// </summary>
     private void Update()
     {
+
         // 強制追跡タイマーのリセット
         if (_isForcedChase)
         {
-            _chaseTimer -= Time.fixedDeltaTime;
+            _chaseTimer -= Time.deltaTime; // Time.fixedDeltaTime から Time.deltaTime に変更
             if (_chaseTimer <= 0f)
             {
                 _isForcedChase = false;
             }
         }
-        
+
         // カメラ方向にビルボードを向ける
         var lookPos = player.position - _camera.transform.position;
         lookPos.y = 0;
         transform.rotation = Quaternion.LookRotation(lookPos);
+
 
         // 状態に応じた処理
         switch (currentState)
@@ -142,11 +137,6 @@ public class EnemyAI : MonoBehaviour
                 break;
             case EnemyState.Chase:
                 Chase();
-                break;
-            default:
-                Debug.LogError($"Unexpected state: {currentState}. Defaulting to Patrol.");
-                currentState = EnemyState.Patrol;
-                Patrol();
                 break;
         }
     }
@@ -173,7 +163,7 @@ public class EnemyAI : MonoBehaviour
         }
 
         // ある程度目的地に着いた場合、到着したと判断して次のポイントへ移動させる
-        if (!_agent.pathPending && _agent.remainingDistance < 0.001f)
+        if (!_agent.pathPending && _agent.remainingDistance < 0.001f && _agent.remainingDistance != float.PositiveInfinity) // 追加: remainingDistanceが無限大でないことを確認
             SetNextPatrolPoint();
 
         if (CanSeePlayer())
@@ -204,7 +194,6 @@ public class EnemyAI : MonoBehaviour
         {
             GameManager.Instance.GameOver();
         }
-
     }
 
     /// <summary>
@@ -226,5 +215,32 @@ public class EnemyAI : MonoBehaviour
     {
         // 距離が視認距離以内ならTrue
         return Vector3.Distance(transform.position, player.position) <= sightRange;
+    }
+
+    /// <summary>
+    /// 速度を変更する
+    /// </summary>
+    /// <param name="v">変更後の速度</param>
+    private void OnChangePlayerSpeed(int v)
+    {
+        // アイテム取得後は速度を変更する
+        _itemCount = v;
+
+        if (speeds == null || _itemCount < 0)
+        {
+            Debug.LogWarning($"速度設定に失敗：_speed[{_itemCount}] は無効です");
+            return;
+        }
+
+        // indexが設定した数より大きいと、最大値で固定にする
+        var newSpeed = _itemCount >= speeds.Count ? speeds[^1] : speeds[_itemCount];
+        _agent.speed = baseSpeed * newSpeed;
+
+        // Debug.Log($"アイテムを{_itemCount}個ゲット!"); // デバッグ用
+
+         //　強制追跡状態にする
+        _isForcedChase = true;
+        // 時間制限のリセット
+        _chaseTimer = _forcedChaseDuration;
     }
 }
