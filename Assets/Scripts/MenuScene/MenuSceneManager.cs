@@ -25,32 +25,46 @@ public class MenuSceneManager : MonoBehaviour
 
     private async UniTask LoadSceneAsync(string sceneName)
     {
-        // Show loading UI
+        // ローディングUIを表示
         loadingPanel.SetActive(true);
         progressBar.gameObject.SetActive(true);
         progressText.gameObject.SetActive(true);
         
-        // Initialize progress
+        // プログレスを初期化
         progressBar.value = 0f;
         progressText.text = "0%";
         
-        // Start async scene loading
+        // 非同期でシーンを読み込み開始
         var operation = SceneManager.LoadSceneAsync(sceneName);
         operation.allowSceneActivation = false;
         
-        // Update progress
-        while (!operation.isDone)
+        float displayProgress = 0f;
+        
+        // プログレスをスムーズに更新
+        while (displayProgress < 0.99f)
         {
-            float progress = Mathf.Clamp01(operation.progress / 0.9f);
-            progressBar.value = progress;
-            progressText.text = $"{(int)(progress * 100)}%";
+            // 実際のローディング進捗を取得 (0-0.9)
+            float targetProgress = operation.progress / 0.9f;
             
-            // When loading reaches 90%, allow scene activation
-            if (operation.progress >= 0.9f)
+            // ジャンプを避けるためスムーズに補間
+            displayProgress = Mathf.MoveTowards(displayProgress, targetProgress, Time.deltaTime * 2f);
+            
+            // アクティベート準備ができるまで99%でキャップ
+            if (displayProgress > 0.99f && operation.progress < 0.9f)
+            {
+                displayProgress = 0.99f;
+            }
+            
+            progressBar.value = displayProgress;
+            progressText.text = $"{(int)(displayProgress * 100)}%";
+            
+            // フリーズを隠すため99%でシーンをアクティベート
+            if (operation.progress >= 0.9f && displayProgress >= 0.99f)
             {
                 progressBar.value = 1f;
                 progressText.text = "100%";
                 operation.allowSceneActivation = true;
+                break;
             }
             
             await UniTask.Yield();
@@ -76,7 +90,7 @@ public class MenuSceneManager : MonoBehaviour
         Time.timeScale = 1;
         Cursor.lockState = CursorLockMode.None;
         
-        // Hide progress UI initially
+        // プログレスUIを初期状態で非表示にする
         if (progressBar != null) progressBar.gameObject.SetActive(false);
         if (progressText != null) progressText.gameObject.SetActive(false);
         
