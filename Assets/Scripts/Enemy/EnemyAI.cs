@@ -27,6 +27,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using R3;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 
 /// <summary>
 /// 状態を巡回（Patrol）、追跡（Chase）、落下（Fall）の2つを遷移させる
@@ -72,6 +74,12 @@ public class EnemyAI : MonoBehaviour
     // 強制追跡状態かどうか
     private bool _isForcedChase = false;
     
+    // 再スポーン地点
+    [SerializeField] private Transform respawnPoint;
+    // 落下から再スポーンまでの時間
+    [SerializeField] private float fallRespawnDelay = 3f;
+    // UniTaskをキャンセルするためのトークン
+    private CancellationTokenSource _fallCancellationTokenSource;
 
 
 
@@ -102,11 +110,20 @@ public class EnemyAI : MonoBehaviour
     private void Start()
     {
         // エージェントの初期化
-        currentState = EnemyState.Patrol;
-        _agent.destination = patrolPoints[_patrolIndex].position;
+        InitializeAgentState();
 
         // アイテム取得数後の処理をSubscribe
         GameManager.Instance.ItemCount.Subscribe(OnChangePlayerSpeed).AddTo(this);
+    }
+
+    /// <summary>
+    /// GameObjectが破壊される時にUniTaskをキャンセルする
+    /// </summary>
+    private void OnDestroy()
+    {
+        // GameObjectが破棄されるときにUniTaskをキャンセルする
+        _fallCancellationTokenSource?.Cancel();
+        _fallCancellationTokenSource?.Dispose();
     }
 
     /// <summary>
@@ -114,53 +131,10 @@ public class EnemyAI : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        // NavMeshが有効の場合、床のアクティブ・非アクティブを確認する
-        if (_agent.enabled)
-        {
-            // Debug.Log("NavMeshが有効です");
-            // 床が非アクティブになったらNavMeshAgentを無効化し、物理演算で落下させる
-            if (!_agent.isOnNavMesh)
-            {
-                Debug.Log("NavMeshから離れました。物理演算に切り替えます");
-                _agent.enabled = false;
-                _rb.isKinematic = false;
-            }
-            else
-            {
-                // 足元の床をRaycastでチェック
-                RaycastHit hit;
-                // Debug.Log("床オブジェクトを確認する");
-                if (Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out hit, 15.0f))
-                {
-                    Renderer hitRenderer = hit.collider.gameObject.GetComponent<Renderer>();
-                    // ヒットしたオブジェクトのRendererが有効でない場合（＝見た目が消えている場合）
-                    if (hitRenderer != null && hitRenderer.enabled == false)
-                    {
-                        Debug.Log("足元の床の見た目が非アクティブになりました。物理演算に切り替えます。");
-                        _agent.enabled = false;
-                        _rb.isKinematic = false;
-                    }
-                    else
-                    {
-                        Debug.Log("アクティブだと思うよ！");
-                    }
-                }
-                else
-                {
-                    // Debug.Log("そんなものはない！");
-                }
-            }
-        }
-        else 
-        {
-            Debug.Log("NavMeshが無効です");
-            // NavMeshが無効の場合、物理演算が有効になっていることを確認
-            if (_rb.isKinematic)
-            {
-                _rb.isKinematic = false;
-            }
-        }
-
+        // カメラ方向にビルボードを向ける (これは常に実行して良い)
+        var lookPos = player.position - _camera.transform.position;
+        lookPos.y = 0;
+        transform.rotation = Quaternion.LookRotation(lookPos);
 
         // 強制追跡タイマーのリセット
         if (_isForcedChase)
@@ -172,11 +146,6 @@ public class EnemyAI : MonoBehaviour
             }
         }
 
-        // カメラ方向にビルボードを向ける
-        var lookPos = player.position - _camera.transform.position;
-        lookPos.y = 0;
-        transform.rotation = Quaternion.LookRotation(lookPos);
-
         // ここから状態遷移のロジック
         if (currentState != EnemyState.Fall) // Fall状態でない場合のみ、床の状態をチェック
         {
@@ -185,7 +154,7 @@ public class EnemyAI : MonoBehaviour
             {
                 bool shouldFall = false;
 
-                // 1. NavMeshAgentがNavMeshから離れた（落下した）場合
+                // NavMeshAgentがNavMeshから離れた（落下した）場合
                 if (!_agent.isOnNavMesh)
                 {
                     Debug.Log("NavMeshから離れました。Fall状態に切り替えます。");
@@ -193,7 +162,7 @@ public class EnemyAI : MonoBehaviour
                 }
                 else
                 {
-                    // 2. 足元の床のRendererが非アクティブになった場合
+                    // 足元の床のRendererが非アクティブになった場合
                     RaycastHit hit;
                     // Rayの開始位置と長さは、キャラクターの足元と床の距離に合わせて調整
                     if (Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out hit, 20.0f))
@@ -215,18 +184,15 @@ public class EnemyAI : MonoBehaviour
 
                 if (shouldFall)
                 {
-                    _agent.enabled = false;
-                    _rb.isKinematic = false;
-                    currentState = EnemyState.Fall; // Fall状態に遷移
+                    EnterFallState(); // Fall状態に遷移
                 }
             }
-            else // _agent.enabled が false になった場合もFall状態に
+            else // NavMeshAgentが使えない場合もFall状態に
             {
                 if (currentState != EnemyState.Fall)
                 {
                     Debug.Log("NavMeshAgentが無効になりました。Fall状態に切り替えます。");
-                    currentState = EnemyState.Fall;
-                    _rb.isKinematic = false; // Rigidbodyを物理演算の影響下に戻す
+                    EnterFallState(); // Fall状態遷移
                 }
             }
         }
@@ -237,8 +203,7 @@ public class EnemyAI : MonoBehaviour
             {
                 _rb.isKinematic = false;
             }
-            // Fall状態での特別な処理があればここに記述
-            Fall();
+            // Fall状態での特殊処理があればここに記述
         }
 
         // 状態に応じた処理
@@ -309,6 +274,51 @@ public class EnemyAI : MonoBehaviour
     }
 
     /// <summary>
+    /// 敵が落下状態に入った際の初期処理
+    /// </summary>
+    private void EnterFallState()
+    {
+         if (currentState == EnemyState.Fall) return; // 既にFall状態なら何もしない
+
+        currentState = EnemyState.Fall;
+        _agent.enabled = false;
+        _rb.isKinematic = false; // Rigidbodyを物理演算の影響下に戻す
+
+        // 以前のUniTaskが存在すればキャンセルする
+        _fallCancellationTokenSource?.Cancel();
+        _fallCancellationTokenSource?.Dispose();
+        _fallCancellationTokenSource = new CancellationTokenSource();
+
+        // UniTaskによる落下後の待機と再スポーン処理を開始
+        FallAndRespawnAsync(_fallCancellationTokenSource.Token).Forget();
+    }
+
+    /// <summary>
+    /// UniTaskを使用した落下待機と再スポーン処理
+    /// </summary>
+    private async UniTask FallAndRespawnAsync(CancellationToken token)
+    {
+        try
+        {
+            Debug.Log($"Falling... Respawn in: {fallRespawnDelay:F2} seconds");
+            await UniTask.Delay(TimeSpan.FromSeconds(fallRespawnDelay), ignoreTimeScale: false, cancellationToken: token);
+
+            // キャンセルされていないか確認
+            token.ThrowIfCancellationRequested();
+
+            Respawn(); // 再スポーン処理
+        }
+        catch (OperationCanceledException)
+        {
+            Debug.Log("FallAndRespawnAsync was cancelled.");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"An error occurred during FallAndRespawnAsync: {e.Message}");
+        }
+    }
+
+    /// <summary>
     /// 落下状態の時の処理
     /// </summary>
     private void Fall()
@@ -362,5 +372,40 @@ public class EnemyAI : MonoBehaviour
         _isForcedChase = true;
         // 時間制限のリセット
         _chaseTimer = _forcedChaseDuration;
+    }
+
+    /// <summary>
+    /// 敵を再スポーンさせ、状態を初期化する
+    /// </summary>
+    private void Respawn()
+    {
+        Debug.Log("Respawning Enemy...");
+
+        // 位置を再スポーン地点に設定
+        transform.position = respawnPoint.position;
+        // 速度をリセット（落下中の慣性をなくす）
+        _rb.linearVelocity = Vector3.zero;
+        _rb.angularVelocity = Vector3.zero;
+
+        // NavMeshAgentを再有効化し、RigidbodyをKinematicに戻す
+        _agent.enabled = true;
+        _rb.isKinematic = true;
+
+        // 状態を初期化（Patrolに）
+        InitializeAgentState(); 
+    }
+
+    /// <summary>
+    /// エージェントの状態を初期化する共通処理
+    /// </summary>
+    private void InitializeAgentState()
+    {
+        currentState = EnemyState.Patrol;
+        _patrolIndex = 0; // 巡回開始地点をリセット
+        _agent.destination = patrolPoints[_patrolIndex].position;
+        _isForcedChase = false; // 強制追跡状態もリセット
+        _chaseTimer = 0f; // チェイスタイマーもリセット
+        // 速度も初期速度に設定し直す場合はここに追加
+        // _agent.speed = baseSpeed * speeds[0]; // 例: アイテム0個時の速度
     }
 }
