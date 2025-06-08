@@ -48,12 +48,18 @@ public class Player : MonoBehaviour
     /// プレイヤーの速度を0-4のintで表す
     /// </summary>
     public ReadOnlyReactiveProperty<int>  PlayerSpeedInt  { get; private set; }
+    /// <summary>
+    /// マウスの移動速度を表す（正規化されていない生の値）
+    /// </summary>
+    public ReadOnlyReactiveProperty<float> MouseSpeed => _mouseSpeed;
 
     private readonly ReactiveProperty<float> _speedNorm = new(0f);
+    private readonly ReactiveProperty<float> _mouseSpeed = new(0f);
 
     private Rigidbody _rb;
     private Collider _collider;
     private PhysicsMaterial _physicsMaterial;
+    private Vector2 _inputDelta;
 
     private void Awake()
     {
@@ -82,22 +88,27 @@ public class Player : MonoBehaviour
             .AddTo(this);
     }
 
+    private void Update()
+    {
+        _inputDelta = Mouse.current?.delta.ReadValue() ?? Vector2.zero;
+        _mouseSpeed.Value = _inputDelta.magnitude;
+    }
+
     private void FixedUpdate()
     {
         var vNorm = Mathf.Clamp01(_rb.linearVelocity.magnitude / maxLinearVelocity);
         _speedNorm.Value = vNorm;
 
-        var delta = Mouse.current?.delta.ReadValue() ?? Vector2.zero;
-        if (delta.sqrMagnitude < 1e-4f) return;
+        if (_inputDelta.sqrMagnitude < 1e-4f) return;
 
         var camF = playerCamera.transform.forward;
         var camR = playerCamera.transform.right;
         camF.y = camR.y = 0f; camF.Normalize(); camR.Normalize();
 
-        var torqueDir = camF * delta.x + camR * -delta.y;
+        var torqueDir = camF * _inputDelta.x + camR * -_inputDelta.y;
         if (isInverted) torqueDir = -torqueDir;
 
-        var strength = delta.magnitude * torqueMultiplier;
+        var strength = _inputDelta.magnitude * torqueMultiplier * Time.fixedDeltaTime * 50f;
         _rb.angularVelocity += torqueDir * strength;
     }
 
