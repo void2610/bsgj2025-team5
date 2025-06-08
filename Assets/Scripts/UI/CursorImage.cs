@@ -19,7 +19,7 @@ public class CursorImage : MonoBehaviour
         RectTransformUtility.ScreenPointToLocalPointInRectangle(_canvasRect,
             Input.mousePosition, canvas.worldCamera, out var mousePos);
 
-        var p = Vector2.Lerp(_mouseImage.anchoredPosition, mousePos, Time.deltaTime * lerpSpeed);
+        var p = Vector2.Lerp(_mouseImage.anchoredPosition, mousePos, Time.unscaledDeltaTime * lerpSpeed);
         _mouseImage.anchoredPosition = p;
     }
 }

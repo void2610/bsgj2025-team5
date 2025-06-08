@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class RotateTween : MonoBehaviour
 {
+    [Tooltip("回転速度（1秒あたりの回転数）。大きいほど速く回転します")]
     [SerializeField] private float speed = 1f;
         
     private void Start()

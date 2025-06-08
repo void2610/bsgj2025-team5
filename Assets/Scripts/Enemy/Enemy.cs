@@ -2,10 +2,17 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private float speed = 5f; // 移動速度
-    [SerializeField] private float rotationSpeed = 360f; // 回転速度 (deg/s)
-    [SerializeField] private Transform target; // 追従対象
-    [SerializeField] private float attackRange = 1f; // 攻撃範囲
+    [Tooltip("敵の移動速度（メートル/秒）")]
+    [SerializeField] private float speed = 5f;
+    
+    [Tooltip("敵がターゲットを向く回転速度（度/秒）")]
+    [SerializeField] private float rotationSpeed = 360f;
+    
+    [Tooltip("追いかけるターゲット（通常はPlayer）")]
+    [SerializeField] private Transform target;
+    
+    [Tooltip("ゲームオーバーになる距離。この距離内に入るとプレイヤーが捕まります")]
+    [SerializeField] private float attackRange = 1f;
         
     private void FixedUpdate()
     {

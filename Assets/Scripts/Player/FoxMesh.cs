@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class FoxMesh : MonoBehaviour
 {
+	[Tooltip("追従するプレイヤーの球体オブジェクト")]
 	[SerializeField] private GameObject playerSphere;
 	
     private void Update()

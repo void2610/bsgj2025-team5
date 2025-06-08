@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class UIManager : SingletonMonoBehaviour<UIManager>
 {
+    [Tooltip("アイテム取得数を表示するテキスト")]
     [SerializeField] private TextMeshProUGUI itemCountText;
+    
+    [Tooltip("プレイヤーの速度レベルを表示するテキスト")]
     [SerializeField] private TextMeshProUGUI playerSpeedText;
+    
+    [Tooltip("ポーズ画面のCanvasGroup")]
     [SerializeField] private CanvasGroup pauseCanvasGroup;
 
     private bool _isPaused = false;
@@ -22,7 +27,6 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
         pauseCanvasGroup.blocksRaycasts = _isPaused;
         
         Cursor.lockState = p ? CursorLockMode.None : CursorLockMode.Locked;
-        Cursor.visible   = p;
     }
 
     protected override void Awake()

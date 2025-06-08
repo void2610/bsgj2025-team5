@@ -47,7 +47,12 @@ MonoBehaviour:
   volume: {fileID: 0}
   saturationRange: {x: 0, y: 75}
   exposureRange: {x: 0, y: 4}
-  hueShiftSpeedRange: {x: 0, y: 7.5}
+  hueShiftSpeedRange: {x: 0, y: 250}
   hueShiftThreshold: 0.75
   caIntensityRange: {x: 0, y: 5}
   ldIntensityRange: {x: 0, y: -0.85}
+  kaleidoscopeClip: {fileID: 32900000, guid: 15c328549c8da4b39a1a7804a20949de, type: 3}
+  maxKaleidoscopeAlpha: 0.25
+  playbackSpeed: 0.2
+  renderMode: 0
+  kaleidoscopeSpeedOffset: 0.4

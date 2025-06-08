@@ -299,7 +299,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5067676933441973044, guid: 8e0ca241b87f04648b2ec51650b6608e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 309079851}
   m_SourcePrefab: {fileID: 100100000, guid: 8e0ca241b87f04648b2ec51650b6608e, type: 3}
 --- !u!20 &123485802 stripped
 Camera:
@@ -383,6 +386,23 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 19236cbb32d8e4156878121eb1701576, type: 3}
+--- !u!1 &309079850 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5067676933441973044, guid: 8e0ca241b87f04648b2ec51650b6608e, type: 3}
+  m_PrefabInstance: {fileID: 123485801}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &309079851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 309079850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3ef09bfb00bb1546be0ca46cc6132cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &602605626 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6541932862363374700, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
@@ -577,22 +597,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2915758770078705743, guid: 53a717c9050e34307b93f5e777290533, type: 3}
-      propertyPath: m_AngularDrag
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 3935310138754294399, guid: 53a717c9050e34307b93f5e777290533, type: 3}
       propertyPath: playerCamera
       value: 
       objectReference: {fileID: 123485802}
-    - target: {fileID: 3935310138754294399, guid: 53a717c9050e34307b93f5e777290533, type: 3}
-      propertyPath: torqueMultiplier
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 3935310138754294399, guid: 53a717c9050e34307b93f5e777290533, type: 3}
-      propertyPath: maxAngularVelocity
-      value: 50
-      objectReference: {fileID: 0}
     - target: {fileID: 7433976897722441484, guid: 53a717c9050e34307b93f5e777290533, type: 3}
       propertyPath: m_Name
       value: Player
@@ -625,8 +633,8 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3139544947062774879, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+    - target: {fileID: 2830393960986499639, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
+      propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 7156760634923837135}
     - target: {fileID: 5689828155364070144, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
@@ -955,6 +963,14 @@ PrefabInstance:
       propertyPath: volume
       value: 
       objectReference: {fileID: 6943145281269625769}
+    - target: {fileID: 3980535131468680562, guid: 2540937b5163f407ca016c114981b389, type: 3}
+      propertyPath: hueShiftThreshold
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 3980535131468680562, guid: 2540937b5163f407ca016c114981b389, type: 3}
+      propertyPath: hueShiftSpeedRange.y
+      value: 250
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

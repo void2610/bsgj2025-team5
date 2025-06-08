@@ -12,12 +12,20 @@ using R3;
 [RequireComponent(typeof(AudioSource))]
 public class BGMManager : MonoBehaviour
 {
+    [Tooltip("BGMとして再生するオーディオクリップ")]
     [SerializeField] private AudioClip bgmClip;
-    [SerializeField] private float fadeTime = 0.5f; // フェード時間
-    [SerializeField] private float bgmUpdateInterval = 1f; // スロットル時間
     
-    [SerializeField] private float basePitch = 1.0f; // 基本ピッチ（スピード0）
-    [SerializeField] private List<float> pitchMultipliers = new() { 1.0f, 1.1f, 1.2f, 1.35f, 1.5f }; // 各スピードレベルでのピッチ倍率
+    [Tooltip("ピッチ変更時のフェード時間（秒）。大きいほど滑らかに変化します")]
+    [SerializeField] private float fadeTime = 0.5f;
+    
+    [Tooltip("BGMのテンポ更新をチェックする間隔（秒）")]
+    [SerializeField] private float bgmUpdateInterval = 1f;
+    
+    [Tooltip("基本のピッチ（速度レベル0の時）")]
+    [SerializeField] private float basePitch = 1.0f;
+    
+    [Tooltip("各速度レベル（0-4）でのBGMピッチ倍率。大きいほど速いテンポになります")]
+    [SerializeField] private List<float> pitchMultipliers = new() { 1.0f, 1.1f, 1.2f, 1.35f, 1.5f };
     
     private int _currentSpeedLevel;
     private AudioSource _audioSource;

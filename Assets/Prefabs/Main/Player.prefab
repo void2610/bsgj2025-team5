@@ -120,7 +120,7 @@ Rigidbody:
   serializedVersion: 4
   m_Mass: 1
   m_Drag: 0
-  m_AngularDrag: 1
+  m_AngularDrag: 3
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -151,7 +151,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerCamera: {fileID: 0}
   isInverted: 1
-  torqueMultiplier: 50
-  maxLinearVelocity: 25
-  maxAngularVelocity: 40
+  torqueMultiplier: 0.01
+  maxLinearVelocity: 40
+  maxAngularVelocity: 50
+  angularDamping: 1
+  dynamicFriction: 10
+  staticFriction: 10
+  bounciness: 0
   sandParticleData: {fileID: 11400000, guid: 6092c442923d44a4e830cd2b8755650f, type: 2}

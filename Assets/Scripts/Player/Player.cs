@@ -3,19 +3,41 @@ using R3;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Rigidbody), typeof(Collider))]
 public class Player : MonoBehaviour
 {
     [Header("Camera & Control")]
+    [Tooltip("プレイヤーを追従するカメラ")]
     [SerializeField] private Camera playerCamera;
+    
+    [Tooltip("ONの場合、マウス操作が反転します")]
     [SerializeField] private bool   isInverted = false;
 
     [Header("Physics")]
+    [Tooltip("マウス移動量を回転力に変換する倍率。大きいほど敏感に回転します")]
     [SerializeField] private float  torqueMultiplier   = 0.25f;
+    
+    [Tooltip("最大移動速度。この速度を基準に速度レベルが計算されます")]
     [SerializeField] private float  maxLinearVelocity  = 10f;
+    
+    [Tooltip("最大回転速度。ボールの回転の上限値")]
     [SerializeField] private float  maxAngularVelocity = 50f;
     
+    [Tooltip("回転の減衰率。大きいほど回転が止まりやすくなります（0=減衰なし）")]
+    [SerializeField] private float angularDamping = 3f;
+    
+    [Header("Physics Material")]
+    [Tooltip("動摩擦係数。移動中の摩擦の強さ（0=摩擦なし）")]
+    [SerializeField] private float dynamicFriction = 1f;
+    
+    [Tooltip("静止摩擦係数。停止時の摩擦の強さ（0=摩擦なし）")]
+    [SerializeField] private float staticFriction = 1f;
+    
+    [Tooltip("弾性。衝突時の跳ね返りの強さ（0=跳ね返りなし、1=完全弾性）")]
+    [SerializeField] private float bounciness = 0f;
+    
     [Header("Visual")]
+    [Tooltip("衝突時に生成する砂のパーティクルエフェクト")]
     [SerializeField] private ParticleData sandParticleData;
 
     /// <summary>
@@ -30,11 +52,28 @@ public class Player : MonoBehaviour
     private readonly ReactiveProperty<float> _speedNorm = new(0f);
 
     private Rigidbody _rb;
+    private Collider _collider;
+    private PhysicsMaterial _physicsMaterial;
 
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
+        _collider = GetComponent<Collider>();
+        
+        // Rigidbodyの設定
         _rb.maxAngularVelocity = maxAngularVelocity;
+        _rb.angularDamping = angularDamping;
+        
+        // Physics Materialの作成と設定
+        _physicsMaterial = new PhysicsMaterial("PlayerPhysicsMaterial")
+        {
+            dynamicFriction = dynamicFriction,
+            staticFriction = staticFriction,
+            bounciness = bounciness,
+            frictionCombine = PhysicsMaterialCombine.Average,
+            bounceCombine = PhysicsMaterialCombine.Average
+        };
+        _collider.material = _physicsMaterial;
 
         // 正規化された速度を別のReactivePropertyに変換して公開する
         PlayerSpeedInt = _speedNorm
@@ -59,7 +98,7 @@ public class Player : MonoBehaviour
         if (isInverted) torqueDir = -torqueDir;
 
         var strength = delta.magnitude * torqueMultiplier;
-        _rb.AddTorque(torqueDir * strength, ForceMode.Impulse);
+        _rb.angularVelocity += torqueDir * strength;
     }
 
     private void OnCollisionEnter(Collision other)
