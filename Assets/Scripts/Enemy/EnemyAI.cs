@@ -20,8 +20,7 @@
 /// 05/23:Agentを取得する前にBakeする必要があるため、Start()で取得するようにした
 /// 06/01:新たにコメントを追加
 /// 06/07:落下状態を常に維持するようにRigidBody設定を変更した
-///       
-
+/// 06/08: 床の非アクティブ状態をチェックし、床が非アクティブになったら、NavMeshAgentを無効化し、物理演算で落下させる処理を追加
 
 using System;
 using System.Collections.Generic;
@@ -30,9 +29,9 @@ using UnityEngine.AI;
 using R3;
 
 /// <summary>
-/// 状態を巡回（Patrol）,追跡（Chase）の2つを遷移させる
+/// 状態を巡回（Patrol）、追跡（Chase）、落下（Fall）の2つを遷移させる
 /// </summary>
-public enum EnemyState { Patrol, Chase }
+public enum EnemyState { Patrol, Chase, Fall }
 
 
 /// <summary>
@@ -72,6 +71,9 @@ public class EnemyAI : MonoBehaviour
     private readonly float _forcedChaseDuration = 5f;
     // 強制追跡状態かどうか
     private bool _isForcedChase = false;
+    
+
+
 
     private void Awake()
     {
@@ -94,7 +96,7 @@ public class EnemyAI : MonoBehaviour
             _rb = this.gameObject.AddComponent<Rigidbody>();
         }
         _rb.useGravity = true;  // 重力を有効にする
-        _rb.isKinematic = false; // 最初はNavMeshAgentが制御するためKinematicにする
+        _rb.isKinematic = true; // 最初はNavMeshAgentが制御するためKinematicにする
     }
 
     private void Start()
@@ -112,6 +114,53 @@ public class EnemyAI : MonoBehaviour
     /// </summary>
     private void Update()
     {
+        // NavMeshが有効の場合、床のアクティブ・非アクティブを確認する
+        if (_agent.enabled)
+        {
+            // Debug.Log("NavMeshが有効です");
+            // 床が非アクティブになったらNavMeshAgentを無効化し、物理演算で落下させる
+            if (!_agent.isOnNavMesh)
+            {
+                Debug.Log("NavMeshから離れました。物理演算に切り替えます");
+                _agent.enabled = false;
+                _rb.isKinematic = false;
+            }
+            else
+            {
+                // 足元の床をRaycastでチェック
+                RaycastHit hit;
+                // Debug.Log("床オブジェクトを確認する");
+                if (Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out hit, 15.0f))
+                {
+                    Renderer hitRenderer = hit.collider.gameObject.GetComponent<Renderer>();
+                    // ヒットしたオブジェクトのRendererが有効でない場合（＝見た目が消えている場合）
+                    if (hitRenderer != null && hitRenderer.enabled == false)
+                    {
+                        Debug.Log("足元の床の見た目が非アクティブになりました。物理演算に切り替えます。");
+                        _agent.enabled = false;
+                        _rb.isKinematic = false;
+                    }
+                    else
+                    {
+                        Debug.Log("アクティブだと思うよ！");
+                    }
+                }
+                else
+                {
+                    // Debug.Log("そんなものはない！");
+                }
+            }
+        }
+        else 
+        {
+            Debug.Log("NavMeshが無効です");
+            // NavMeshが無効の場合、物理演算が有効になっていることを確認
+            if (_rb.isKinematic)
+            {
+                _rb.isKinematic = false;
+            }
+        }
+
 
         // 強制追跡タイマーのリセット
         if (_isForcedChase)
@@ -128,6 +177,69 @@ public class EnemyAI : MonoBehaviour
         lookPos.y = 0;
         transform.rotation = Quaternion.LookRotation(lookPos);
 
+        // ここから状態遷移のロジック
+        if (currentState != EnemyState.Fall) // Fall状態でない場合のみ、床の状態をチェック
+        {
+            // NavMeshAgentが有効な場合のみ、NavMesh上と足元の床のアクティブ状態を確認
+            if (_agent.enabled)
+            {
+                bool shouldFall = false;
+
+                // 1. NavMeshAgentがNavMeshから離れた（落下した）場合
+                if (!_agent.isOnNavMesh)
+                {
+                    Debug.Log("NavMeshから離れました。Fall状態に切り替えます。");
+                    shouldFall = true;
+                }
+                else
+                {
+                    // 2. 足元の床のRendererが非アクティブになった場合
+                    RaycastHit hit;
+                    // Rayの開始位置と長さは、キャラクターの足元と床の距離に合わせて調整
+                    if (Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out hit, 20.0f))
+                    {
+                        Renderer hitRenderer = hit.collider.gameObject.GetComponent<Renderer>();
+                        if (hitRenderer != null && !hitRenderer.enabled) // Rendererが非アクティブなら
+                        {
+                            Debug.Log("足元の床の見た目が非アクティブになりました。Fall状態に切り替えます。");
+                            shouldFall = true;
+                        }
+                    }
+                    // Raycastが何もヒットしなかった場合も落下とみなすことができる
+                    else
+                    {
+                        Debug.Log("足元に何もヒットしませんでした。Fall状態に切り替えます。");
+                        shouldFall = true;
+                    }
+                }
+
+                if (shouldFall)
+                {
+                    _agent.enabled = false;
+                    _rb.isKinematic = false;
+                    currentState = EnemyState.Fall; // Fall状態に遷移
+                }
+            }
+            else // _agent.enabled が false になった場合もFall状態に
+            {
+                if (currentState != EnemyState.Fall)
+                {
+                    Debug.Log("NavMeshAgentが無効になりました。Fall状態に切り替えます。");
+                    currentState = EnemyState.Fall;
+                    _rb.isKinematic = false; // Rigidbodyを物理演算の影響下に戻す
+                }
+            }
+        }
+        else // currentState が Fall の場合
+        {
+            // Fall状態では物理演算が有効になっていることを確認
+            if (_rb.isKinematic)
+            {
+                _rb.isKinematic = false;
+            }
+            // Fall状態での特別な処理があればここに記述
+            Fall();
+        }
 
         // 状態に応じた処理
         switch (currentState)
@@ -194,6 +306,14 @@ public class EnemyAI : MonoBehaviour
         {
             GameManager.Instance.GameOver();
         }
+    }
+
+    /// <summary>
+    /// 落下状態の時の処理
+    /// </summary>
+    private void Fall()
+    {
+        //　何か特殊な処理、アニメーションの再生などを行う
     }
 
     /// <summary>
