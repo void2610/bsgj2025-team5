@@ -368,6 +368,11 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1867553516881644330, guid: dd62bf834f14640289beb95f2f076623, type: 3}
   m_PrefabInstance: {fileID: 1189942490}
   m_PrefabAsset: {fileID: 0}
+--- !u!223 &1189942492 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 761699855439478664, guid: dd62bf834f14640289beb95f2f076623, type: 3}
+  m_PrefabInstance: {fileID: 1189942490}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1877820101
 GameObject:
   m_ObjectHideFlags: 0
@@ -539,6 +544,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CearContent
       objectReference: {fileID: 0}
+    - target: {fileID: 8556061848987250536, guid: 33f4bce9b8e504a3c812bb7e3c69afcc, type: 3}
+      propertyPath: mainCanvas
+      value: 
+      objectReference: {fileID: 1189942492}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

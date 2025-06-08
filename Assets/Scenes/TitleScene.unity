@@ -393,29 +393,9 @@ PrefabInstance:
       value: TitleContent
       objectReference: {fileID: 0}
     - target: {fileID: 8556061848987250536, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
-      propertyPath: fadeImage
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8556061848987250536, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
       propertyPath: mainCanvas
       value: 
       objectReference: {fileID: 1189942494}
-    - target: {fileID: 8556061848987250536, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
-      propertyPath: progressBar
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8556061848987250536, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
-      propertyPath: loadingPanel
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8556061848987250536, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
-      propertyPath: progressText
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8556061848987250536, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
-      propertyPath: loadingUIPrefab
-      value: 
-      objectReference: {fileID: 7729960160623458231, guid: f4178b1814d764ddc9fdc44b782db834, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
