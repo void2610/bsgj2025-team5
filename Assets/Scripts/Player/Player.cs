@@ -48,12 +48,18 @@ public class Player : MonoBehaviour
     /// プレイヤーの速度を0-4のintで表す
     /// </summary>
     public ReadOnlyReactiveProperty<int>  PlayerSpeedInt  { get; private set; }
+    /// <summary>
+    /// マウスの移動速度を表す（正規化されていない生の値）
+    /// </summary>
+    public ReadOnlyReactiveProperty<float> MouseSpeed => _mouseSpeed;
 
     private readonly ReactiveProperty<float> _speedNorm = new(0f);
+    private readonly ReactiveProperty<float> _mouseSpeed = new(0f);
 
     private Rigidbody _rb;
     private Collider _collider;
     private PhysicsMaterial _physicsMaterial;
+    private Vector2 _inputDelta;
 
     private void Awake()
     {
@@ -75,11 +81,17 @@ public class Player : MonoBehaviour
         };
         _collider.material = _physicsMaterial;
 
-        // 正規化された速度を別のReactivePropertyに変換して公開する
+        // 正規化された速度を5段階（0-4）に変換して公開する
         PlayerSpeedInt = _speedNorm
-            .Select(n => Mathf.Clamp(Mathf.FloorToInt((n + 0.25f) * 4f), 0, 4))
+            .Select(n => Mathf.Clamp(Mathf.FloorToInt(n * 5f), 0, 4))
             .ToReadOnlyReactiveProperty()
             .AddTo(this);
+    }
+
+    private void Update()
+    {
+        _inputDelta = Mouse.current?.delta.ReadValue() ?? Vector2.zero;
+        _mouseSpeed.Value = _inputDelta.magnitude;
     }
 
     private void FixedUpdate()
@@ -87,17 +99,16 @@ public class Player : MonoBehaviour
         var vNorm = Mathf.Clamp01(_rb.linearVelocity.magnitude / maxLinearVelocity);
         _speedNorm.Value = vNorm;
 
-        var delta = Mouse.current?.delta.ReadValue() ?? Vector2.zero;
-        if (delta.sqrMagnitude < 1e-4f) return;
+        if (_inputDelta.sqrMagnitude < 1e-4f) return;
 
         var camF = playerCamera.transform.forward;
         var camR = playerCamera.transform.right;
         camF.y = camR.y = 0f; camF.Normalize(); camR.Normalize();
 
-        var torqueDir = camF * delta.x + camR * -delta.y;
+        var torqueDir = camF * _inputDelta.x + camR * -_inputDelta.y;
         if (isInverted) torqueDir = -torqueDir;
 
-        var strength = delta.magnitude * torqueMultiplier;
+        var strength = _inputDelta.magnitude * torqueMultiplier * Time.fixedDeltaTime * 50f;
         _rb.angularVelocity += torqueDir * strength;
     }
 
@@ -105,6 +116,7 @@ public class Player : MonoBehaviour
     {
         // 一定以上の速度で衝突した場合、砂のパーティクルを生成する
         // このようにコードから生成する場合はParticleManagerを通して生成すると、万が一、大量にこのコードが呼ばれても過剰な生成を防げる
+
         if (_rb.linearVelocity.magnitude > 0.2f)
         {
             var quaternion = Quaternion.FromToRotation(Vector3.up, other.contacts[0].normal);

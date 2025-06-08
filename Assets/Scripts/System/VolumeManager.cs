@@ -31,6 +31,16 @@ public class VolumeManager : MonoBehaviour
     [Tooltip("レンズ歪みの強度範囲。X:最低速度時、Y:最高速度時の値（マイナス値で歪み）")]
     [SerializeField] private Vector2 ldIntensityRange = new (0f, -0.4f);
 
+    [Header("Vignette")]
+    [Tooltip("ビネット効果の強度範囲。X:敵が遠い時、Y:敵が近い時の値")]
+    [SerializeField] private Vector2 vignetteIntensityRange = new (0f, 0.5f);
+    
+    [Tooltip("ビネット効果が始まる距離")]
+    [SerializeField] private float vignetteStartDistance = 20f;
+    
+    [Tooltip("ビネット効果が最大になる距離")]
+    [SerializeField] private float vignetteMaxDistance = 5f;
+
     [Header("Kaleidoscope Video")]
     [Tooltip("万華鏡効果の動画クリップ")]
     [SerializeField] private VideoClip kaleidoscopeClip;
@@ -50,6 +60,7 @@ public class VolumeManager : MonoBehaviour
     private ColorAdjustments    _cAdj;
     private ChromaticAberration _ca;
     private LensDistortion      _ld;
+    private Vignette           _vignette;
     
     private VideoPlayer    _videoPlayer;
 
@@ -58,13 +69,15 @@ public class VolumeManager : MonoBehaviour
         volume.profile.TryGet(out _cAdj);
         volume.profile.TryGet(out _ca);
         volume.profile.TryGet(out _ld);
+        volume.profile.TryGet(out _vignette);
         
         SetupKaleidoscopeVideo();
     }
 
     private void Start()
     {
-        GameManager.Instance.Player.PlayerSpeedNorm.Subscribe(SetValue);
+        GameManager.Instance.Player.PlayerSpeedNorm.Subscribe(SetValue).AddTo(this);
+        GameManager.Instance.ClosestEnemyDistance.Subscribe(UpdateVignette).AddTo(this);
     }
 
     public void SetValue(float v)
@@ -120,6 +133,13 @@ public class VolumeManager : MonoBehaviour
         _videoPlayer.playbackSpeed = playbackSpeed;
         
         _videoPlayer.Play();
+    }
+    
+    private void UpdateVignette(float distance)
+    {
+        var normalizedDistance = Mathf.InverseLerp(vignetteStartDistance, vignetteMaxDistance, distance);
+        // ビネット強度を設定
+        _vignette.intensity.value = Mathf.Lerp(vignetteIntensityRange.x, vignetteIntensityRange.y, normalizedDistance);
     }
 
 }
