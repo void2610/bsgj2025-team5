@@ -48,8 +48,13 @@ public class Player : MonoBehaviour
     /// プレイヤーの速度を0-4のintで表す
     /// </summary>
     public ReadOnlyReactiveProperty<int>  PlayerSpeedInt  { get; private set; }
+    /// <summary>
+    /// マウスの移動速度を表す（正規化されていない生の値）
+    /// </summary>
+    public ReadOnlyReactiveProperty<float> MouseSpeed => _mouseSpeed;
 
     private readonly ReactiveProperty<float> _speedNorm = new(0f);
+    private readonly ReactiveProperty<float> _mouseSpeed = new(0f);
 
     private Rigidbody _rb;
     private Collider _collider;
@@ -88,6 +93,7 @@ public class Player : MonoBehaviour
         _speedNorm.Value = vNorm;
 
         var delta = Mouse.current?.delta.ReadValue() ?? Vector2.zero;
+        _mouseSpeed.Value = delta.magnitude;
         if (delta.sqrMagnitude < 1e-4f) return;
 
         var camF = playerCamera.transform.forward;
