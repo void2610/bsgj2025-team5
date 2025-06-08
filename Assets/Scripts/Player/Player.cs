@@ -116,6 +116,7 @@ public class Player : MonoBehaviour
     {
         // 一定以上の速度で衝突した場合、砂のパーティクルを生成する
         // このようにコードから生成する場合はParticleManagerを通して生成すると、万が一、大量にこのコードが呼ばれても過剰な生成を防げる
+
         if (_rb.linearVelocity.magnitude > 0.2f)
         {
             var quaternion = Quaternion.FromToRotation(Vector3.up, other.contacts[0].normal);

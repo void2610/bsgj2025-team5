@@ -36,6 +36,13 @@ public class ConcentrationLineController : MonoBehaviour
 
     private void Start()
     {
+        // 初期状態では集中線を非表示にする
+        _currentIntensity = 0f;
+        if (_concentrationLineMaterial.HasProperty(edgePropertyName))
+        {
+            _concentrationLineMaterial.SetFloat(edgePropertyName, edgeMaxValue);
+        }
+        
         var player = GameManager.Instance.Player;
         // マウス速度を購読してマテリアルプロパティを更新
         _subscription = player.MouseSpeed.Subscribe(UpdateConcentrationLineEffect).AddTo(this);
