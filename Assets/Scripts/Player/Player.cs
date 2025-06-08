@@ -10,8 +10,11 @@ public class Player : MonoBehaviour
     [Tooltip("プレイヤーを追従するカメラ")]
     [SerializeField] private Camera playerCamera;
     
-    [Tooltip("ONの場合、マウス操作が反転します")]
-    [SerializeField] private bool   isInverted = false;
+    [Tooltip("ONの場合、マウスの左右操作が反転します")]
+    [SerializeField] private bool   isHorizontalInverted = false;
+    
+    [Tooltip("ONの場合、マウスの上下操作が反転します")]
+    [SerializeField] private bool   isVerticalInverted = false;
 
     [Header("Physics")]
     [Tooltip("マウス移動量を回転力に変換する倍率。大きいほど敏感に回転します")]
@@ -119,9 +122,10 @@ public class Player : MonoBehaviour
         var camR = playerCamera.transform.right;
         camF.y = camR.y = 0f; camF.Normalize(); camR.Normalize();
 
-        // カメラ相対の方向を計算
-        var torqueDir = camF * _accumulatedInputDelta.x + camR * -_accumulatedInputDelta.y;
-        if (isInverted) torqueDir = -torqueDir;
+        // カメラ相対の方向を計算（反転設定を個別に適用）
+        var horizontalInput = isHorizontalInverted ? -_accumulatedInputDelta.x : _accumulatedInputDelta.x;
+        var verticalInput = isVerticalInverted ? _accumulatedInputDelta.y : -_accumulatedInputDelta.y;
+        var torqueDir = camF * horizontalInput + camR * verticalInput;
 
         // フレームレート非依存の強度計算
         // _accumulatedInputDeltaは既にフレーム間の総移動量なので、Time.fixedDeltaTimeで正規化
