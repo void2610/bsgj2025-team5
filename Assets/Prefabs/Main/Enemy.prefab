@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1289765022244942251}
   - component: {fileID: -6764445507269401167}
   - component: {fileID: 6281476529864886526}
+  - component: {fileID: 69670390040582557}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -108,8 +109,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.7267128, y: 0.92795235, z: 353.68835}
-  m_Center: {x: -0.023647945, y: 0.03602352, z: -176.34422}
+  m_Size: {x: 0.1, y: 0.92795235, z: 30}
+  m_Center: {x: -0.023647945, y: 0.03602352, z: 0}
 --- !u!114 &-6764445507269401167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,14 +129,27 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   currentState: 0
-  sightRange: 10
-  speed:
-  - 5
-  - 7
-  - 11
-  - 13
+  sightRange: 100
+  baseSpeed: 1.5
+  speeds:
+  - 1
+  - 3
+  - 10
+  - 15
   - 20
   attackRange: 15
+  respawnPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  fallRespawnDelay: 3
+  respawnSearchRadius: 2
+  FloorLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  disappearFloorLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!195 &6281476529864886526
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -158,3 +172,30 @@ NavMeshAgent:
   m_BaseOffset: 0.5
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!54 &69670390040582557
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6034626642155126375}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
