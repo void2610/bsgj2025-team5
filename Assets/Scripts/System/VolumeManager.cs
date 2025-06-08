@@ -137,11 +137,7 @@ public class VolumeManager : MonoBehaviour
     
     private void UpdateVignette(float distance)
     {
-        Debug.Log($"UpdateVignette: distance={distance}");
-        // 距離を0-1の範囲に正規化（近い方が1）
         var normalizedDistance = Mathf.InverseLerp(vignetteStartDistance, vignetteMaxDistance, distance);
-        // normalizedDistance = 1f - normalizedDistance; // 反転（近い時に強くなるように）
-        
         // ビネット強度を設定
         _vignette.intensity.value = Mathf.Lerp(vignetteIntensityRange.x, vignetteIntensityRange.y, normalizedDistance);
     }
