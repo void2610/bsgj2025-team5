@@ -637,6 +637,10 @@ PrefabInstance:
       propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 7156760634923837135}
+    - target: {fileID: 5168954598800756796, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
+      propertyPath: maxMouseSpeed
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 5689828155364070144, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
       propertyPath: enemy
       value: 

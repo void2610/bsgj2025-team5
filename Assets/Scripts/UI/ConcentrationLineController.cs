@@ -38,12 +38,7 @@ public class ConcentrationLineController : MonoBehaviour
     {
         var player = GameManager.Instance.Player;
         // マウス速度を購読してマテリアルプロパティを更新
-        _subscription = player.MouseSpeed
-            .Subscribe(mouseSpeed =>
-            {
-                UpdateConcentrationLineEffect(mouseSpeed);
-            })
-            .AddTo(this);
+        _subscription = player.MouseSpeed.Subscribe(UpdateConcentrationLineEffect).AddTo(this);
     }
 
     private void UpdateConcentrationLineEffect(float mouseSpeed)
