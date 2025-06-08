@@ -322,42 +322,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 997455250}
     - target: {fileID: -6764445507269401167, guid: 19236cbb32d8e4156878121eb1701576, type: 3}
-      propertyPath: baseSpeed
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: -6764445507269401167, guid: 19236cbb32d8e4156878121eb1701576, type: 3}
-      propertyPath: sightRange
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: -6764445507269401167, guid: 19236cbb32d8e4156878121eb1701576, type: 3}
-      propertyPath: FloorLayer.m_Bits
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: -6764445507269401167, guid: 19236cbb32d8e4156878121eb1701576, type: 3}
-      propertyPath: 'speeds.Array.data[1]'
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: -6764445507269401167, guid: 19236cbb32d8e4156878121eb1701576, type: 3}
-      propertyPath: 'speeds.Array.data[2]'
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: -6764445507269401167, guid: 19236cbb32d8e4156878121eb1701576, type: 3}
-      propertyPath: 'speeds.Array.data[3]'
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: -6764445507269401167, guid: 19236cbb32d8e4156878121eb1701576, type: 3}
-      propertyPath: 'speeds.Array.data[4]'
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: -6764445507269401167, guid: 19236cbb32d8e4156878121eb1701576, type: 3}
-      propertyPath: respawnPoints.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: -6764445507269401167, guid: 19236cbb32d8e4156878121eb1701576, type: 3}
-      propertyPath: disappearFloorLayer.m_Bits
-      value: 64
-      objectReference: {fileID: 0}
-    - target: {fileID: -6764445507269401167, guid: 19236cbb32d8e4156878121eb1701576, type: 3}
       propertyPath: 'patrolPoints.Array.data[0]'
       value: 
       objectReference: {fileID: 602605626}
@@ -381,18 +345,6 @@ PrefabInstance:
       propertyPath: 'respawnPoints.Array.data[2]'
       value: 
       objectReference: {fileID: 1655839374}
-    - target: {fileID: 1289765022244942251, guid: 19236cbb32d8e4156878121eb1701576, type: 3}
-      propertyPath: m_Size.x
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1289765022244942251, guid: 19236cbb32d8e4156878121eb1701576, type: 3}
-      propertyPath: m_Size.z
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 1289765022244942251, guid: 19236cbb32d8e4156878121eb1701576, type: 3}
-      propertyPath: m_Center.z
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5145788490129973675, guid: 19236cbb32d8e4156878121eb1701576, type: 3}
       propertyPath: m_LocalPosition.x
       value: -67.9
@@ -436,6 +388,10 @@ PrefabInstance:
     - target: {fileID: 6034626642155126375, guid: 19236cbb32d8e4156878121eb1701576, type: 3}
       propertyPath: m_Name
       value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 6034626642155126375, guid: 19236cbb32d8e4156878121eb1701576, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -994,24 +950,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 123485802}
     - target: {fileID: 3935310138754294399, guid: 53a717c9050e34307b93f5e777290533, type: 3}
-      propertyPath: staticFriction
-      value: 50
+      propertyPath: isVerticalInverted
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3935310138754294399, guid: 53a717c9050e34307b93f5e777290533, type: 3}
-      propertyPath: dynamicFriction
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 3935310138754294399, guid: 53a717c9050e34307b93f5e777290533, type: 3}
-      propertyPath: torqueMultiplier
-      value: 0.001
-      objectReference: {fileID: 0}
-    - target: {fileID: 3935310138754294399, guid: 53a717c9050e34307b93f5e777290533, type: 3}
-      propertyPath: maxLinearVelocity
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 3935310138754294399, guid: 53a717c9050e34307b93f5e777290533, type: 3}
-      propertyPath: maxAngularVelocity
-      value: 30
+      propertyPath: isHorizontalInverted
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7433976897722441484, guid: 53a717c9050e34307b93f5e777290533, type: 3}
       propertyPath: m_Name
