@@ -59,7 +59,7 @@ public class Player : MonoBehaviour
     private Rigidbody _rb;
     private Collider _collider;
     private PhysicsMaterial _physicsMaterial;
-    private Vector2 _inputDelta;
+    private Vector2 _accumulatedInputDelta;
 
     private void Awake()
     {
@@ -70,16 +70,23 @@ public class Player : MonoBehaviour
         _rb.maxAngularVelocity = maxAngularVelocity;
         _rb.angularDamping = angularDamping;
         
-        // Physics Materialの作成と設定
-        _physicsMaterial = new PhysicsMaterial("PlayerPhysicsMaterial")
+        // Physics Materialの設定（既存のマテリアルがない場合のみ作成）
+        if (_collider.material == null)
         {
-            dynamicFriction = dynamicFriction,
-            staticFriction = staticFriction,
-            bounciness = bounciness,
-            frictionCombine = PhysicsMaterialCombine.Average,
-            bounceCombine = PhysicsMaterialCombine.Average
-        };
-        _collider.material = _physicsMaterial;
+            _physicsMaterial = new PhysicsMaterial("PlayerPhysicsMaterial")
+            {
+                dynamicFriction = dynamicFriction,
+                staticFriction = staticFriction,
+                bounciness = bounciness,
+                frictionCombine = PhysicsMaterialCombine.Average,
+                bounceCombine = PhysicsMaterialCombine.Average
+            };
+            _collider.material = _physicsMaterial;
+        }
+        else
+        {
+            _physicsMaterial = _collider.material;
+        }
 
         // 正規化された速度を5段階（0-4）に変換して公開する
         PlayerSpeedInt = _speedNorm
@@ -90,8 +97,14 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        _inputDelta = Mouse.current?.delta.ReadValue() ?? Vector2.zero;
-        _mouseSpeed.Value = _inputDelta.magnitude;
+        // マウスのdelta値を取得（ピクセル/フレーム）
+        var currentDelta = Mouse.current?.delta.ReadValue() ?? Vector2.zero;
+        
+        // FixedUpdate用に入力を蓄積
+        _accumulatedInputDelta += currentDelta;
+        
+        // マウス速度の更新（UI表示用）
+        _mouseSpeed.Value = currentDelta.magnitude;
     }
 
     private void FixedUpdate()
@@ -99,17 +112,24 @@ public class Player : MonoBehaviour
         var vNorm = Mathf.Clamp01(_rb.linearVelocity.magnitude / maxLinearVelocity);
         _speedNorm.Value = vNorm;
 
-        if (_inputDelta.sqrMagnitude < 1e-4f) return;
+        // 蓄積された入力を使用
+        if (_accumulatedInputDelta.sqrMagnitude < 1e-4f) return;
 
         var camF = playerCamera.transform.forward;
         var camR = playerCamera.transform.right;
         camF.y = camR.y = 0f; camF.Normalize(); camR.Normalize();
 
-        var torqueDir = camF * _inputDelta.x + camR * -_inputDelta.y;
+        // カメラ相対の方向を計算
+        var torqueDir = camF * _accumulatedInputDelta.x + camR * -_accumulatedInputDelta.y;
         if (isInverted) torqueDir = -torqueDir;
 
-        var strength = _inputDelta.magnitude * torqueMultiplier * Time.fixedDeltaTime * 50f;
+        // フレームレート非依存の強度計算
+        // _accumulatedInputDeltaは既にフレーム間の総移動量なので、Time.fixedDeltaTimeで正規化
+        var strength = _accumulatedInputDelta.magnitude * torqueMultiplier;
         _rb.angularVelocity += torqueDir * strength;
+        
+        // 使用済みの入力をリセット
+        _accumulatedInputDelta = Vector2.zero;
     }
 
     private void OnCollisionEnter(Collision other)
