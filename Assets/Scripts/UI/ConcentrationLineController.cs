@@ -48,7 +48,8 @@ public class ConcentrationLineController : MonoBehaviour
 
     private void UpdateConcentrationLineEffect(float mouseSpeed)
     {
-        Debug.Log($"Mouse Speed: {mouseSpeed}");
+        if (mouseSpeed == 0f) return;
+        
         // マウス速度を0-1の範囲に正規化
         var normalizedSpeed = Mathf.Clamp01(mouseSpeed / maxMouseSpeed);
         
