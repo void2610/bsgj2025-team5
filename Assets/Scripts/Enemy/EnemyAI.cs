@@ -21,6 +21,9 @@
 /// 06/01:新たにコメントを追加
 /// 06/07:落下状態を常に維持するようにRigidBody設定を変更した
 /// 06/08: 床の非アクティブ状態をチェックし、床が非アクティブになったら、NavMeshAgentを無効化し、物理演算で落下させる処理を追加
+///        落下状態(Fall)を追加
+///        現在の床のレイヤーから落下するかどうかを判定する処理を追加
+///        UniTaskによって落下から一定秒を計測し、ランダムなリスポーン地点からリスポーンするように処理を追加した
 
 using System;
 using System.Collections.Generic;
@@ -29,6 +32,7 @@ using UnityEngine.AI;
 using R3;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Random = UnityEngine.Random;
 
 /// <summary>
 /// 状態を巡回（Patrol）、追跡（Chase）、落下（Fall）の2つを遷移させる
@@ -73,14 +77,18 @@ public class EnemyAI : MonoBehaviour
     private readonly float _forcedChaseDuration = 5f;
     // 強制追跡状態かどうか
     private bool _isForcedChase = false;
-    
-    // 再スポーン地点
-    [SerializeField] private Transform respawnPoint;
+
+    // 複数の再スポーン地点の配列に変更
+    [SerializeField] private Transform[] respawnPoints;
     // 落下から再スポーンまでの時間
     [SerializeField] private float fallRespawnDelay = 3f;
     // UniTaskをキャンセルするためのトークン
     private CancellationTokenSource _fallCancellationTokenSource;
-
+    // 選択したリスポーン地点からのNavMesh検索範囲
+    [SerializeField] private float respawnSearchRadius = 2f;
+    // 常にアクティブな床のレイヤー
+    [SerializeField] private LayerMask FloorLayer; 
+    [SerializeField] private LayerMask disappearFloorLayer; // 消える床のレイヤー
 
 
     private void Awake()
@@ -153,7 +161,6 @@ public class EnemyAI : MonoBehaviour
             if (_agent.enabled)
             {
                 bool shouldFall = false;
-
                 // NavMeshAgentがNavMeshから離れた（落下した）場合
                 if (!_agent.isOnNavMesh)
                 {
@@ -162,25 +169,49 @@ public class EnemyAI : MonoBehaviour
                 }
                 else
                 {
-                    // 足元の床のRendererが非アクティブになった場合
+                    // 足元の床の状態をRaycastでチェック
                     RaycastHit hit;
+                    // 両方の床レイヤーを対象にするレイヤーマスクを作成
+                    int combinedFloorLayers = FloorLayer.value | disappearFloorLayer.value;
+
                     // Rayの開始位置と長さは、キャラクターの足元と床の距離に合わせて調整
-                    if (Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out hit, 20.0f))
+                    // isTriggerのColliderも検出するためQueryTriggerInteraction.Collideを指定
+                    if (Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, out hit, 20.0f, combinedFloorLayers, QueryTriggerInteraction.Collide))
                     {
-                        Renderer hitRenderer = hit.collider.gameObject.GetComponent<Renderer>();
-                        if (hitRenderer != null && !hitRenderer.enabled) // Rendererが非アクティブなら
+                        // Raycastが何らかの床のColliderをヒットした
+                        if (((1 << hit.collider.gameObject.layer) & disappearFloorLayer) != 0)
                         {
-                            Debug.Log("足元の床の見た目が非アクティブになりました。Fall状態に切り替えます。");
-                            shouldFall = true;
+                            // ヒットしたのが「消える床」だった場合
+                            if (hit.collider.isTrigger)
+                            {
+                                Debug.Log("足元の消える床がisTriggerになりました（通過可能）。Fall状態に切り替えます。");
+                                shouldFall = true;
+                            }
+                            // else: 消える床だがisTriggerではない（表示状態）なら落下しない
+                        }
+                        else if (((1 << hit.collider.gameObject.layer) & FloorLayer) != 0)
+                        {
+                            // ヒットしたのが「常にアクティブな床」だった場合
+                            // この場合、isTriggerは通常falseなので、落下しない
+                            Debug.Log("足元に常にアクティブな床があります。");
+                            shouldFall = false; // 明示的に落下しないことを示す
+                        }
+                        else
+                        {
+                            // 想定外のレイヤーの床にヒットした場合 (念のため)
+                            Debug.LogWarning("足元に想定外のレイヤーの床にヒットしました。");
+                            // この場合は落下しない、または別の判定ロジックを入れる
+                            shouldFall = false;
                         }
                     }
-                    // Raycastが何もヒットしなかった場合も落下とみなすことができる
                     else
+                        // Raycastが何もヒットしなかった場合も落下とみなす
                     {
                         Debug.Log("足元に何もヒットしませんでした。Fall状態に切り替えます。");
                         shouldFall = true;
                     }
                 }
+
 
                 if (shouldFall)
                 {
@@ -278,7 +309,7 @@ public class EnemyAI : MonoBehaviour
     /// </summary>
     private void EnterFallState()
     {
-         if (currentState == EnemyState.Fall) return; // 既にFall状態なら何もしない
+        if (currentState == EnemyState.Fall) return; // 既にFall状態なら何もしない
 
         currentState = EnemyState.Fall;
         _agent.enabled = false;
@@ -316,14 +347,6 @@ public class EnemyAI : MonoBehaviour
         {
             Debug.LogError($"An error occurred during FallAndRespawnAsync: {e.Message}");
         }
-    }
-
-    /// <summary>
-    /// 落下状態の時の処理
-    /// </summary>
-    private void Fall()
-    {
-        //　何か特殊な処理、アニメーションの再生などを行う
     }
 
     /// <summary>
@@ -379,10 +402,40 @@ public class EnemyAI : MonoBehaviour
     /// </summary>
     private void Respawn()
     {
+        if (respawnPoints == null || respawnPoints.Length == 0)
+        {
+            Debug.LogError("Respawn Pointsが設定されていません！再スポーンできません。");
+            // 最悪の場合、ゲームオーバーにするか、現在の位置で復帰させるかなど、フォールバック処理を記述
+            InitializeAgentState(); // 状態だけは初期化しておく
+            _agent.enabled = true;
+            _rb.isKinematic = true;
+            return;
+        }
+
         Debug.Log("Respawning Enemy...");
 
-        // 位置を再スポーン地点に設定
-        transform.position = respawnPoint.position;
+        // ランダムにリスポーン地点を選択
+        int randomIndex = Random.Range(0, respawnPoints.Length);
+        Vector3 chosenRespawnPoint = respawnPoints[randomIndex].position;
+
+
+        NavMeshHit hit;
+        Vector3 finalSpawnPosition = chosenRespawnPoint;
+
+        // 選択したリスポーン地点からNavMesh上で最も近い有効な位置を探す
+        if (NavMesh.SamplePosition(chosenRespawnPoint, out hit, respawnSearchRadius, NavMesh.AllAreas))
+        {
+            finalSpawnPosition = hit.position; // 有効なNavMesh上の位置を取得
+            Debug.Log($"Found NavMesh spawn position from chosen point: {finalSpawnPosition}");
+        }
+        else
+        {
+            // NavMesh.SamplePositionに失敗しても、選んだポイントにそのままスポーンさせる
+            Debug.LogWarning($"Could not find valid NavMesh position near chosen respawn point ({chosenRespawnPoint}) within {respawnSearchRadius}. Spawning at chosen point directly (may be off-NavMesh).");
+        }
+
+        // 位置を最終的な再スポーン地点に設定
+        transform.position = finalSpawnPosition;
         // 速度をリセット（落下中の慣性をなくす）
         _rb.linearVelocity = Vector3.zero;
         _rb.angularVelocity = Vector3.zero;
@@ -405,7 +458,5 @@ public class EnemyAI : MonoBehaviour
         _agent.destination = patrolPoints[_patrolIndex].position;
         _isForcedChase = false; // 強制追跡状態もリセット
         _chaseTimer = 0f; // チェイスタイマーもリセット
-        // 速度も初期速度に設定し直す場合はここに追加
-        // _agent.speed = baseSpeed * speeds[0]; // 例: アイテム0個時の速度
     }
 }
