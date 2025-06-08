@@ -110,7 +110,6 @@ public class Player : MonoBehaviour
 
         var strength = _inputDelta.magnitude * torqueMultiplier * Time.fixedDeltaTime * 50f;
         _rb.angularVelocity += torqueDir * strength;
-        Debug.Log(_rb.angularVelocity);
     }
 
     private void OnCollisionEnter(Collision other)

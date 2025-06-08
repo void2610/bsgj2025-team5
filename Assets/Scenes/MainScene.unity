@@ -1067,6 +1067,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5145788490129973675, guid: 19236cbb32d8e4156878121eb1701576, type: 3}
   m_PrefabInstance: {fileID: 295842230}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1638045983 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -6764445507269401167, guid: 19236cbb32d8e4156878121eb1701576, type: 3}
+  m_PrefabInstance: {fileID: 295842230}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9ba5cfa7cdb34f159f1eb238bc3b26a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1657432592 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3500160023300334669, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
@@ -1302,8 +1313,20 @@ PrefabInstance:
       value: 0.75
       objectReference: {fileID: 0}
     - target: {fileID: 3980535131468680562, guid: 2540937b5163f407ca016c114981b389, type: 3}
+      propertyPath: vignetteMaxDistance
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3980535131468680562, guid: 2540937b5163f407ca016c114981b389, type: 3}
       propertyPath: hueShiftSpeedRange.y
       value: 250
+      objectReference: {fileID: 0}
+    - target: {fileID: 3980535131468680562, guid: 2540937b5163f407ca016c114981b389, type: 3}
+      propertyPath: vignetteStartDistance
+      value: 75
+      objectReference: {fileID: 0}
+    - target: {fileID: 3980535131468680562, guid: 2540937b5163f407ca016c114981b389, type: 3}
+      propertyPath: vignetteIntensityRange.y
+      value: 0.7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1366,6 +1389,10 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 1432960161}
+    - target: {fileID: 8785554058055454799, guid: e7960efeaae96482da914062fc0009be, type: 3}
+      propertyPath: enemyAI
+      value: 
+      objectReference: {fileID: 1638045983}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
