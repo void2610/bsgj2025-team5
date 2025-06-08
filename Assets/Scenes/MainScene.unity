@@ -637,10 +637,6 @@ PrefabInstance:
       propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 7156760634923837135}
-    - target: {fileID: 5168954598800756796, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
-      propertyPath: maxMouseSpeed
-      value: 20
-      objectReference: {fileID: 0}
     - target: {fileID: 5689828155364070144, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
       propertyPath: enemy
       value: 
@@ -736,6 +732,14 @@ PrefabInstance:
     - target: {fileID: 7592090827493774473, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7887497323464267084, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -410
+      objectReference: {fileID: 0}
+    - target: {fileID: 7887497323464267084, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -158.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

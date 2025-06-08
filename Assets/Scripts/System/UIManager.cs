@@ -7,9 +7,6 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
     [Tooltip("アイテム取得数を表示するテキスト")]
     [SerializeField] private TextMeshProUGUI itemCountText;
     
-    [Tooltip("プレイヤーの速度レベルを表示するテキスト")]
-    [SerializeField] private TextMeshProUGUI playerSpeedText;
-    
     [Tooltip("ポーズ画面のCanvasGroup")]
     [SerializeField] private CanvasGroup pauseCanvasGroup;
 
@@ -39,6 +36,5 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
     private void Start()
     {
         GameManager.Instance.ItemCount.Subscribe(v => itemCountText.text = $"Item: {v}/5").AddTo(this);
-        GameManager.Instance.Player.PlayerSpeedInt.Subscribe(v => playerSpeedText.text = $"Speed: {v}/4").AddTo(this);
     }
 }
