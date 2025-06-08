@@ -33,7 +33,7 @@ RectTransform:
   m_Father: {fileID: 5796185163921819393}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -158,12 +158,12 @@ GameObject:
   - component: {fileID: 5375002757466465992}
   - component: {fileID: 187277821812477819}
   m_Layer: 5
-  m_Name: Slider
+  m_Name: ProgressBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &5375002757466465992
 RectTransform:
   m_ObjectHideFlags: 0
@@ -345,7 +345,7 @@ RectTransform:
   m_Father: {fileID: 8805461817877762973}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -399,12 +399,12 @@ GameObject:
   - component: {fileID: 8234242763120258784}
   - component: {fileID: 1059326097643684049}
   m_Layer: 5
-  m_Name: Text
+  m_Name: ProgressText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &8817993870304664196
 RectTransform:
   m_ObjectHideFlags: 0
@@ -574,12 +574,12 @@ GameObject:
   - component: {fileID: 2052831578834509019}
   - component: {fileID: 7475038672314606226}
   m_Layer: 5
-  m_Name: Black2
+  m_Name: FadeImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &898305183088311898
 RectTransform:
   m_ObjectHideFlags: 0
@@ -649,12 +649,12 @@ GameObject:
   - component: {fileID: 4457571973929764510}
   - component: {fileID: 150549946232224662}
   m_Layer: 5
-  m_Name: Black
+  m_Name: BackgroundImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7689707729578498437
 RectTransform:
   m_ObjectHideFlags: 0
