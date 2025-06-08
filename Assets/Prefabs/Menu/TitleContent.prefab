@@ -44,6 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c99529b2651e41c1b1d30b667e95f15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mainCanvas: {fileID: 0}
+  loadingUIPrefab: {fileID: 7729960160623458231, guid: f4178b1814d764ddc9fdc44b782db834, type: 3}
 --- !u!1 &4035107331115990639
 GameObject:
   m_ObjectHideFlags: 0
