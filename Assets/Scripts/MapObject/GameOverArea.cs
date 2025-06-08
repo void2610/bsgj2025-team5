@@ -1,3 +1,10 @@
+/// <sammary>
+/// ゲームオーバー判定をするクラス
+/// </sammary>
+/// 作業進捗
+/// 05/06:作成
+/// 06/07:敵も判定するように変更
+
 using UnityEngine;
 
 public class GameOverArea : MonoBehaviour
@@ -8,6 +15,10 @@ public class GameOverArea : MonoBehaviour
         {
             Debug.Log("Entered!!");
             GameManager.Instance.GameOver();
+        }
+        else if (other.TryGetComponent<Enemy>(out _))
+        {
+            Debug.Log("Enemy Falled!!");
         }
     }
 }
