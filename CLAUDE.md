@@ -30,7 +30,7 @@ This is a Unity 6 (6000.0.42f1) 3D physics-based ball-rolling puzzle game where 
 # Open Unity Hub (macOS)
 open -n -a "Unity Hub"
 
-# Build from command line
+# Build from command line (Unity 6000.0.42f1)
 /Applications/Unity/Hub/Editor/6000.0.42f1/Unity.app/Contents/MacOS/Unity \
   -batchmode \
   -quit \
@@ -38,6 +38,12 @@ open -n -a "Unity Hub"
   -buildTarget [StandaloneOSX|StandaloneWindows64|WebGL] \
   -buildOSXUniversalPlayer "Build/MyGame.app"
 ```
+
+### CI/CD Pipeline
+- **GitHub Actions**: Automatic WebGL builds on push/PR to main branch
+- **Build Target**: WebGL with decompression fallback enabled
+- **Deployment**: Auto-deploys to GitHub Pages with branch-specific URLs
+- **Discord Integration**: Notifies on successful deploys
 
 ### Common Unity Shortcuts
 - Play Mode: Cmd+P (Mac) / Ctrl+P (Windows)
@@ -47,16 +53,45 @@ open -n -a "Unity Hub"
 ## Code Patterns
 
 ### Singleton Pattern
-All manager classes inherit from `SingletonMonoBehaviour<T>`:
+All manager classes inherit from `SingletonMonoBehaviour<T>` with auto-instantiation:
 ```csharp
 public class MyManager : SingletonMonoBehaviour<MyManager>
+{
+    protected override void Awake()
+    {
+        base.Awake(); // Critical: Always call base.Awake()
+        // Custom initialization here
+    }
+}
 ```
 
 ### Reactive Properties (R3)
-State is managed using ReactiveProperty:
+State management with reactive streams and automatic cleanup:
 ```csharp
 private readonly ReactiveProperty<int> _value = new(0);
 public ReadOnlyReactiveProperty<int> Value => _value;
+
+// Subscription with automatic cleanup
+private void Start()
+{
+    GameManager.Instance.ItemCount.Subscribe(OnItemChanged).AddTo(this);
+}
+```
+
+### Manager Architecture
+- **GameManager**: Central state controller with `ItemCount` and `ClosestEnemyDistance` reactive properties
+- **SeManager**: Audio pool system (20 AudioSources) with `PlaySe()` API and PlayerPrefs volume
+- **BGMManager**: Dynamic tempo scaling based on player speed using LitMotion
+- **ParticleManager**: GameObject pool for effects with `CreateParticle()` API
+- **UIManager**: Pause/UI control with time scale management
+- **VolumeManager**: Post-processing effects driven by speed/distance
+
+### Physics System
+Player uses torque-based ball physics:
+```csharp
+// Mouse input → torque application → Rigidbody physics
+rigidbody.AddTorque(mouseInput * torqueMultiplier);
+// Speed levels calculated from maxLinearVelocity (0-4 int levels)
 ```
 
 ### Scene Management
@@ -82,8 +117,10 @@ SceneManager.LoadScene("SceneName");
 
 ## Important Notes
 
-- Physics settings: Player Rigidbody has custom max velocities
-- Win condition: Collect 5 items
-- Lose condition: Touch enemy
-- Localization: All UI text should use localized strings
-- Audio: Separate BGM and SE managers with mixer groups
+- **Physics Configuration**: Player Rigidbody has custom max velocities (linear/angular) with tuned friction/bounciness
+- **Game Rules**: Win at 5 items collected, lose on enemy contact
+- **Input System**: Mouse movement drives ball torque, 'P' key toggles pause
+- **Localization**: All UI text uses Unity Localization system (EN/JA) via string tables
+- **Audio Architecture**: SeManager (pooled AudioSources) + BGMManager (speed-reactive) with AudioMixer groups
+- **R3 Lifecycle**: Always use `.AddTo(this)` for subscriptions to prevent memory leaks
+- **Addressables**: Used for localization assets with proper group configuration
