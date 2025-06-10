@@ -79,7 +79,7 @@ public class Item : MonoBehaviour
         if (other.TryGetComponent<Player>(out _))
         {
             // 表示状態の時のみ取得可能
-            if (!_isVisible) return;
+            // if (!_isVisible) return;
             
             GameManager.Instance.AddItemCount();
             Destroy(gameObject);

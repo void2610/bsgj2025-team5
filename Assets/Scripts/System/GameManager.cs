@@ -24,6 +24,13 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     public void AddItemCount()
     {
         _itemCount.Value++;
+        
+        // アイテム取得時にプレイヤーのpsychedelic modeを有効にする
+        if (player != null)
+        {
+            player.ActivatePsychedelicMode();
+        }
+        
         if (_itemCount.Value >= 5)
         {
             Debug.Log("Clear!!");
