@@ -12,22 +12,25 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     [Tooltip("敵の参照。ゲーム開始時に設定する必要があります")]
     [SerializeField] private EnemyAI enemyAI;
 
+    [Tooltip ("カウントダウンタイマーの参照。ゲーム開始時に設定する必要があります")]
+    [SerializeField] private CountdownTimer countdownTimer;
+
     public ReadOnlyReactiveProperty<int> ItemCount => _itemCount;
         
     private readonly ReactiveProperty<int> _itemCount = new(0);
 
     public ReadOnlyReactiveProperty<float> ClosestEnemyDistance { get; private set; }
     
-        
     public Player Player => player;
-        
+
     public void AddItemCount()
     {
         _itemCount.Value++;
         if (_itemCount.Value >= 5)
         {
-            Debug.Log("Clear!!");
-            SceneManager.LoadScene("ClearScene");
+            // クリア時の残りタイムを保存する
+            countdownTimer.SaveCurrentTime();
+            GameClear();
         }
     }
 
@@ -35,6 +38,13 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     {
         Debug.Log("Game Over");
         SceneManager.LoadScene("GameOverScene");
+    }
+
+    // アイテムカウントによるゲームクリア処理
+    public void GameClear()
+    {
+        Debug.Log("Game Clear!");
+        SceneManager.LoadScene("ClearScene");
     }
     
     public void GoToTitleScene()
@@ -45,7 +55,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     protected override void Awake()
     {
         base.Awake();
-        
+
         // R3を使った敵との距離計算
         ClosestEnemyDistance = ObservableExtensions
             .Select(Observable.EveryUpdate(), _ => Vector3.Distance(player.transform.position, enemyAI.transform.position))

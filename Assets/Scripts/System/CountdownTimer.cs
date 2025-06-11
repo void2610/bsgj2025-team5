@@ -6,16 +6,18 @@
 
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement; // シーン管理のために必要
 
 public class CountdownTimer : MonoBehaviour
 {
     // 初期カウント時間（180秒）
     [SerializeField] public float CountdownDuration = 180f;
-    // UIのTextMeshProの内容物の束縛
+    // UIのTextMeshProの束縛
     [SerializeField] public TextMeshProUGUI timerText;
     // 現在の残り時間
     private float currentTime;
-
+    // ゲーム終了（ゲームオーバーまたはクリア）を判定するフラグ
+    private bool gameEnded = false; 
 
     /// <summary>
     /// ゲーム開始時に、初期時間をタイマーに反映させる
@@ -24,6 +26,7 @@ public class CountdownTimer : MonoBehaviour
     {
         currentTime = CountdownDuration;
         SetTimeDisplay();
+        gameEnded = false;
     }
 
     /// <summary>
@@ -31,20 +34,29 @@ public class CountdownTimer : MonoBehaviour
     /// </summary>
     void Update()
     {
+        // ゲームが終了していたら更新しない
+        if (gameEnded) return; 
+
         // タイマーを数える
         currentTime -= Time.deltaTime;
-        // 時間が0以下でゲームオーバー
+
+        // 時間が0秒以下でゲームオーバー
         if (currentTime <= 0f)
         {
-            // 残り時間を0で固定
+            // 0秒で固定
             currentTime = 0f;
-            // デバッグ用
-            Debug.Log("タイマーが0になりました!");
-            // ゲームオーバーにしてシーンを読み込む
-            GameManager.Instance.GameOver();
+            SetTimeDisplay();
+
+            Debug.Log("タイマーが0秒になりました");
+
+            gameEnded = true; // ゲームを終了状態にする
+            GameManager.Instance.GameOver(); // GameManagerを介してゲームオーバーシーンへ遷移
+
+            this.enabled = false; // このスクリプトの更新を停止
         }
         else
         {
+            // タイマーを更新
             SetTimeDisplay();
         }
     }
@@ -59,5 +71,24 @@ public class CountdownTimer : MonoBehaviour
         int seconds = Mathf.FloorToInt(currentTime % 60);
         // 表示形式をM分S秒に揃える
         timerText.text = $"{minutes:00}:{seconds:00}";
+    }
+
+    /// <summary>
+    /// クリア時の残り時間を保存するメソッド
+    /// </summary>
+    public void SaveCurrentTime()
+    {
+        // currentTime = 0f;
+        currentTime = 0f;
+        SetTimeDisplay();
+
+        // PlayerPrefsに残り時間を保存
+        PlayerPrefs.SetFloat(PlayerPrefsKeys.RemainingTimeAtClear, currentTime);
+        PlayerPrefs.Save();
+
+        Debug.Log($"タイマーが0秒以下になりました。クリア時の残り時間としてPlayerPrefsに保存しました: {currentTime:F2}秒");
+
+        // ゲームを終了状態にする
+        gameEnded = true; 
     }
 }
