@@ -984,6 +984,7 @@ PrefabInstance:
       propertyPath: playerCamera
       value: 
       objectReference: {fileID: 123485802}
+<<<<<<< HEAD
     - target: {fileID: 3935310138754294399, guid: 53a717c9050e34307b93f5e777290533, type: 3}
       propertyPath: angularDamping
       value: 30
@@ -1016,6 +1017,8 @@ PrefabInstance:
       propertyPath: isHorizontalInverted
       value: 1
       objectReference: {fileID: 0}
+=======
+>>>>>>> 0cc0af8093329951e636510df116ab96bcbee01a
     - target: {fileID: 7433976897722441484, guid: 53a717c9050e34307b93f5e777290533, type: 3}
       propertyPath: m_Name
       value: Player
