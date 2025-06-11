@@ -252,6 +252,14 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 997455250}
+    - target: {fileID: 1573497707450298354, guid: 8e0ca241b87f04648b2ec51650b6608e, type: 3}
+      propertyPath: posLerpSpeed
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1573497707450298354, guid: 8e0ca241b87f04648b2ec51650b6608e, type: 3}
+      propertyPath: rotLerpSpeed
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 5067676933441973044, guid: 8e0ca241b87f04648b2ec51650b6608e, type: 3}
       propertyPath: m_Name
       value: Main Camera
@@ -391,7 +399,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6034626642155126375, guid: 19236cbb32d8e4156878121eb1701576, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -694,6 +702,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: MainGameLevel
       objectReference: {fileID: 0}
+    - target: {fileID: 5403669400617713873, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -91.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5403669400617713873, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 13.31
+      objectReference: {fileID: 0}
+    - target: {fileID: 5403669400617713873, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 772.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5763013958879261491, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -90.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5763013958879261491, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5763013958879261491, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 231.9
+      objectReference: {fileID: 0}
     - target: {fileID: 9186623462167224120, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -735,7 +767,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 3814094607667670214, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
+    - {fileID: 6171162214145733298, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
+    - {fileID: 642854629086203884, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 6005823117864029443, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
       insertIndex: 11
@@ -949,6 +984,41 @@ PrefabInstance:
       propertyPath: playerCamera
       value: 
       objectReference: {fileID: 123485802}
+<<<<<<< HEAD
+=======
+    - target: {fileID: 3935310138754294399, guid: 53a717c9050e34307b93f5e777290533, type: 3}
+      propertyPath: angularDamping
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 3935310138754294399, guid: 53a717c9050e34307b93f5e777290533, type: 3}
+      propertyPath: staticFriction
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3935310138754294399, guid: 53a717c9050e34307b93f5e777290533, type: 3}
+      propertyPath: dynamicFriction
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3935310138754294399, guid: 53a717c9050e34307b93f5e777290533, type: 3}
+      propertyPath: torqueMultiplier
+      value: 0.001
+      objectReference: {fileID: 0}
+    - target: {fileID: 3935310138754294399, guid: 53a717c9050e34307b93f5e777290533, type: 3}
+      propertyPath: maxLinearVelocity
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 3935310138754294399, guid: 53a717c9050e34307b93f5e777290533, type: 3}
+      propertyPath: isVerticalInverted
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3935310138754294399, guid: 53a717c9050e34307b93f5e777290533, type: 3}
+      propertyPath: maxAngularVelocity
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 3935310138754294399, guid: 53a717c9050e34307b93f5e777290533, type: 3}
+      propertyPath: isHorizontalInverted
+      value: 1
+      objectReference: {fileID: 0}
+>>>>>>> MisawaLevelDesign04
     - target: {fileID: 7433976897722441484, guid: 53a717c9050e34307b93f5e777290533, type: 3}
       propertyPath: m_Name
       value: Player
@@ -1419,13 +1489,25 @@ PrefabInstance:
       propertyPath: m_Name
       value: VolumeManager
       objectReference: {fileID: 0}
+    - target: {fileID: 3083257230431187555, guid: 2540937b5163f407ca016c114981b389, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3980535131468680562, guid: 2540937b5163f407ca016c114981b389, type: 3}
       propertyPath: volume
       value: 
       objectReference: {fileID: 6943145281269625769}
     - target: {fileID: 3980535131468680562, guid: 2540937b5163f407ca016c114981b389, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3980535131468680562, guid: 2540937b5163f407ca016c114981b389, type: 3}
       propertyPath: hueShiftThreshold
       value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 3980535131468680562, guid: 2540937b5163f407ca016c114981b389, type: 3}
+      propertyPath: caIntensityRange.y
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 3980535131468680562, guid: 2540937b5163f407ca016c114981b389, type: 3}
       propertyPath: vignetteMaxDistance
@@ -1433,11 +1515,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3980535131468680562, guid: 2540937b5163f407ca016c114981b389, type: 3}
       propertyPath: hueShiftSpeedRange.y
-      value: 250
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3980535131468680562, guid: 2540937b5163f407ca016c114981b389, type: 3}
       propertyPath: vignetteStartDistance
       value: 75
+      objectReference: {fileID: 0}
+    - target: {fileID: 3980535131468680562, guid: 2540937b5163f407ca016c114981b389, type: 3}
+      propertyPath: kaleidoscopeSpeedOffset
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 3980535131468680562, guid: 2540937b5163f407ca016c114981b389, type: 3}
       propertyPath: vignetteIntensityRange.y
