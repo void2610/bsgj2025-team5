@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using R3;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -42,6 +43,10 @@ public class Player : MonoBehaviour
     [Header("Visual")]
     [Tooltip("衝突時に生成する砂のパーティクルエフェクト")]
     [SerializeField] private ParticleData sandParticleData;
+    
+    [Header("Psychedelic Mode")]
+    [Tooltip("アイテム取得後のサイケデリック効果の持続時間（秒）")]
+    [SerializeField] private float psychedelicDuration = 3f;
 
     /// <summary>
     /// プレイヤーの速度を0-1のfloatで表す
@@ -63,6 +68,9 @@ public class Player : MonoBehaviour
     private Collider _collider;
     private PhysicsMaterial _physicsMaterial;
     private Vector2 _accumulatedInputDelta;
+    
+    private bool _isPsychedelicMode = false;
+    private Coroutine _psychedelicCoroutine;
 
     private void Awake()
     {
@@ -113,7 +121,8 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         var vNorm = Mathf.Clamp01(_rb.linearVelocity.magnitude / maxLinearVelocity);
-        _speedNorm.Value = vNorm;
+        // Psychedelic modeが有効な時のみ実際の速度を使用、無効な時は0を返す
+        _speedNorm.Value = _isPsychedelicMode ? vNorm : 0f;
 
         // 蓄積された入力を使用
         if (_accumulatedInputDelta.sqrMagnitude < 1e-4f) return;
@@ -149,5 +158,32 @@ public class Player : MonoBehaviour
             // カメラを揺らす
             playerCamera.GetComponent<PlayerCamera>().ShakeCamera(0.2f, 0.3f);
         }
+    }
+    
+    /// <summary>
+    /// Psychedelic modeを指定時間有効にします
+    /// </summary>
+    /// <param name="duration">持続時間（秒）。指定しない場合はデフォルト値を使用</param>
+    public void ActivatePsychedelicMode(float? duration = null)
+    {
+        // 既に実行中のコルーチンがあれば停止
+        if (_psychedelicCoroutine != null)
+        {
+            StopCoroutine(_psychedelicCoroutine);
+        }
+        
+        _isPsychedelicMode = true;
+        var actualDuration = duration ?? psychedelicDuration;
+        _psychedelicCoroutine = StartCoroutine(DeactivatePsychedelicModeAfterDelay(actualDuration));
+    }
+    
+    /// <summary>
+    /// 指定時間後にPsychedelic modeを無効にするコルーチン
+    /// </summary>
+    private IEnumerator DeactivatePsychedelicModeAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        _isPsychedelicMode = false;
+        _psychedelicCoroutine = null;
     }
 }
