@@ -55,32 +55,48 @@ public class CanvasAspectRatioFitter : MonoBehaviour
         var windowAspect = (float)Screen.width / (float)Screen.height;
         var scaleHeight = windowAspect / _targetAspect;
         
+        // Reset to default first
+        _rectTransform.anchorMin = Vector2.zero;
+        _rectTransform.anchorMax = Vector2.one;
+        _rectTransform.anchoredPosition = Vector2.zero;
+        _rectTransform.sizeDelta = Vector2.zero;
+        
         if (scaleHeight < 1.0f)
         {
             // Letterbox (black bars on top and bottom)
+            // Canvas height should be scaled down to match the camera's viewport
             var scaledHeight = Screen.height * scaleHeight;
             var yOffset = (Screen.height - scaledHeight) * 0.5f;
             
-            _rectTransform.anchorMin = Vector2.zero;
-            _rectTransform.anchorMax = Vector2.one;
-            _rectTransform.anchoredPosition = new Vector2(0, 0);
-            _rectTransform.sizeDelta = new Vector2(0, -yOffset * 2);
             _rectTransform.offsetMin = new Vector2(0, yOffset);
             _rectTransform.offsetMax = new Vector2(0, -yOffset);
         }
         else
         {
             // Pillarbox (black bars on left and right)
+            // Canvas width should be scaled down to match the camera's viewport
             var scaleWidth = 1.0f / scaleHeight;
             var scaledWidth = Screen.width * scaleWidth;
             var xOffset = (Screen.width - scaledWidth) * 0.5f;
             
-            _rectTransform.anchorMin = Vector2.zero;
-            _rectTransform.anchorMax = Vector2.one;
-            _rectTransform.anchoredPosition = new Vector2(0, 0);
-            _rectTransform.sizeDelta = new Vector2(-xOffset * 2, 0);
             _rectTransform.offsetMin = new Vector2(xOffset, 0);
             _rectTransform.offsetMax = new Vector2(-xOffset, 0);
+        }
+        
+        // Update Canvas Scaler to maintain proper UI scaling
+        if (_canvasScaler != null && _canvasScaler.uiScaleMode == CanvasScaler.ScaleMode.ScaleWithScreenSize)
+        {
+            // Adjust match width/height based on aspect ratio
+            if (scaleHeight < 1.0f)
+            {
+                // When letterboxed, prioritize width matching
+                _canvasScaler.matchWidthOrHeight = 0f;
+            }
+            else
+            {
+                // When pillarboxed, prioritize height matching
+                _canvasScaler.matchWidthOrHeight = 1f;
+            }
         }
     }
 }
