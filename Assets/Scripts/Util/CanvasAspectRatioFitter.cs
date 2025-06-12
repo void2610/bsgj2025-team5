@@ -46,14 +46,54 @@ public class CanvasAspectRatioFitter : MonoBehaviour
     
     private void AdjustCanvas()
     {
-        if (_canvas.renderMode != RenderMode.ScreenSpaceOverlay)
+        var windowAspect = (float)Screen.width / (float)Screen.height;
+        var scaleHeight = windowAspect / _targetAspect;
+        
+        if (_canvas.renderMode == RenderMode.ScreenSpaceCamera && targetCamera != null)
         {
-            // For Screen Space - Camera mode, the camera's viewport rect already handles this
+            // For Screen Space - Camera mode, adjust based on camera's viewport rect
+            var cameraRect = targetCamera.rect;
+            
+            // Reset to default first
+            _rectTransform.anchorMin = Vector2.zero;
+            _rectTransform.anchorMax = Vector2.one;
+            _rectTransform.anchoredPosition = Vector2.zero;
+            _rectTransform.sizeDelta = Vector2.zero;
+            
+            // Apply the same offset as the camera viewport
+            var xOffset = cameraRect.x * Screen.width;
+            var yOffset = cameraRect.y * Screen.height;
+            var widthScale = cameraRect.width;
+            var heightScale = cameraRect.height;
+            
+            _rectTransform.offsetMin = new Vector2(xOffset, yOffset);
+            _rectTransform.offsetMax = new Vector2(-(Screen.width * (1 - widthScale) - xOffset), 
+                                                   -(Screen.height * (1 - heightScale) - yOffset));
+            
+            // Update Canvas Scaler to maintain proper UI scaling
+            if (_canvasScaler != null && _canvasScaler.uiScaleMode == CanvasScaler.ScaleMode.ScaleWithScreenSize)
+            {
+                // Adjust match width/height based on aspect ratio
+                if (scaleHeight < 1.0f)
+                {
+                    // When letterboxed, prioritize width matching
+                    _canvasScaler.matchWidthOrHeight = 0f;
+                }
+                else
+                {
+                    // When pillarboxed, prioritize height matching
+                    _canvasScaler.matchWidthOrHeight = 1f;
+                }
+            }
+            
             return;
         }
         
-        var windowAspect = (float)Screen.width / (float)Screen.height;
-        var scaleHeight = windowAspect / _targetAspect;
+        // For Screen Space - Overlay mode
+        if (_canvas.renderMode != RenderMode.ScreenSpaceOverlay)
+        {
+            return;
+        }
         
         // Reset to default first
         _rectTransform.anchorMin = Vector2.zero;
