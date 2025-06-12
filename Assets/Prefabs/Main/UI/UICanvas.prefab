@@ -194,6 +194,7 @@ GameObject:
   - component: {fileID: 2120364841502204461}
   - component: {fileID: 6815496169403885088}
   - component: {fileID: 298940864622293378}
+  - component: {fileID: 2557388374492804896}
   m_Layer: 5
   m_Name: UICanvas
   m_TagString: Untagged
@@ -235,7 +236,7 @@ Canvas:
   m_GameObject: {fileID: 6866070582696165679}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
+  m_RenderMode: 1
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
@@ -289,6 +290,21 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &2557388374492804896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6866070582696165679}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3f87b5e4e8d44f9a9e2c8f6d1a2b3c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetCamera: {fileID: 0}
+  aspectWidth: 16
+  aspectHeight: 9
 --- !u!1001 &896144407770507405
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -298,9 +314,21 @@ PrefabInstance:
     m_TransformParent: {fileID: 7592090827493774473}
     m_Modifications:
     - target: {fileID: 4799124270865251213, guid: eb9b7b1eeac9b4dfb9b1cac13074d8b4, type: 3}
+      propertyPath: maxScale
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4799124270865251213, guid: eb9b7b1eeac9b4dfb9b1cac13074d8b4, type: 3}
+      propertyPath: minScale
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4799124270865251213, guid: eb9b7b1eeac9b4dfb9b1cac13074d8b4, type: 3}
       propertyPath: canvasRect
       value: 
       objectReference: {fileID: 7592090827493774473}
+    - target: {fileID: 4799124270865251213, guid: eb9b7b1eeac9b4dfb9b1cac13074d8b4, type: 3}
+      propertyPath: indicatorRadius
+      value: 350
+      objectReference: {fileID: 0}
     - target: {fileID: 5505758181550024119, guid: eb9b7b1eeac9b4dfb9b1cac13074d8b4, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -813,7 +841,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5552636353808683947, guid: 752d99779524b445a95ba580c9f81c9f, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -410
+      value: -397
       objectReference: {fileID: 0}
     - target: {fileID: 5552636353808683947, guid: 752d99779524b445a95ba580c9f81c9f, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -915,7 +943,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5016160042958030986, guid: e6fa577f323be4a42b044459853dd309, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -457
+      value: -442
       objectReference: {fileID: 0}
     - target: {fileID: 5016160042958030986, guid: e6fa577f323be4a42b044459853dd309, type: 3}
       propertyPath: m_AnchoredPosition.y
