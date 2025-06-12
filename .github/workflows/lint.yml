@@ -15,12 +15,11 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Run Super-Linter 🪄
-        uses: github/super-linter@v6
-        env:
-          DEFAULT_BRANCH: main
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VALIDATE_CSHARP: true            # C# だけでよければ他の VALIDATE_*** を false
-          RUN_LOCAL: true                  # コンテナ内部でリントし結果だけ出力
-          IGNORE_GITIGNORED_FILES: true    # optional: gitignored な Library/ など除外
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Check formatting
+        run: dotnet format --verify-no-changes --severity warn
 
