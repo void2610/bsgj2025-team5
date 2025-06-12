@@ -1,0 +1,23 @@
+name: Lint C# 🔍
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    paths: ["**/*.cs", ".editorconfig"]
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Super-Linter 🪄
+        uses: github/super-linter@v6
+        env:
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_CSHARP: true            # C# だけでよければ他の VALIDATE_*** を false
+          RUN_LOCAL: true                  # コンテナ内部でリントし結果だけ出力
+          IGNORE_GITIGNORED_FILES: true    # optional: gitignored な Library/ など除外
+
