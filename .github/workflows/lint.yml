@@ -20,6 +20,6 @@ jobs:
           dotnet-version: 8.0.x
       - name: Restore dependencies
         run: dotnet restore Assembly-CSharp.csproj
-      - name: Check formatting
-        run: dotnet format --verify-no-changes --severity warn
+      - name: Format check
+        run: dotnet format Assembly-CSharp.csproj --verify-no-changes --severity warn
 
