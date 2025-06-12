@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CameraAspectManager : MonoBehaviour
+public class CameraAspectRatioHandler : MonoBehaviour
 {
     public float aspectWidth = 16.0f;
     public float aspectHeight = 9.0f;

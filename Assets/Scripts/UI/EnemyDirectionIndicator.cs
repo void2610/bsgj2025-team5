@@ -7,7 +7,10 @@ public class EnemyDirectionIndicator : MonoBehaviour
     [SerializeField] private Camera mainCamera;          // プレイヤーカメラ
     [SerializeField] private RectTransform canvasRect;   // UI Canvas の RectTransform
     [SerializeField] private float yawOffset = 180f;     // アイコンの向き補正
-    [SerializeField] private float screenEdgeBuffer = 50f;
+    
+    [Header("Indicator Display Range")]
+    [Tooltip("中央からの最大距離（ピクセル）")]
+    [SerializeField] private float indicatorRadius = 300f;
 
     [Header("Indicator Size by Distance")]
     [SerializeField] private float minScale = 0.5f;      // 最も遠いときのサイズ
@@ -43,12 +46,15 @@ public class EnemyDirectionIndicator : MonoBehaviour
             var center = new Vector2(Screen.width, Screen.height) / 2;
             var dir = ((Vector2)screenPos - center).normalized;
 
-            var halfW = canvasRect.sizeDelta.x / 2 - screenEdgeBuffer;
-            var halfH = canvasRect.sizeDelta.y / 2 - screenEdgeBuffer;
-
+            // 16:9のアスペクト比を考慮した楕円の境界上に配置
+            var radiusX = indicatorRadius;
+            var radiusY = indicatorRadius * (9f / 16f); // 16:9のアスペクト比
+            
+            // 楕円上の点を計算
+            var ellipseAngle = Mathf.Atan2(dir.y * radiusX, dir.x * radiusY);
             var edgePos = new Vector2(
-                Mathf.Clamp(dir.x * halfW, -halfW, halfW),
-                Mathf.Clamp(dir.y * halfH, -halfH, halfH)
+                radiusX * Mathf.Cos(ellipseAngle),
+                radiusY * Mathf.Sin(ellipseAngle)
             );
 
             _indicator.anchoredPosition = edgePos;
