@@ -1,0 +1,31 @@
+name: Lint C# 🔍
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    paths: ["**/*.cs", ".editorconfig"]
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore dependencies
+        run: dotnet restore Assembly-CSharp.csproj
+      - name: Format check
+        run: |
+          dotnet format style Assembly-CSharp.csproj --verify-no-changes --severity warn || true
+          dotnet format analyzers Assembly-CSharp.csproj --verify-no-changes --severity warn --diagnostics IDE1006 CA1707 CA1708 CA1715
+      - name: Comprehensive naming check
+        run: |
+          echo "Checking for naming convention violations..."
+          dotnet format analyzers Assembly-CSharp.csproj --severity error --include IDE1006 --dry-run || exit 1
+

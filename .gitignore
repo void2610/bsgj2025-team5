@@ -79,3 +79,5 @@ crashlytics-build.properties
 .idea/
 
 Packages/com.singularitygroup.hotreload/
+
+!Assembly-CSharp.csproj
