@@ -139,12 +139,46 @@ csharp_space_after_colon_in_inheritance_clause = true
 csharp_space_before_open_square_brackets = false
 csharp_space_between_method_call_parameter_list_parentheses = false
 csharp_space_between_method_declaration_parameter_list_parentheses = false
-csharp_space_between_parentheses = expressions, type_casts
+csharp_space_between_parentheses = false
 csharp_space_around_binary_operators = before_and_after
+csharp_space_between_method_call_empty_parameter_list_parentheses = false
+csharp_space_between_method_declaration_empty_parameter_list_parentheses = false
+csharp_space_after_comma = true
+csharp_space_before_comma = false
+csharp_space_after_dot = false
+csharp_space_before_dot = false
+csharp_space_after_semicolon_in_for_statement = true
+csharp_space_before_semicolon_in_for_statement = false
+csharp_space_around_declaration_statements = false
+csharp_space_before_open_square_brackets = false
+csharp_space_between_empty_square_brackets = false
+csharp_space_between_square_brackets = false
 
 # 改行・ブロック
 csharp_preserve_single_line_blocks = true
 csharp_preserve_single_line_statements = true
+csharp_new_line_before_open_brace = all
+csharp_new_line_before_else = true
+csharp_new_line_before_catch = true
+csharp_new_line_before_finally = true
 
 # 複数空白行
 dotnet_style_allow_multiple_blank_lines = false
+csharp_space_after_keywords_in_control_flow_statements = true
+
+# インデント
+csharp_indent_case_contents = true
+csharp_indent_switch_labels = true
+csharp_indent_labels = flush_left
+csharp_indent_block_contents = true
+csharp_indent_braces = false
+
+# 行末空白と最終改行
+dotnet_diagnostic.IDE0055.severity = warning
+
+# dotnet formatで特定のルールを無視
+dotnet_diagnostic.IDE2000.severity = none  # 不要な空白の削除を無視
+dotnet_diagnostic.IDE2001.severity = none  # 埋め込みステートメントは別の行に配置する必要があります
+dotnet_diagnostic.IDE2002.severity = none  # 連続する中かっこは別の行に配置する必要があります
+dotnet_diagnostic.IDE2003.severity = none  # ファイルの末尾に改行を追加
+dotnet_diagnostic.IDE2004.severity = none  # 行末の空白を削除
