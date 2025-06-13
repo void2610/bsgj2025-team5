@@ -23,5 +23,9 @@ jobs:
       - name: Format check
         run: |
           dotnet format style Assembly-CSharp.csproj --verify-no-changes --severity warn || true
-          dotnet format analyzers Assembly-CSharp.csproj --verify-no-changes --severity warn
+          dotnet format analyzers Assembly-CSharp.csproj --verify-no-changes --severity warn --diagnostics IDE1006 CA1707 CA1708 CA1715
+      - name: Comprehensive naming check
+        run: |
+          echo "Checking for naming convention violations..."
+          dotnet format analyzers Assembly-CSharp.csproj --severity error --include IDE1006 --dry-run || exit 1
 

@@ -182,3 +182,9 @@ dotnet_diagnostic.IDE2001.severity = none  # 埋め込みステートメント�
 dotnet_diagnostic.IDE2002.severity = none  # 連続する中かっこは別の行に配置する必要があります
 dotnet_diagnostic.IDE2003.severity = none  # ファイルの末尾に改行を追加
 dotnet_diagnostic.IDE2004.severity = none  # 行末の空白を削除
+
+# 命名規則の診断レベルを強化
+dotnet_diagnostic.IDE1006.severity = error  # 命名規則違反
+dotnet_diagnostic.CA1707.severity = error   # 識別子にアンダースコアを含めない
+dotnet_diagnostic.CA1708.severity = error   # 識別子は大文字と小文字以外でも相違する必要があります
+dotnet_diagnostic.CA1715.severity = error   # 識別子は正しいプレフィックスを含んでいる必要があります
