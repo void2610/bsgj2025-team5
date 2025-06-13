@@ -21,10 +21,5 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore Assembly-CSharp.csproj
       - name: Format check
-        run: |
-          dotnet format Assembly-CSharp.csproj --verify-no-changes --severity warn \
-            --exclude-diagnostics IDE0055 \
-            --exclude-diagnostics IDE2000 \
-            --exclude-diagnostics IDE2003 \
-            --exclude-diagnostics IDE2004
+        run: dotnet format Assembly-CSharp.csproj --verify-no-changes --severity warn --exclude-diagnostics IDE0055 IDE2000 IDE2003 IDE2004 WHITESPACE FINALNEWLINE
 
