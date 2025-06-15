@@ -25,7 +25,7 @@ public class RemainingTimeText : MonoBehaviour
         float time = PlayerPrefs.GetFloat(PlayerPrefsKeys.RemainingTimeAtClear, 0f);
         
         // 読み込んだ時間が0より大きい場合のみ表示（デフォルト値でないことを確認）
-        if (time > 0)
+        if (time >= 0)
         {
             // "残りタイム: MM:SS" の形式で表示
             int minutes = Mathf.FloorToInt(time / 60);

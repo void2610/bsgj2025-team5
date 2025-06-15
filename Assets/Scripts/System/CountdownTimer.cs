@@ -78,15 +78,13 @@ public class CountdownTimer : MonoBehaviour
     /// </summary>
     public void SaveCurrentTime()
     {
-        // currentTime = 0f;
-        currentTime = 0f;
         SetTimeDisplay();
 
         // PlayerPrefsに残り時間を保存
         PlayerPrefs.SetFloat(PlayerPrefsKeys.RemainingTimeAtClear, currentTime);
         PlayerPrefs.Save();
 
-        Debug.Log($"タイマーが0秒以下になりました。クリア時の残り時間としてPlayerPrefsに保存しました: {currentTime:F2}秒");
+        Debug.Log($"クリア時の残り時間としてPlayerPrefsに保存しました: {currentTime:F2}秒");
 
         // ゲームを終了状態にする
         gameEnded = true; 
