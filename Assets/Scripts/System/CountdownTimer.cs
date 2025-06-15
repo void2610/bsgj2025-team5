@@ -62,9 +62,9 @@ public class CountdownTimer : MonoBehaviour
     /// </summary>
     private void SetTimeDisplay()
     {
-        // 残り時間を分秒で計算する
-        int minutes = Mathf.FloorToInt(_currentTime / 60);
-        int seconds = Mathf.FloorToInt(_currentTime % 60);
+        // 残り時間を分秒で計算する(かならず0以上にする)
+        int minutes = Mathf.Max(0,Mathf.FloorToInt(_currentTime / 60));
+        int seconds = Mathf.Max(0, Mathf.FloorToInt(_currentTime % 60));
         // 表示形式をM分S秒に揃える
         timerText.text = $"{minutes:00}:{seconds:00}";
     }
