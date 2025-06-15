@@ -373,13 +373,18 @@ PrefabInstance:
       propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 7227945025554411862, guid: dd62bf834f14640289beb95f2f076623, type: 3}
+      propertyPath: targetCamera
+      value: 
+      objectReference: {fileID: 1978174879}
     - target: {fileID: 7615835358442042621, guid: dd62bf834f14640289beb95f2f076623, type: 3}
       propertyPath: m_Name
       value: MenuSceneCanvas
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: [{fileID: 5322147027651596, guid: dd62bf834f14640289beb95f2f076623, type: 3},
-      {fileID: 4543333765802412293, guid: dd62bf834f14640289beb95f2f076623, type: 3}]
+    m_RemovedGameObjects:
+    - {fileID: 5322147027651596, guid: dd62bf834f14640289beb95f2f076623, type: 3}
+    - {fileID: 4543333765802412293, guid: dd62bf834f14640289beb95f2f076623, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 1867553516881644330, guid: dd62bf834f14640289beb95f2f076623, type: 3}
       insertIndex: 0
