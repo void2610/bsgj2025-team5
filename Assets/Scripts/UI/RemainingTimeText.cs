@@ -10,9 +10,9 @@ using TMPro; // TextMeshProUGUI を使う場合
 public class RemainingTimeText : MonoBehaviour
 {
     // UIのTextMeshProの束縛
-    public TextMeshProUGUI remainingTimeText;
+    [SerializeField] private TextMeshProUGUI remainingTimeText;
 
-    void Start()
+    private void Start()
     {
         // 残り時間の表示
         DisplayRemainingTime();
