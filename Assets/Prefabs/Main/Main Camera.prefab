@@ -157,8 +157,8 @@ MonoBehaviour:
   lookSensitivity: 150
   minPitch: -20
   maxPitch: 80
-  posLerpSpeed: 2.5
-  rotLerpSpeed: 2.5
+  posLerpSpeed: 5
+  rotLerpSpeed: 5
   autoAlign: 1
   alignSpeed: 4
   velThreshold: 0.2
