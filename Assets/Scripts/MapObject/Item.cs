@@ -82,6 +82,12 @@ public class Item : MonoBehaviour
             if (!_isVisible) return;
             
             GameManager.Instance.AddItemCount();
+            
+            // アイテムとった座標をPlayerPrefsに登録して、プレイヤーのリスポーン地点とする
+            PlayerPrefs.SetFloat("RespawnPosition_x", this.transform.position.x);
+            PlayerPrefs.SetFloat("RespawnPosition_y", this.transform.position.y);
+            PlayerPrefs.SetFloat("RespawnPosition_z", this.transform.position.z);
+            
             Destroy(gameObject);
         }
     }

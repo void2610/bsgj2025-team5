@@ -7,10 +7,15 @@
 using UnityEngine;
 using TMPro; // TextMeshProUGUI を使う場合
 
+
 public class RemainingTimeText : MonoBehaviour
 {
     // UIのTextMeshProの束縛
     [SerializeField] private TextMeshProUGUI remainingTimeText;
+    // PlayerPrefsに登録された残り時間のキー
+    private const string REMAINING_TIME_AT_CLEAR = "RemainingTimeAtClear";
+    // 残り時間（デフォルトは0）
+    private float _remainingTime = 0;
 
     private void Start()
     {
@@ -18,30 +23,33 @@ public class RemainingTimeText : MonoBehaviour
         DisplayRemainingTime();
     }
 
-    void DisplayRemainingTime()
+    private void DisplayRemainingTime()
     {
-        // PlayerPrefsから残り時間を読み込み
-        // キーが存在しない場合はデフォルト値として0fを返す
-        float time = PlayerPrefs.GetFloat(PlayerPrefsKeys.RemainingTimeAtClear, 0f);
+        // PlayerPrefsから残り時間を読み込み（デフォルトは0f）
+        if (PlayerPrefs.HasKey(REMAINING_TIME_AT_CLEAR))
+        {
+            _remainingTime = Mathf.Max(0f, PlayerPrefs.GetFloat(REMAINING_TIME_AT_CLEAR));
+            // 残り時間を表示した後は、PlayerPrefsのデータをクリアする
+            PlayerPrefs.DeleteKey(REMAINING_TIME_AT_CLEAR);
+            PlayerPrefs.Save();
+        }
         
-        // 読み込んだ時間が0より大きい場合のみ表示（デフォルト値でないことを確認）
-        if (time >= 0)
+        // 読み込んだ時間が0以上の場合のみ表示
+        if (_remainingTime >= 0)
         {
             // "残りタイム: MM:SS" の形式で表示
-            int minutes = Mathf.FloorToInt(time / 60);
-            int seconds = Mathf.FloorToInt(time % 60);            
+            int minutes = Mathf.FloorToInt(_remainingTime / 60);
+            int seconds = Mathf.FloorToInt(_remainingTime % 60);            
             remainingTimeText.text = $"Time: {minutes:00}:{seconds:00}";
             
             // デバッグ用
-            Debug.Log($"クリアシーンでPlayerPrefsから読み込んだ残りタイム: {time:F2}秒");
+            Debug.Log($"クリアシーンで読み込んだクリア時残りタイム: {_remainingTime:F2}秒");
         }
         else
         {
-            Debug.LogWarning("PlayerPrefsに残り時間のデータが見つからないか、値が0以下です。");
+            Debug.LogWarning("PlayerPrefsに残り時間のデータが見つからないか、値が0未満で登録されています。");
         }
         
-        // 残り時間を表示した後は、PlayerPrefsのデータをクリアする
-        PlayerPrefs.DeleteKey(PlayerPrefsKeys.RemainingTimeAtClear);
-        PlayerPrefs.Save();
+        
     }
 }
