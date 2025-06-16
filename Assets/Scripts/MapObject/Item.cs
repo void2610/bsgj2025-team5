@@ -80,8 +80,10 @@ public class Item : MonoBehaviour
         {
             // 表示状態の時のみ取得可能
             if (!_isVisible) return;
+
+            // アイテムとった座標をGameManagerに渡して、プレイヤーのリスポーン地点にする。
+            GameManager.Instance.AddItemCount(new Vector3(transform.position.x,transform.position.y,transform.position.z));
             
-            GameManager.Instance.AddItemCount();
             Destroy(gameObject);
         }
     }

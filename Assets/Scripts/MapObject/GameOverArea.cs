@@ -14,7 +14,8 @@ public class GameOverArea : MonoBehaviour
         if (other.TryGetComponent<Player>(out _))
         {
             Debug.Log("Entered!!");
-            GameManager.Instance.GameOver();
+            // GameManager.Instance.GameOver();
+            GameManager.Instance.Fall();
         }
         else if (other.TryGetComponent<Enemy>(out _))
         {
