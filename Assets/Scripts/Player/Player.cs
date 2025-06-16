@@ -44,11 +44,11 @@ public class Player : MonoBehaviour
     [SerializeField] private ParticleData sandParticleData;
 
     /// <summary>
-    /// プレイヤーの速度を0-1のfloatで表す
+    /// プレイヤーの速度を0-1のfloatで表す（現在はアイテム数ベース）
     /// </summary>
     public ReadOnlyReactiveProperty<float> PlayerSpeedNorm => _speedNorm;
     /// <summary>
-    /// プレイヤーの速度を0-4のintで表す
+    /// プレイヤーの速度を0-4のintで表す（現在はアイテム数ベース）
     /// </summary>
     public ReadOnlyReactiveProperty<int>  PlayerSpeedInt  { get; private set; }
     /// <summary>
@@ -91,11 +91,20 @@ public class Player : MonoBehaviour
             _physicsMaterial = _collider.material;
         }
 
-        // 正規化された速度を5段階（0-4）に変換して公開する
+        // アイテム数ベースの正規化された値を5段階（0-4）に変換して公開する
         PlayerSpeedInt = _speedNorm
             .Select(n => Mathf.Clamp(Mathf.FloorToInt(n * 5f), 0, 4))
             .ToReadOnlyReactiveProperty()
             .AddTo(this);
+    }
+
+    private void Start()
+    {
+        // GameManagerのアイテム数変化を購読して、_speedNormを更新
+        GameManager.Instance.ItemCount.Subscribe(OnItemCountChanged).AddTo(this);
+        
+        // 初期値設定
+        OnItemCountChanged(GameManager.Instance.ItemCount.CurrentValue);
     }
 
     private void Update()
@@ -110,11 +119,14 @@ public class Player : MonoBehaviour
         _mouseSpeed.Value = currentDelta.magnitude;
     }
 
+    private void OnItemCountChanged(int itemCount)
+    {
+        // アイテム数（0-5）を0-1の範囲にマッピング
+        _speedNorm.Value = Mathf.Clamp01(itemCount / 5f);
+    }
+
     private void FixedUpdate()
     {
-        var vNorm = Mathf.Clamp01(_rb.linearVelocity.magnitude / maxLinearVelocity);
-        _speedNorm.Value = vNorm;
-
         // 蓄積された入力を使用
         if (_accumulatedInputDelta.sqrMagnitude < 1e-4f) return;
 
