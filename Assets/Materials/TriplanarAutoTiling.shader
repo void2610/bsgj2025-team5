@@ -4,6 +4,7 @@ Shader "Custom/TriplanarAutoTiling"
     {
         _MainTex ("Texture", 2D) = "white" {}
         _TileScale ("Tile Scale", Float) = 1.0
+        _Color ("Color", Color) = (1,1,1,1)
     }
     SubShader
     {
@@ -36,6 +37,7 @@ Shader "Custom/TriplanarAutoTiling"
             sampler2D _MainTex;
             float4 _MainTex_ST;
             float _TileScale;
+            fixed4 _Color;
 
             v2f vert (appdata v)
             {
@@ -65,6 +67,7 @@ Shader "Custom/TriplanarAutoTiling"
 
                 // Blend the textures
                 fixed4 col = texX * blendWeights.x + texY * blendWeights.y + texZ * blendWeights.z;
+                col *= _Color;
                 return col;
             }
             ENDCG
