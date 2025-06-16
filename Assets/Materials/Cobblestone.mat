@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Cobblestone
-  m_Shader: {fileID: -6465566751694194690, guid: 55a89fdabab1e47bf970591a57d2fc58, type: 3}
+  m_Shader: {fileID: 4800000, guid: a2bbbc5c294174a91b3c6684cbccaa6e, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -100,6 +100,8 @@ Material:
     - _AlphaToMask: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
+    - _BlendPower: 2
+    - _BlendSharpness: 4
     - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
@@ -125,13 +127,20 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
+    - _TileScale: 0.125
+    - _TileSize: 7.43
+    - _TilingScale: 1
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0.7, g: 0.7, b: 0.7, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Multiplier: {r: 0.05, g: 0.05, b: 0, a: 0}
+    - _OffsetX: {r: 0, g: 0, b: 0, a: 0}
+    - _OffsetY: {r: 0, g: 0, b: 0, a: 0}
+    - _OffsetZ: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _TileSize: {r: 1.39, g: 1.85, b: -2.63, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
