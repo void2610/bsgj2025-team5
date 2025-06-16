@@ -81,7 +81,7 @@ public class Item : MonoBehaviour
             // 表示状態の時のみ取得可能
             // if (!_isVisible) return;
             
-            GameManager.Instance.AddItemCount();
+            GameManager.Instance.AddItemCount(this.transform.position);
             Destroy(gameObject);
         }
     }
