@@ -3,11 +3,11 @@
 /// </summary>
 /// 開発進捗
 /// 06/11:作成
-/// 06/16:
+/// 06/16:ゲームオーバー時のペナルティで残り時間を減少させるように修正
+/// 06/17:機微の修正
 
 using UnityEngine;
 using TMPro;
-using UnityEngine.SceneManagement; // シーン管理のために必要
 
 public class CountdownTimer : MonoBehaviour
 {
@@ -41,7 +41,7 @@ public class CountdownTimer : MonoBehaviour
         if (_wasGameEnded) return; 
 
         // 残り時間を数える
-        OperateCurrentTime(-Time.deltaTime);
+        DecreaseCurrentTime(Time.deltaTime);
         // タイマーを更新
         SetTimeDisplay();
         // 時間が0秒以下でゲームオーバー
@@ -72,11 +72,11 @@ public class CountdownTimer : MonoBehaviour
     }
 
     /// <summary>
-    /// 残り時間を変更するメソッド
+    /// 残り時間を減らすメソッド
     /// </summary>
-    public void OperateCurrentTime(float v)
+    public void DecreaseCurrentTime(float v)
     {
-        _currentTime += v;
+        _currentTime -= Mathf.Abs(v);
     }
 
     /// <summary>

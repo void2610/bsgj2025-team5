@@ -31,10 +31,10 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
   [SerializeField] private Vector3 defaultRespawnPosition;
   private Vector3 _respawnPosition;
 
-  public void AddItemCount(Vector3 itemPositon)
+  public void AddItemCount(Transform itemPositon)
   {
     _itemCount.Value++;
-    _respawnPosition = itemPositon; //最後に取得したアイテムの位置をリスポーン地点にする
+    _respawnPosition = new Vector3(itemPositon.position.x,itemPositon.position.y,itemPositon.position.z); //最後に取得したアイテムの位置をリスポーン地点にする
     if (_itemCount.Value >= 5)
     {
       // クリア時の残りタイムを保存する
@@ -53,7 +53,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
   {
     Debug.Log("Fall Penalty: " + _fallTimePenalty);
     // 残り時間を減らしてプレイヤーをリスポーンさせる
-    countdownTimer.OperateCurrentTime(_fallTimePenalty);
+    countdownTimer.DecreaseCurrentTime(_fallTimePenalty);
     RespownPlayer();
   }
 
