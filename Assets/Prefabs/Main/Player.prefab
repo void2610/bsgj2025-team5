@@ -152,11 +152,11 @@ MonoBehaviour:
   playerCamera: {fileID: 0}
   isHorizontalInverted: 1
   isVerticalInverted: 1
-  torqueMultiplier: 0.001
-  maxLinearVelocity: 15
-  maxAngularVelocity: 30
+  torqueMultiplier: 1
+  maxLinearVelocity: 50
+  maxAngularVelocity: 50
   angularDamping: 1
-  dynamicFriction: 50
-  staticFriction: 50
+  dynamicFriction: 0.01
+  staticFriction: 0.01
   bounciness: 0
   sandParticleData: {fileID: 11400000, guid: 6092c442923d44a4e830cd2b8755650f, type: 2}

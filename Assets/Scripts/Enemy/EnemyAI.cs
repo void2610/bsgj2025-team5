@@ -88,7 +88,8 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private float respawnSearchRadius = 2f;
     // 常にアクティブな床のレイヤー
     [SerializeField] private LayerMask FloorLayer; 
-    [SerializeField] private LayerMask disappearFloorLayer; // 消える床のレイヤー
+    // 消える床のレイヤー
+    [SerializeField] private LayerMask disappearFloorLayer; 
 
 
     private void Awake()
