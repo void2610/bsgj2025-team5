@@ -130,7 +130,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredSpeed: 0
-  destroyDelay: 0.25
+  destroyDelay: 0.5
+  blowForce: 85
+  upwardForce: 30
 --- !u!65 &3943559155358807395
 BoxCollider:
   m_ObjectHideFlags: 0
