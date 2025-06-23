@@ -6,7 +6,7 @@ public class RotateTween : MonoBehaviour
 {
     [Tooltip("回転速度（1秒あたりの回転数）。大きいほど速く回転します")]
     [SerializeField] private float speed = 1f;
-        
+
     private void Start()
     {
         LMotion.Create(new Vector3(45, 0, 45), new Vector3(45, 360, 45), 1f / speed)
