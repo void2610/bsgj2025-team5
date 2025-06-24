@@ -54,6 +54,7 @@ public class RevealableObject : MonoBehaviour
         
         // ディゾルブマテリアルに切り替え
         _materialInstance = new Material(dissolveMaterial);
+        _materialInstance.SetTexture(_mainTex, _originalMaterial.mainTexture);
         _renderer.material = _materialInstance;
         
         // ディゾルブアニメーション開始（0→1で出現）
