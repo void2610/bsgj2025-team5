@@ -1,5 +1,6 @@
 using R3;
 using UnityEngine;
+using LitMotion;
 
 public class RevealableObject : MonoBehaviour
 {
@@ -12,93 +13,104 @@ public class RevealableObject : MonoBehaviour
     [Tooltip("パーティクルのプレハブ（オプション）")]
     [SerializeField] private GameObject particlePrefab;
     
-    [Tooltip("表示状態の透明度")]
-    [SerializeField, Range(0f, 1f)] private float visibleAlpha = 1f;
+    [Tooltip("ディゾルブマテリアル")]
+    [SerializeField] private Material dissolveMaterial;
     
-    [Tooltip("非表示状態の透明度")]
-    [SerializeField, Range(0f, 1f)] private float hiddenAlpha = 0.5f;
+    [Tooltip("ディゾルブアニメーションの継続時間")]
+    [SerializeField] private float dissolveDuration = 2.0f;
     
-    private Material _material;
+    private Material _originalMaterial;
+    private Material _materialInstance;
     private Collider _collider;
-    private static readonly int _baseColor = Shader.PropertyToID("_BaseColor");
-    private static readonly int _surface = Shader.PropertyToID("_Surface");
-    private static readonly int _blend = Shader.PropertyToID("_Blend");
-    private static readonly int _srcBlend = Shader.PropertyToID("_SrcBlend");
-    private static readonly int _dstBlend = Shader.PropertyToID("_DstBlend");
-    private static readonly int _zWrite = Shader.PropertyToID("_ZWrite");
-    private Color _originalColor;
+    private Renderer _renderer;
+    private MotionHandle _currentMotion;
+    private bool _isRevealed = false;
+    
+    private static readonly int _dissolveAmount = Shader.PropertyToID("_Dissolve");
+    private static readonly int _mainTex = Shader.PropertyToID("_MainTex");
 
     private void OnChangePlayerSpeed(int s)
     {
         var shouldBeActive = invertBehavior ? s <= requiredSpeed : s >= requiredSpeed;
-        if (shouldBeActive)
+        if (shouldBeActive && !_isRevealed)
         {
-            var color = _originalColor;
-            color.a = visibleAlpha;
-            _material.SetColor(_baseColor, color);
-            _collider.isTrigger = false;
-            
-            // 透明度が1の場合は不透明モードに切り替え
-            if (visibleAlpha >= 0.99f)
-            {
-                SetOpaqueMode();
-            }
-            else
-            {
-                SetTransparentMode();
-            }
+            RevealObject();
         }
-        else
+        else if (!shouldBeActive && _isRevealed)
         {
-            var color = _originalColor;
-            color.a = hiddenAlpha;
-            _material.SetColor(_baseColor, color);
-            _collider.isTrigger = true;
-            
-            // 半透明の場合は透明モードに切り替え
-            SetTransparentMode();
+            HideObject();
         }
     }
     
-    private void SetOpaqueMode()
+    /// <summary>
+    /// オブジェクトをディゾルブ効果で出現させる
+    /// </summary>
+    private void RevealObject()
     {
-        _material.SetFloat(_surface, 0); // Opaque
-        _material.SetFloat(_zWrite, 1);
-        _material.DisableKeyword("_SURFACE_TYPE_TRANSPARENT");
-        _material.DisableKeyword("_ALPHABLEND_ON");
-        _material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Geometry;
+        _isRevealed = true;
+        _collider.isTrigger = false;
+        
+        if (_currentMotion.IsActive()) _currentMotion.Cancel();
+        
+        // ディゾルブマテリアルに切り替え
+        _materialInstance = new Material(dissolveMaterial);
+        _renderer.material = _materialInstance;
+        
+        // ディゾルブアニメーション開始（0→1で出現）
+        _currentMotion = LMotion.Create(0f, 1f, dissolveDuration)
+            .WithEase(Ease.OutQuad)
+            .Bind(value => _materialInstance?.SetFloat(_dissolveAmount, value))
+            .AddTo(this);
     }
     
-    private void SetTransparentMode()
+    /// <summary>
+    /// オブジェクトをディゾルブ効果で消失させる
+    /// </summary>
+    private void HideObject()
     {
-        _material.SetFloat(_surface, 1); // Transparent
-        _material.SetFloat(_blend, 0);
-        _material.SetFloat(_srcBlend, (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
-        _material.SetFloat(_dstBlend, (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-        _material.SetFloat(_zWrite, 0);
-        _material.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
-        _material.EnableKeyword("_ALPHABLEND_ON");
-        _material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+        _isRevealed = false;
+        _collider.isTrigger = true;
+        
+        // 既存のアニメーションを停止
+        if (_currentMotion.IsActive()) _currentMotion.Cancel();
+        
+        // ディゾルブアニメーション開始
+        _currentMotion = LMotion.Create(1, 0f, dissolveDuration)
+            .WithEase(Ease.OutQuad)
+            .WithOnComplete(() => { _renderer.material = _originalMaterial; })
+            .Bind(value => _materialInstance?.SetFloat(_dissolveAmount, value))
+            .AddTo(this);
     }
 
     private void Awake()
     {
         if (particlePrefab) Instantiate(particlePrefab, this.transform.position, Quaternion.identity);
         
-        var rend = this.GetComponent<Renderer>();
-        _material = new Material(rend.material);
-        rend.material = _material;
-        
+        _renderer = this.GetComponent<Renderer>();
+        _originalMaterial = _renderer.material;
+        Debug.Log(_originalMaterial.mainTexture.name);
         _collider = this.GetComponent<Collider>();
         
-        _originalColor = _material.GetColor(_baseColor);
+        // 初期状態では非表示（ディゾルブ値0）
+        _materialInstance = new Material(dissolveMaterial);
+        _materialInstance.SetFloat(_dissolveAmount, 0f);
+        _materialInstance.SetTexture(_mainTex, _originalMaterial.mainTexture);
+        _renderer.material = _materialInstance;
         
-        // 初期状態は不透明モードで開始
-        SetOpaqueMode();
+        _isRevealed = false;
+        _collider.isTrigger = true;
     }
         
     private void Start()
     {
         GameManager.Instance.Player.PlayerSpeedInt.Subscribe(OnChangePlayerSpeed).AddTo(this);
+    }
+
+    private void OnDestroy()
+    {
+        // アニメーションを停止
+        if (_currentMotion.IsActive()) _currentMotion.Cancel();
+        // マテリアルインスタンスを破棄
+        if (_materialInstance) DestroyImmediate(_materialInstance);
     }
 }

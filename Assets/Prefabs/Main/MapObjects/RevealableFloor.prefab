@@ -124,3 +124,5 @@ MonoBehaviour:
   requiredSpeed: 3
   invertBehavior: 0
   particlePrefab: {fileID: 3514528225388775477, guid: a016f99fb9a4b46c4a26dfc0ffe1f9e6, type: 3}
+  dissolveMaterial: {fileID: 2100000, guid: 6cf907a36da9e4de2a02dc82da144857, type: 2}
+  dissolveDuration: 2
