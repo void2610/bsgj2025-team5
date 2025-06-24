@@ -49,7 +49,7 @@ public class BreakableObject : MonoBehaviour
         if (squaredDistance <= detectionDistance * detectionDistance && _player.PlayerSpeedInt.CurrentValue >= requiredSpeed)
         {
             // コライダーを無効化してプレイヤーの減速を防ぐ
-            _collider.enabled = false;
+            Physics.IgnoreCollision(_collider, _player.GetComponent<Collider>());
             BlowAway();
         }
     }
