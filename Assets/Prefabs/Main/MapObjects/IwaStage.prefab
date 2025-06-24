@@ -134,6 +134,18 @@ MonoBehaviour:
   blowForce: 80
   upwardForce: 30
   detectionDistance: 3
+  slowdownForce: 1000
+  speedSettings:
+  - blowForceMultiplier: 0.2
+    slowdownForceMultiplier: 5
+  - blowForceMultiplier: 0.5
+    slowdownForceMultiplier: 0.5
+  - blowForceMultiplier: 1
+    slowdownForceMultiplier: 0.1
+  - blowForceMultiplier: 1
+    slowdownForceMultiplier: 0.1
+  - blowForceMultiplier: 1
+    slowdownForceMultiplier: 0.1
 --- !u!65 &3943559155358807395
 BoxCollider:
   m_ObjectHideFlags: 0
