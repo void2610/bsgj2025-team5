@@ -16,46 +16,53 @@ public class BreakableObject : MonoBehaviour
     [Tooltip("吹っ飛び時の上向きの力")]
     [SerializeField] private float upwardForce = 30f;
     
+    [Tooltip("プレイヤー検知距離")]
+    [SerializeField] private float detectionDistance = 2f;
+    
     private Rigidbody _rb;
-    private bool _isBlownAway = false;
+    private Collider _collider;
+    private Player _player;
+    private bool _isBlownAway;
 
     private void Awake()
     {
-        // RigidBodyコンポーネントを取得し、初期状態では静的にする
         _rb = GetComponent<Rigidbody>();
-        if (_rb == null)
-        {
-            Debug.LogError($"BreakableObject '{gameObject.name}' にRigidbodyがアタッチされていません！");
-            return;
-        }
+        _collider = GetComponent<Collider>();
         
         // 初期状態では物理演算を無効にして静的にする
         _rb.isKinematic = true;
     }
-
-    private void OnCollisionEnter(Collision collision)
+    
+    private void Start()
     {
-        // すでに吹っ飛んでいる場合は処理しない
-        if (_isBlownAway) return;
+        _player = FindFirstObjectByType<Player>();
+    }
+
+    private void Update()
+    {
+        // すでに吹っ飛んでいるか、プレイヤーが見つからない場合は処理しない
+        if (_isBlownAway || !_player) return;
         
-        if (collision.gameObject.TryGetComponent(out Player player))
+        var distance = Vector3.Distance(transform.position, _player.transform.position);
+        
+        // 検知距離内にプレイヤーがいて、条件を満たしている場合
+        if (distance <= detectionDistance && _player.PlayerSpeedInt.CurrentValue >= requiredSpeed)
         {
-            if (player.PlayerSpeedInt.CurrentValue >= requiredSpeed)
-            {
-                BlowAway(collision);
-            }
+            // コライダーを無効化してプレイヤーの減速を防ぐ
+            _collider.enabled = false;
+            BlowAway();
         }
     }
 
-    private void BlowAway(Collision collision)
+    private void BlowAway()
     {
         _isBlownAway = true;
         
         // 物理演算を有効にする
         _rb.isKinematic = false;
         
-        // 衝突点と方向を計算
-        var direction = (transform.position - collision.transform.position).normalized;
+        // プレイヤーの位置から吹っ飛ぶ方向を計算
+        var direction = (transform.position - _player.transform.position).normalized;
         // 水平方向の力と上向きの力を組み合わせ
         var force = direction * blowForce + Vector3.up * upwardForce;
         
