@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      youryoku_0: -5915653937099845263
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

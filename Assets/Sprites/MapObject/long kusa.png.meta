@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 324d8b27184634d0f8840d60180d9e05
+guid: 3266919384d024c7d815a55ae6e3c31b
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7886569411198417101
-    second: youryoku makimono_0
+      213: -5406582086356187290
+    second: long kusa_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -96,40 +96,27 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: youryoku makimono_0
+      name: long kusa_0
       rect:
         serializedVersion: 2
-        x: 282
-        y: 74
-        width: 1485
-        height: 373
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 59
+        y: 36
+        width: 905
+        height: 1858
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3378e05c7e64d8290800000000000000
-      internalID: -7886569411198417101
+      spriteID: 667cfbddc36f7f4b0800000000000000
+      internalID: -5406582086356187290
       vertices: []
       indices: 
       edges: []
@@ -138,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5890db05ddd88c3459cafce50db9a99b
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      youryoku makimono_0: -7886569411198417101
+      long kusa_0: -5406582086356187290
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
