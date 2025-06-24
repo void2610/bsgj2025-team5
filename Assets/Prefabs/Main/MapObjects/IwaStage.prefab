@@ -79,7 +79,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 9220265608552340914, guid: c5a4822aaaaa2b44d8949a43bf897cca, type: 3}
+  m_Sprite: {fileID: 9220265608552340914, guid: 32b6335aff68c4c959d307f3024833a1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -130,7 +130,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   requiredSpeed: 0
-  destroyDelay: 0.25
+  destroyDelay: 0.5
+  blowForce: 80
+  upwardForce: 30
+  detectionDistance: 3
+  slowdownForce: 1000
+  speedSettings:
+  - blowForceMultiplier: 0.2
+    slowdownForceMultiplier: 5
+  - blowForceMultiplier: 0.5
+    slowdownForceMultiplier: 0.5
+  - blowForceMultiplier: 1
+    slowdownForceMultiplier: 0.1
+  - blowForceMultiplier: 1
+    slowdownForceMultiplier: 0.1
+  - blowForceMultiplier: 1
+    slowdownForceMultiplier: 0.1
 --- !u!65 &3943559155358807395
 BoxCollider:
   m_ObjectHideFlags: 0

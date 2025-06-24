@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 324d8b27184634d0f8840d60180d9e05
+guid: 32b6335aff68c4c959d307f3024833a1
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7886569411198417101
-    second: youryoku makimono_0
+      213: 9220265608552340914
+    second: iwa_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -96,40 +96,27 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: youryoku makimono_0
+      name: iwa_0
       rect:
         serializedVersion: 2
-        x: 282
-        y: 74
-        width: 1485
-        height: 373
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 33
+        y: 77
+        width: 1225
+        height: 1023
+      alignment: 9
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3378e05c7e64d8290800000000000000
-      internalID: -7886569411198417101
+      spriteID: 2bd538c48b6f4ff70800000000000000
+      internalID: 9220265608552340914
       vertices: []
       indices: 
       edges: []
@@ -138,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 833776abe7b9893458b85f935594394d
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      youryoku makimono_0: -7886569411198417101
+      iwa_0: 9220265608552340914
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
