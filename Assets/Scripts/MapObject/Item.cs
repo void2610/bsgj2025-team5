@@ -57,21 +57,21 @@ public class Item : MonoBehaviour
         _material = new Material(rend.material);
         rend.material = _material;
         
-        _originalColor = _material.GetColor(_baseColor);
-        
-        // マテリアルを透明にするための設定
-        _material.SetFloat(_surface, 1); // 0 = Opaque, 1 = Transparent
-        _material.SetFloat(_blend, 0);   // 0 = Alpha, 1 = Premultiply, 2 = Additive, 3 = Multiply
-        _material.SetFloat(_srcBlend, (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
-        _material.SetFloat(_dstBlend, (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-        _material.SetFloat(_zWrite, 0);
-        _material.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
-        _material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+        // _originalColor = _material.GetColor(_baseColor);
+        //
+        // // マテリアルを透明にするための設定
+        // _material.SetFloat(_surface, 1); // 0 = Opaque, 1 = Transparent
+        // _material.SetFloat(_blend, 0);   // 0 = Alpha, 1 = Premultiply, 2 = Additive, 3 = Multiply
+        // _material.SetFloat(_srcBlend, (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
+        // _material.SetFloat(_dstBlend, (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+        // _material.SetFloat(_zWrite, 0);
+        // _material.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+        // _material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
     }
         
     private void Start()
     {
-        GameManager.Instance.Player.PlayerSpeedInt.Subscribe(OnChangePlayerSpeed).AddTo(this);
+        // GameManager.Instance.Player.PlayerSpeedInt.Subscribe(OnChangePlayerSpeed).AddTo(this);
     }
     
     private void OnTriggerEnter(Collider other)
@@ -79,7 +79,7 @@ public class Item : MonoBehaviour
         if (other.TryGetComponent<Player>(out _))
         {
             // 表示状態の時のみ取得可能
-            // if (!_isVisible) return;
+            if (!_isVisible) return;
             
             GameManager.Instance.AddItemCount(this.transform.position);
             Destroy(gameObject);
