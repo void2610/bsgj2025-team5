@@ -50,11 +50,9 @@ public class ItemUI : MonoBehaviour
         {
             // トランジション値を1から0にアニメーション（Blazeエフェクトを徐々に消す）
             LMotion.Create(1f, 0f, animationDuration)
-                .WithOnComplete(() => {
-                    // アニメーション完了後、エフェクトを無効化
-                    uiEffect.transitionRate = 0f;
-                })
-                .Bind(value => uiEffect.transitionRate = value);
+                .WithOnComplete(() => { uiEffect.transitionRate = 0f; })
+                .Bind(value => uiEffect.transitionRate = value)
+                .AddTo(this);
         }
     }
 }
