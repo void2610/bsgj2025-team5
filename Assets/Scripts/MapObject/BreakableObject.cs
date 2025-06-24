@@ -43,10 +43,10 @@ public class BreakableObject : MonoBehaviour
         // すでに吹っ飛んでいるか、プレイヤーが見つからない場合は処理しない
         if (_isBlownAway || !_player) return;
         
-        var distance = Vector3.Distance(transform.position, _player.transform.position);
+        var squaredDistance = (transform.position - _player.transform.position).sqrMagnitude;
         
         // 検知距離内にプレイヤーがいて、条件を満たしている場合
-        if (distance <= detectionDistance && _player.PlayerSpeedInt.CurrentValue >= requiredSpeed)
+        if (squaredDistance <= detectionDistance * detectionDistance && _player.PlayerSpeedInt.CurrentValue >= requiredSpeed)
         {
             // コライダーを無効化してプレイヤーの減速を防ぐ
             _collider.enabled = false;
