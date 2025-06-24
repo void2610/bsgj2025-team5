@@ -89,7 +89,6 @@ public class RevealableObject : MonoBehaviour
         
         _renderer = this.GetComponent<Renderer>();
         _originalMaterial = _renderer.material;
-        Debug.Log(_originalMaterial.mainTexture.name);
         _collider = this.GetComponent<Collider>();
         
         // 初期状態では非表示（ディゾルブ値0）
