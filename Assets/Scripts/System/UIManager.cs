@@ -32,9 +32,4 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
         
         SetPause(false);
     }
-    
-    private void Start()
-    {
-        GameManager.Instance.ItemCount.Subscribe(v => itemCountText.text = $"Item: {v}/5").AddTo(this);
-    }
 }
