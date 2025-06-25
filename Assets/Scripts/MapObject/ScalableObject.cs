@@ -45,12 +45,14 @@ public class ScalableObject : MonoBehaviour
         // 既存のアニメーションをキャンセル
         if (_currentAnimation.IsActive()) _currentAnimation.Cancel();
         
+        var startScale = transform.localScale;
+        
         // LitMotionでスケールと位置を同時にアニメーション
-        _currentAnimation = LMotion.Create(0f, 1f, 2f)
+        _currentAnimation = LMotion.Create(0f, 1f, 2.5f)
             .WithEase(Ease.OutBack)
             .Bind(progress =>
             {
-                transform.localScale = Vector3.Lerp(transform.localScale, targetScale, progress);
+                transform.localScale = Vector3.Lerp(startScale, targetScale, progress);
                 transform.position = Vector3.Lerp(transform.position, targetPosition, progress);
             });
     }
