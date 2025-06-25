@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8375407336337183358}
   - component: {fileID: 519292704350975541}
   - component: {fileID: 3943559155358807395}
+  - component: {fileID: 2481333848240953190}
   m_Layer: 0
   m_Name: IwaStage
   m_TagString: Untagged
@@ -133,7 +134,7 @@ MonoBehaviour:
   destroyDelay: 0.5
   blowForce: 80
   upwardForce: 30
-  detectionDistance: 3
+  detectionDistance: 3.5
   slowdownForce: 1000
   speedSettings:
   - blowForceMultiplier: 0.2
@@ -167,3 +168,43 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 12.249999, y: 10.229999, z: 0.19999999}
   m_Center: {x: 0.0000011920929, y: 5.1149983, z: 0.000015258789}
+--- !u!114 &2481333848240953190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1456739089770547239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6eb2fec5a476f458995a74af0dfff45c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minScale: 0.75
+  maxScale: 2.5
+  scaleCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 1
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  positionOffsetMultiplier: 0.5
+  positionOffsetDirection: {x: 0, y: 1, z: 0}
