@@ -128,3 +128,4 @@ MonoBehaviour:
     m_RotationOrder: 4
   positionOffsetMultiplier: 0.5
   positionOffsetDirection: {x: 0, y: 1, z: 0}
+  animationDuration: 2

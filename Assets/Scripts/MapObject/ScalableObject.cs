@@ -1,3 +1,5 @@
+using LitMotion;
+using LitMotion.Extensions;
 using R3;
 using UnityEngine;
 
@@ -22,6 +24,7 @@ public class ScalableObject : MonoBehaviour
     
     private Vector3 _originalScale;
     private Vector3 _originalPosition;
+    private MotionHandle _currentAnimation;
 
     private void Awake()
     {
@@ -34,17 +37,32 @@ public class ScalableObject : MonoBehaviour
         var curveValue = scaleCurve.Evaluate(speedNorm);
         var scaleMultiplier = Mathf.Lerp(minScale, maxScale, curveValue);
         
-        // スケール変更前の補正値を計算
+        // 目標スケールと位置を計算
+        var targetScale = _originalScale * scaleMultiplier;
         var scaleDifference = scaleMultiplier - 1.0f;
-        var positionOffset = positionOffsetDirection * (scaleDifference * positionOffsetMultiplier);
+        var targetPosition = _originalPosition + positionOffsetDirection * (scaleDifference * positionOffsetMultiplier);
         
-        // スケールと位置を同時に更新
-        transform.localScale = _originalScale * scaleMultiplier;
-        transform.position = _originalPosition + positionOffset;
+        // 既存のアニメーションをキャンセル
+        if (_currentAnimation.IsActive()) _currentAnimation.Cancel();
+        
+        // LitMotionでスケールと位置を同時にアニメーション
+        _currentAnimation = LMotion.Create(0f, 1f, 2f)
+            .WithEase(Ease.OutBack)
+            .Bind(progress =>
+            {
+                transform.localScale = Vector3.Lerp(transform.localScale, targetScale, progress);
+                transform.position = Vector3.Lerp(transform.position, targetPosition, progress);
+            });
     }
         
     private void Start()
     {
         GameManager.Instance.Player.PlayerSpeedNorm.Subscribe(OnChangePlayerSpeed).AddTo(this);
+    }
+    
+    private void OnDestroy()
+    {
+        // オブジェクト破棄時にアニメーションをキャンセル
+        if (_currentAnimation.IsActive()) _currentAnimation.Cancel();
     }
 }
