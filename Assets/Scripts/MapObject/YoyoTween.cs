@@ -21,26 +21,46 @@ public class YoyoTween : MonoBehaviour
     
     [Tooltip("ランダム遅延の最大値（秒）")]
     [SerializeField] private float randomDelayMax = 1f;
-
-    private Vector3 _initialPosition;
+    
+    private Vector3 _initialLocalPosition;
+    private Vector3 _offset;
 
     private void Start()
     {
-        // 初期位置を保存
-        _initialPosition = transform.position;
-        
-        // 終了位置を計算
-        var endPosition = _initialPosition + moveVector;
+        // 初期ローカル位置を保存
+        _initialLocalPosition = transform.localPosition;
         
         // 遅延時間を計算
         var delay = useRandomDelay ? Random.Range(0f, randomDelayMax) : 0f;
         
-        // 往復運動を開始
-        LMotion.Create(_initialPosition, endPosition, period / 2f)
-            .WithDelay(delay) // 遅延を適用
-            .WithLoops(-1, loopType) // 指定されたループタイプを使用
-            .WithEase(ease) // 指定されたイージングを使用
-            .BindToPosition(transform) // 位置に紐づけ
+        // オフセット値をアニメーション（0から1の値で制御）
+        LMotion.Create(0f, 1f, period / 2f)
+            .WithDelay(delay)
+            .WithLoops(-1, loopType)
+            .WithEase(ease)
+            .Bind(value => 
+            {
+                // 現在のオフセットを計算
+                _offset = moveVector * value;
+                // 他のYoyoTweenのオフセットと合成して適用
+                UpdatePosition();
+            })
             .AddTo(gameObject);
+    }
+
+    private void UpdatePosition()
+    {
+        // 全てのYoyoTweenコンポーネントを取得
+        var yoyoTweens = GetComponents<YoyoTween>();
+        var totalOffset = Vector3.zero;
+        
+        // 各YoyoTweenのオフセットを合計
+        foreach (var tween in yoyoTweens)
+        {
+            totalOffset += tween._offset;
+        }
+        
+        // 初期位置に合計オフセットを適用
+        transform.localPosition = _initialLocalPosition + totalOffset;
     }
 }
