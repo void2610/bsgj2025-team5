@@ -7,7 +7,6 @@
 using UnityEngine;
 using TMPro; // TextMeshProUGUI を使う場合
 
-
 public class RemainingTimeText : MonoBehaviour
 {
     // UIのTextMeshProの束縛
