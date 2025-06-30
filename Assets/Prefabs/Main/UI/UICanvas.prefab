@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3275467068504404351}
   - component: {fileID: 403048505979767446}
   m_Layer: 5
-  m_Name: TimeDecrease
+  m_Name: PenaltyTimeText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -25,16 +25,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 857914628629996580}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -76.217964}
+  m_LocalScale: {x: 0.95208335, y: 0.95208335, z: 0.95208335}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7592090827493774473}
+  m_Father: {fileID: 6194888850821407365}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -228.8, y: 195.64517}
+  m_AnchoredPosition: {x: -687.66907, y: 287.15686}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3275467068504404351
@@ -195,7 +195,7 @@ GameObject:
   - component: {fileID: 7928103422811979105}
   - component: {fileID: 1533173605486921416}
   m_Layer: 5
-  m_Name: CountDownTimer
+  m_Name: CountDownTimerText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -208,16 +208,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4407486009967934621}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -76.217964}
+  m_LocalScale: {x: 0.95208335, y: 0.95208335, z: 0.95208335}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7592090827493774473}
+  m_Father: {fileID: 6194888850821407365}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -356, y: 222}
+  m_AnchoredPosition: {x: -808.77405, y: 312.24884}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9185653854254019685
@@ -331,14 +331,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f5f8bffbf52147379b8c84a00b28943, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timerText: {fileID: 7928103422811979105}
-  timeDecreaseText: {fileID: 403048505979767446}
-  timeDecreaseSpawnPoint: {fileID: 1529087537669328258}
-  flashColor: {r: 1, g: 0, b: 0, a: 1}
-  flashDuration: 0.5
-  flashStartTime: 10
-  timeDecreaseAnimationDuration: 1
-  timeDecreaseMoveAmount: 50
+  _mainTimerText: {fileID: 7928103422811979105}
+  _timePenaltyTextPrefab: {fileID: 403048505979767446}
+  _timePenaltyTextSpawnPoint: {fileID: 1529087537669328258}
 --- !u!1 &6866070582696165679
 GameObject:
   m_ObjectHideFlags: 0
@@ -372,9 +367,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 6194888850821407365}
   - {fileID: 5353474785040077499}
-  - {fileID: 8123177206860179336}
-  - {fileID: 1529087537669328258}
   - {fileID: 4613902025910930746}
   - {fileID: 7985037696956430798}
   - {fileID: 7887497323464267084}
@@ -480,6 +474,39 @@ MonoBehaviour:
   targetCamera: {fileID: 0}
   aspectWidth: 16
   aspectHeight: 9
+--- !u!1 &7655578578108104058
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6194888850821407365}
+  m_Layer: 0
+  m_Name: CountdownTimer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6194888850821407365
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7655578578108104058}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 493.47824, y: -105.963776, z: 80.05389}
+  m_LocalScale: {x: 1.0503283, y: 1.0503283, z: 1.0503283}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8123177206860179336}
+  - {fileID: 1529087537669328258}
+  m_Father: {fileID: 7592090827493774473}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &896144407770507405
 PrefabInstance:
   m_ObjectHideFlags: 0

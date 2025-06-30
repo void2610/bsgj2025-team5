@@ -2,145 +2,179 @@ using UnityEngine;
 using TMPro;
 using R3;
 using LitMotion;
-using LitMotion.Extensions; // これが必要です
-using System;
+using LitMotion.Extensions;
 
 public class TimerUI : MonoBehaviour
 {
-    [SerializeField] private TextMeshProUGUI timerText; // 対象のTextMeshProを束縛
+    [Tooltip("必要なUIの要素")]
+    [SerializeField] private TextMeshProUGUI _mainTimerText; // タイマー表示テキスト
+    [SerializeField] private TextMeshProUGUI _timePenaltyTextPrefab; // 時間ペナルティー表示用のプレハブ
+    [SerializeField] private Transform _timePenaltyTextSpawnPoint; // 時間ペナルティー表示を生成する位置
 
-    [SerializeField] private TextMeshProUGUI timeDecreaseText; // 時間減少を知らせるテキストを束縛
+    [Tooltip("点滅アニメーションの設定")]
+    // 点滅アニメーション設定
+    private readonly Color _timerFlashColor = Color.red; // タイマーが点滅する色
+    private readonly float _timerFlashDuration = 0.5f; // タイマー点滅の1サイクルにかかる時間
+    private readonly float _flashThresholdTime = 10.0f; // タイマー点滅を開始する残り時間
 
-    [SerializeField] private Transform timeDecreaseSpawnPoint; // 時間減少を知らせるテキストの生成位置
+    [Tooltip("時間ペナルティアニメーションの設定")]
+    // 時間ペナルティーアニメーション設定
+    private readonly float _timePenaltyAnimationDuration = 1.0f; // 時間アニメーションの期間
+    private readonly float _timePenaltyMoveAmount = 50f; // 時間ペナルティアニメーションでテキストが移動する量 (上方向)
+    private readonly float _minPenaltyAmountToShow = 1.0f; // 表示する時間ペナルティー量の最小値
 
-    [SerializeField] private Color flashColor = Color.red; // 点滅する色
-
-    [SerializeField] private float flashDuration = 0.5f; // 点滅の期間
-
-    [SerializeField] private float flashStartTime = 10.0f; // 点滅を開始する残り時間
-
-    [SerializeField] private float timeDecreaseAnimationDuration = 1.0f; // 減少アニメーショの期間
-
-    [SerializeField] private float timeDecreaseMoveAmount = 20f; // 減少アニメーションの移動量
-
-    private MotionHandle _flashMotionHandle; // LitMotion のハンドル
-
-    private Color _originalTextColor; // 元のテキスト色を保持するフィールド変数
-
-    private float _previousTime; // 時間減少量のためのフィールド変数
+    // 内部状態管理用
+    private MotionHandle _currentFlashMotionHandle; // 現在実行中のタイマー点滅モーションのハンドル
+    private Color _originalTimerTextColor; // タイマーテキストの元の色
+    private float _previousGameTime; // 前回のゲーム時間を保持し、時間ペナルティーを検出するために使用
 
     private void Awake()
     {
-        // 元のテキスト色を保持
-        _originalTextColor = timerText.color;
+        // タイマーの元の色を保持
+        _originalTimerTextColor = _mainTimerText.color;
     }
 
     private void Start()
     {
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.OnTimeChanged
-                .Subscribe(SetTimeDisplay)
-                .AddTo(this);
-
-            GameManager.Instance.OnTimeChanged
-                .Subscribe(CheckTimeDecrease)
-                .AddTo(this);
-
-            // 残り時間によって赤文字点滅
-            GameManager.Instance.OnTimeChanged
-                .Where(time => time <= flashStartTime && time > 0f)
-                .Subscribe(_ => StartFlash())
-                .AddTo(this);
-            // 点滅終了
-            GameManager.Instance.OnTimeChanged
-                .Where(time => time <= 0f)
-                .Subscribe(_ => StopFlash())
-                .AddTo(this);
-
-            // 時間保持用変数の初期化
-            _previousTime = GameManager.Instance.CurrentTimeValue;
-        }
-        else
+        if (GameManager.Instance == null)
         {
             Debug.LogError("GameManagerのインスタンスが見つかりません。シングルトンが正しく初期化されているか確認してください。", this);
-        }
-    }
-
-    private void SetTimeDisplay(float currentTime)
-    {
-        int minutes = Mathf.Max(0, Mathf.FloorToInt(currentTime / 60));
-        int seconds = Mathf.Max(0, Mathf.FloorToInt(currentTime % 60));
-        timerText.text = $"{minutes:00}:{seconds:00}";
-    }
-
-    private void StartFlash()
-    {
-        // 既に点滅モーションが開始している場合は何もしない
-        if (_flashMotionHandle.IsActive()) return;
-
-        // LitMotionでTextMeshProUGUIのVertex Colorプロパティをアニメーションさせる
-        _flashMotionHandle = LMotion.Create(_originalTextColor, flashColor, flashDuration)
-            .WithEase(Ease.OutSine)
-            .WithLoops(-1, LoopType.Yoyo) // アニメーションを無限ループさせる
-            .BindToColor(timerText) // colorプロパティに束縛
-            .AddTo(this);
-    }
-
-    private void StopFlash()
-    {
-        if (_flashMotionHandle.IsActive())
-        {
-            _flashMotionHandle.Cancel(); // 無限ループから解放する
-            timerText.color = _originalTextColor; // テキストを元の色に戻す
-        }
-    }
-
-    private void CheckTimeDecrease(float currentTime)
-    {
-        // 時間が減少したときのみに処理
-        if (currentTime < _previousTime)
-        {
-            float decreaseAmount = _previousTime - currentTime;
-            if (decreaseAmount > 1.0f) // 微小変化は無視
-            {
-                ShowTimeDecreaseAnimation(decreaseAmount);
-            }
-        }
-
-        // 時間の更新
-        _previousTime = currentTime;
-    }
-
-    private void ShowTimeDecreaseAnimation(float amount)
-    {
-        if (timeDecreaseText == null)
-        {
-            Debug.LogWarning("Time Decrease Prefabが設定されていません。", this);
             return;
         }
 
-        // 減少表示テキストのインスタンスを生成
-        TextMeshProUGUI decreaseTextInstance = Instantiate(timeDecreaseText, timeDecreaseSpawnPoint.position, Quaternion.identity, timeDecreaseSpawnPoint);
-        decreaseTextInstance.gameObject.SetActive(true); // アクティブにする
-        decreaseTextInstance.text = $"-{Mathf.CeilToInt(amount)}"; // 整数に丸めて表示
+        // 初期ゲーム時間を設定（時間ペナルティー検出の基準値）
+        _previousGameTime = GameManager.Instance.CurrentTimeValue;
+        // タイマーにかかるアニメーションの登録
+        TimerSubscribe();
+    }
 
-        // 初期色を赤に設定
-        Color startColor = flashColor; // 点滅色を初期色として使用
-        decreaseTextInstance.color = startColor;
+    /// <summary>
+    /// タイマーへの処理を登録する
+    /// </summary>
+    private void TimerSubscribe()
+    {
+        // GameManagerのOnTimeChangedイベントを購読し、各種処理を登録
+        Observable<float> timeChanged = GameManager.Instance.OnTimeChanged;
+
+        // タイマーに残り時間を表示
+        timeChanged
+            .Subscribe(UpdateTimerText)
+            .AddTo(this);
+
+        // 時間ペナルティーの検出とアニメーション表示
+        timeChanged
+            .Subscribe(CheckForTimePenalty)
+            .AddTo(this);
+
+        // 残り時間が閾値以下で0より大きい場合タイマー点滅を開始
+        timeChanged
+            .Where(remainingTime => remainingTime <= _flashThresholdTime && remainingTime > 0f)
+            .Subscribe(_ => StartTimerFlashAnimation()) 
+            .AddTo(this);
+
+        // 残り時間が0以下になった場合タイマー点滅を停止
+        timeChanged
+            .Where(remainingTime => remainingTime <= 0f) 
+            .Subscribe(_ => StopTimerFlashAnimation())
+            .AddTo(this);
+    }
+
+    /// <summary>
+    /// タイマーの表示を更新する
+    /// </summary>
+    /// <param name="currentTime">現在の残り時間 (秒)</param>
+    private void UpdateTimerText(float currentTime)
+    {
+        int minutes = Mathf.Max(0, Mathf.FloorToInt(currentTime / 60));
+        int seconds = Mathf.Max(0, Mathf.FloorToInt(currentTime % 60));
+        _mainTimerText.text = $"{minutes:00}:{seconds:00}";
+    }
+
+    /// <summary>
+    /// 残り時間が閾値以下になった場合にタイマーテキストの点滅アニメーションを開始する
+    /// </summary>
+    private void StartTimerFlashAnimation()
+    {
+        // 既に点滅モーションがアクティブな場合は何もしない
+        if (_currentFlashMotionHandle.IsActive()) return;
+
+        // LitMotionを使ってテキストのcolorプロパティを赤色にして点滅させる
+        _currentFlashMotionHandle = LMotion.Create(_originalTimerTextColor, _timerFlashColor, _timerFlashDuration)
+            .WithEase(Ease.OutSine) // イージングを設定
+            .WithLoops(-1, LoopType.Yoyo)
+            .BindToColor(_mainTimerText)
+            .AddTo(this);
+    }
+
+    /// <summary>
+    /// タイマー点滅アニメーションを停止し、テキストの色を元に戻す
+    /// </summary>
+    private void StopTimerFlashAnimation()
+    {
+        // 点滅している場合モーションをキャンセルして、テキストを元の色に戻す
+        if (_currentFlashMotionHandle.IsActive())
+        {
+            _currentFlashMotionHandle.Cancel(); 
+            _mainTimerText.color = _originalTimerTextColor;
+        }
+    }
+
+    /// <summary>
+    /// 時間ペナルティーをアニメーションで表示する
+    /// </summary>
+    private void CheckForTimePenalty(float currentTime)
+    {
+        // 時間が減少した場合にのみ処理を実行
+        if (currentTime < _previousGameTime)
+        {
+            float timeDecreasedAmount = _previousGameTime - currentTime;
+
+            // 定義された最小減少量より大きい場合にアニメーションを表示
+            if (timeDecreasedAmount > _minPenaltyAmountToShow)
+            {
+                ShowTimePenaltyAnimation(timeDecreasedAmount);
+            }
+        }
+
+        // 現在の時間を保持
+        _previousGameTime = currentTime;
+    }
+
+    /// <summary>
+    /// 時間ペナルティー量を示すテキストを生成し、アニメーション表示します。
+    /// </summary>
+    private void ShowTimePenaltyAnimation(float amount)
+    {
+        if (_timePenaltyTextPrefab == null)
+        {
+            Debug.LogWarning("Time Penalty Text Prefabが設定されていません。Inspectorで設定してください。", this);
+            return;
+        }
+
+        // 減少表示テキストのインスタンスを生成し、ペナルティー量を整数に丸めて表示
+        TextMeshProUGUI penaltyTextInstance = Instantiate(_timePenaltyTextPrefab, _timePenaltyTextSpawnPoint.position,
+            Quaternion.identity, _timePenaltyTextSpawnPoint);
+        penaltyTextInstance.gameObject.SetActive(true);
+        penaltyTextInstance.text = $"-{Mathf.CeilToInt(amount)}";
+
+        // 初期色を点滅色（赤）に設定
+        Color initialColor = _timerFlashColor;
+        penaltyTextInstance.color = initialColor;
 
         // 垂直方向への移動アニメーション
-        LMotion.Create(decreaseTextInstance.rectTransform.anchoredPosition, decreaseTextInstance.rectTransform.anchoredPosition + new Vector2(0, timeDecreaseMoveAmount), timeDecreaseAnimationDuration)
-            .BindToAnchoredPosition(decreaseTextInstance.rectTransform)
-            .AddTo(this); // TimerUIオブジェクトが破棄されたときにモーションもキャンセルされるようにする
+        LMotion.Create(penaltyTextInstance.rectTransform.anchoredPosition,
+                penaltyTextInstance.rectTransform.anchoredPosition + new Vector2(0, _timePenaltyMoveAmount),
+                _timePenaltyAnimationDuration)
+            .BindToAnchoredPosition(penaltyTextInstance.rectTransform)
+            .AddTo(this);
 
         // アルファ値のフェードアウトアニメーション
-        LMotion.Create(startColor, new Color(startColor.r, startColor.g, startColor.b, 0f),
-            timeDecreaseAnimationDuration)
-          .BindToColor(decreaseTextInstance)
-          .AddTo(this); // TimerUIオブジェクトが破棄されたときにモーションもキャンセルされるようにする
+        LMotion.Create(initialColor, new Color(initialColor.r, initialColor.g, initialColor.b, 0f), 
+                _timePenaltyAnimationDuration)
+            .BindToColor(penaltyTextInstance)
+            .AddTo(this);
 
         // アニメーション後にオブジェクトを破棄
-        Destroy(decreaseTextInstance.gameObject, timeDecreaseAnimationDuration);
+        Destroy(penaltyTextInstance.gameObject, _timePenaltyAnimationDuration);
     }
 }
