@@ -15,13 +15,19 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     [SerializeField] private float countDownDuration = 180f;
 
     // 残り時間。変更を通知するためにReactivePropertyにしている
-    private readonly ReactiveProperty<float> _onTimeChanged = new ReactiveProperty<float>(0f);
+    private readonly ReactiveProperty<float> _onTimeChanged = new ReactiveProperty<float>();
 
-    // 外部からはObservable<float>として購読可能にする
+    // 残り時間を外部からはObservable<float>として購読可能にする
     public Observable<float> OnTimeChanged => _onTimeChanged.AsObservable();
 
     // 外部から残り時間を参照するためのプロパティ (読み取り専用)
     public float CurrentTimeValue => _onTimeChanged.Value;
+
+    // 落下ペナルティが発生したことを通知するためのSubject
+    private readonly Subject<float> _onHappenTimePenalty = new Subject<float>();
+
+    // 落下ペナルティを外部からはObservable<float>として購読可能にする
+    public Observable<float> OnHappenTimePenalty => _onHappenTimePenalty.AsObservable();
 
     // PlayerPrefsに登録する残り時間のキー
     private const string REMAINING_TIME_AT_CLEAR = "RemainingTimeAtClear";
@@ -75,9 +81,9 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
     public void Fall()
     {
-        Debug.Log("Fall Penalty: " + _fallTimePenalty);
+        Debug.Log("Fall method called."); // 追加
         // 残り時間を減らしてプレイヤーをリスポーンさせる
-        OperateCurrentTime(_fallTimePenalty);
+        DecreaseCurrentTime(_fallTimePenalty);
         RespownPlayer();
     }
 
@@ -114,9 +120,20 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         SceneManager.LoadScene("TitleScene");
     }
 
-    public void OperateCurrentTime(float v)
+    public void DecreaseCurrentTime(float v)
     {
-        _onTimeChanged.Value += v;
+        // 減少量を絶対値で扱う
+        float actualDecreaseAmount = Math.Abs(v);
+
+        _onTimeChanged.Value -= actualDecreaseAmount;
+
+        // 減少量が20f以上の場合にOnHappenTimePenaltyを通知
+        if (actualDecreaseAmount >= 20f)
+        {
+            Debug.Log(
+                $"DecreaseCurrentTime: Large penalty of {actualDecreaseAmount} detected. Notifying OnHappenTimePenalty."); // デバッグログ追加
+            _onHappenTimePenalty.OnNext(actualDecreaseAmount);
+        }
     }
 
     protected override void Awake()
@@ -145,7 +162,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
         if (_isGameEnded) return;
         // 残り時間を数える
-        OperateCurrentTime(-Time.deltaTime);
+        DecreaseCurrentTime(-Time.deltaTime);
         if (_onTimeChanged.Value <= 0f)
         {
             _onTimeChanged.Value = 0f;

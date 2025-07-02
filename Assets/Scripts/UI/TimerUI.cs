@@ -3,11 +3,11 @@ using TMPro;
 using R3;
 using LitMotion;
 using LitMotion.Extensions;
+using System;
 
 public class TimerUI : MonoBehaviour
 {
-    [Tooltip("必要なUIの要素")]
-    [SerializeField] private TextMeshProUGUI _mainTimerText; // タイマー表示テキスト
+    [Tooltip("必要なUIの要素")] [SerializeField] private TextMeshProUGUI _mainTimerText; // タイマー表示テキスト
     [SerializeField] private TextMeshProUGUI _timePenaltyTextPrefab; // 時間ペナルティー表示用のプレハブ
     [SerializeField] private Transform _timePenaltyTextSpawnPoint; // 時間ペナルティー表示を生成する位置
 
@@ -15,7 +15,7 @@ public class TimerUI : MonoBehaviour
     // 点滅アニメーション設定
     private readonly Color _timerFlashColor = Color.red; // タイマーが点滅する色
     private readonly float _timerFlashDuration = 0.5f; // タイマー点滅の1サイクルにかかる時間
-    private readonly float _flashThresholdTime = 10.0f; // タイマー点滅を開始する残り時間
+    private readonly float _flashThresholdTime = 60.0f; // タイマー点滅を開始する残り時間
 
     [Tooltip("時間ペナルティアニメーションの設定")]
     // 時間ペナルティーアニメーション設定
@@ -26,7 +26,6 @@ public class TimerUI : MonoBehaviour
     // 内部状態管理用
     private MotionHandle _currentFlashMotionHandle; // 現在実行中のタイマー点滅モーションのハンドル
     private Color _originalTimerTextColor; // タイマーテキストの元の色
-    private float _previousGameTime; // 前回のゲーム時間を保持し、時間ペナルティーを検出するために使用
 
     private void Awake()
     {
@@ -42,41 +41,35 @@ public class TimerUI : MonoBehaviour
             return;
         }
 
-        // 初期ゲーム時間を設定（時間ペナルティー検出の基準値）
-        _previousGameTime = GameManager.Instance.CurrentTimeValue;
         // タイマーにかかるアニメーションの登録
-        TimerSubscribe();
+        GameManager.Instance.OnTimeChanged
+            .Subscribe(v => UpdateTimer(v))
+            .AddTo(this);
+
+        // 時間ペナルティ発生イベントを購読
+        GameManager.Instance.OnHappenTimePenalty
+            .Where(amount => amount > _minPenaltyAmountToShow) // 最小表示量より大きい場合のみ
+            .Subscribe(amount => ShowTimePenaltyAnimation(amount))
+            .AddTo(this);
     }
 
     /// <summary>
     /// タイマーへの処理を登録する
     /// </summary>
-    private void TimerSubscribe()
+    private void UpdateTimer(float v)
     {
-        // GameManagerのOnTimeChangedイベントを購読し、各種処理を登録
-        Observable<float> timeChanged = GameManager.Instance.OnTimeChanged;
-
-        // タイマーに残り時間を表示
-        timeChanged
-            .Subscribe(UpdateTimerText)
-            .AddTo(this);
-
-        // 時間ペナルティーの検出とアニメーション表示
-        timeChanged
-            .Subscribe(CheckForTimePenalty)
-            .AddTo(this);
+        // タイマーの表示を更新
+        UpdateTimerText(v);
 
         // 残り時間が閾値以下で0より大きい場合タイマー点滅を開始
-        timeChanged
-            .Where(remainingTime => remainingTime <= _flashThresholdTime && remainingTime > 0f)
-            .Subscribe(_ => StartTimerFlashAnimation()) 
-            .AddTo(this);
-
-        // 残り時間が0以下になった場合タイマー点滅を停止
-        timeChanged
-            .Where(remainingTime => remainingTime <= 0f) 
-            .Subscribe(_ => StopTimerFlashAnimation())
-            .AddTo(this);
+        if (v <= _flashThresholdTime && v > 0f)
+        {
+            StartTimerFlashAnimation();
+        }
+        else // 残り時間が0以下になった場合タイマー点滅を停止
+        {
+            StopTimerFlashAnimation();
+        }
     }
 
     /// <summary>
@@ -114,30 +107,9 @@ public class TimerUI : MonoBehaviour
         // 点滅している場合モーションをキャンセルして、テキストを元の色に戻す
         if (_currentFlashMotionHandle.IsActive())
         {
-            _currentFlashMotionHandle.Cancel(); 
+            _currentFlashMotionHandle.Cancel();
             _mainTimerText.color = _originalTimerTextColor;
         }
-    }
-
-    /// <summary>
-    /// 時間ペナルティーをアニメーションで表示する
-    /// </summary>
-    private void CheckForTimePenalty(float currentTime)
-    {
-        // 時間が減少した場合にのみ処理を実行
-        if (currentTime < _previousGameTime)
-        {
-            float timeDecreasedAmount = _previousGameTime - currentTime;
-
-            // 定義された最小減少量より大きい場合にアニメーションを表示
-            if (timeDecreasedAmount > _minPenaltyAmountToShow)
-            {
-                ShowTimePenaltyAnimation(timeDecreasedAmount);
-            }
-        }
-
-        // 現在の時間を保持
-        _previousGameTime = currentTime;
     }
 
     /// <summary>
@@ -145,6 +117,7 @@ public class TimerUI : MonoBehaviour
     /// </summary>
     private void ShowTimePenaltyAnimation(float amount)
     {
+        Debug.Log($"ShowTimePenaltyAnimation called with amount: {amount} at time: {Time.time}");
         if (_timePenaltyTextPrefab == null)
         {
             Debug.LogWarning("Time Penalty Text Prefabが設定されていません。Inspectorで設定してください。", this);
@@ -152,7 +125,8 @@ public class TimerUI : MonoBehaviour
         }
 
         // 減少表示テキストのインスタンスを生成し、ペナルティー量を整数に丸めて表示
-        TextMeshProUGUI penaltyTextInstance = Instantiate(_timePenaltyTextPrefab, _timePenaltyTextSpawnPoint.position,
+        TextMeshProUGUI penaltyTextInstance = Instantiate(_timePenaltyTextPrefab,
+            _timePenaltyTextSpawnPoint.position,
             Quaternion.identity, _timePenaltyTextSpawnPoint);
         penaltyTextInstance.gameObject.SetActive(true);
         penaltyTextInstance.text = $"-{Mathf.CeilToInt(amount)}";
@@ -169,7 +143,7 @@ public class TimerUI : MonoBehaviour
             .AddTo(this);
 
         // アルファ値のフェードアウトアニメーション
-        LMotion.Create(initialColor, new Color(initialColor.r, initialColor.g, initialColor.b, 0f), 
+        LMotion.Create(initialColor, new Color(initialColor.r, initialColor.g, initialColor.b, 0f),
                 _timePenaltyAnimationDuration)
             .BindToColor(penaltyTextInstance)
             .AddTo(this);
