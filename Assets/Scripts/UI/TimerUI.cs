@@ -7,19 +7,23 @@ using System;
 
 public class TimerUI : MonoBehaviour
 {
-    [Tooltip("必要なUIの要素")] [SerializeField] private TextMeshProUGUI _mainTimerText; // タイマー表示テキスト
-    [SerializeField] private TextMeshProUGUI _timePenaltyTextPrefab; // 時間ペナルティー表示用のプレハブ
-    [SerializeField] private Transform _timePenaltyTextSpawnPoint; // 時間ペナルティー表示を生成する位置
+    [Tooltip("必要なUIの要素")] 
+    // UI要素
+    [SerializeField] private TextMeshProUGUI mainTimerText; // タイマー表示テキスト
+    [SerializeField] private TextMeshProUGUI timePenaltyTextPrefab; // 時間ペナルティー表示用のプレハブ
+    [SerializeField] private Transform timePenaltyTextSpawnPoint; // 時間ペナルティー表示を生成する位置
 
     [Tooltip("点滅アニメーションの設定")]
     // 点滅アニメーション設定
     private readonly Color _timerFlashColor = Color.red; // タイマーが点滅する色
+
     private readonly float _timerFlashDuration = 0.5f; // タイマー点滅の1サイクルにかかる時間
-    private readonly float _flashThresholdTime = 60.0f; // タイマー点滅を開始する残り時間
+    [SerializeField] private readonly float flashThresholdTime = 60.0f; // タイマー点滅を開始する残り時間
 
     [Tooltip("時間ペナルティアニメーションの設定")]
     // 時間ペナルティーアニメーション設定
     private readonly float _timePenaltyAnimationDuration = 1.0f; // 時間アニメーションの期間
+
     private readonly float _timePenaltyMoveAmount = 50f; // 時間ペナルティアニメーションでテキストが移動する量 (上方向)
     private readonly float _minPenaltyAmountToShow = 1.0f; // 表示する時間ペナルティー量の最小値
 
@@ -30,7 +34,7 @@ public class TimerUI : MonoBehaviour
     private void Awake()
     {
         // タイマーの元の色を保持
-        _originalTimerTextColor = _mainTimerText.color;
+        _originalTimerTextColor = mainTimerText.color;
     }
 
     private void Start()
@@ -62,7 +66,7 @@ public class TimerUI : MonoBehaviour
         UpdateTimerText(v);
 
         // 残り時間が閾値以下で0より大きい場合タイマー点滅を開始
-        if (v <= _flashThresholdTime && v > 0f)
+        if (v <= flashThresholdTime && v > 0f)
         {
             StartTimerFlashAnimation();
         }
@@ -80,7 +84,7 @@ public class TimerUI : MonoBehaviour
     {
         int minutes = Mathf.Max(0, Mathf.FloorToInt(currentTime / 60));
         int seconds = Mathf.Max(0, Mathf.FloorToInt(currentTime % 60));
-        _mainTimerText.text = $"{minutes:00}:{seconds:00}";
+        mainTimerText.text = $"{minutes:00}:{seconds:00}";
     }
 
     /// <summary>
@@ -95,7 +99,7 @@ public class TimerUI : MonoBehaviour
         _currentFlashMotionHandle = LMotion.Create(_originalTimerTextColor, _timerFlashColor, _timerFlashDuration)
             .WithEase(Ease.OutSine) // イージングを設定
             .WithLoops(-1, LoopType.Yoyo)
-            .BindToColor(_mainTimerText)
+            .BindToColor(mainTimerText)
             .AddTo(this);
     }
 
@@ -108,7 +112,7 @@ public class TimerUI : MonoBehaviour
         if (_currentFlashMotionHandle.IsActive())
         {
             _currentFlashMotionHandle.Cancel();
-            _mainTimerText.color = _originalTimerTextColor;
+            mainTimerText.color = _originalTimerTextColor;
         }
     }
 
@@ -118,16 +122,16 @@ public class TimerUI : MonoBehaviour
     private void ShowTimePenaltyAnimation(float amount)
     {
         Debug.Log($"ShowTimePenaltyAnimation called with amount: {amount} at time: {Time.time}");
-        if (_timePenaltyTextPrefab == null)
+        if (timePenaltyTextPrefab == null)
         {
             Debug.LogWarning("Time Penalty Text Prefabが設定されていません。Inspectorで設定してください。", this);
             return;
         }
 
         // 減少表示テキストのインスタンスを生成し、ペナルティー量を整数に丸めて表示
-        TextMeshProUGUI penaltyTextInstance = Instantiate(_timePenaltyTextPrefab,
-            _timePenaltyTextSpawnPoint.position,
-            Quaternion.identity, _timePenaltyTextSpawnPoint);
+        TextMeshProUGUI penaltyTextInstance = Instantiate(timePenaltyTextPrefab,
+            timePenaltyTextSpawnPoint.position,
+            Quaternion.identity, timePenaltyTextSpawnPoint);
         penaltyTextInstance.gameObject.SetActive(true);
         penaltyTextInstance.text = $"-{Mathf.CeilToInt(amount)}";
 
