@@ -15,13 +15,16 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     [SerializeField] private float countDownDuration = 180f;
 
     // 残り時間。変更を通知するためにReactivePropertyにしている
-    private readonly ReactiveProperty<float> _onTimeChanged = new ReactiveProperty<float>(0f);
-
-    // 外部からはObservable<float>として購読可能にする
-    public Observable<float> OnTimeChanged => _onTimeChanged.AsObservable();
+    private readonly ReactiveProperty<float> _onTimeChangedInternal = new();
 
     // 外部から残り時間を参照するためのプロパティ (読み取り専用)
-    public float CurrentTimeValue => _onTimeChanged.Value;
+    public ReadOnlyReactiveProperty<float> OnTimeChanged => _onTimeChangedInternal;
+
+    // 落下ペナルティが発生したことを通知するためのSubject
+    private readonly Subject<float> _onHappenTimePenalty = new Subject<float>();
+
+    // 落下ペナルティを外部からはObservable<float>として購読可能にする
+    public Observable<float> OnHappenTimePenalty => _onHappenTimePenalty.AsObservable();
 
     // PlayerPrefsに登録する残り時間のキー
     private const string REMAINING_TIME_AT_CLEAR = "RemainingTimeAtClear";
@@ -34,7 +37,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
     public Player Player => player;
 
-    private readonly float _fallTimePenalty = -20f;
+    private readonly float _fallTimePenalty = 20f;
 
     private Rigidbody _playerqRigidbody;
 
@@ -60,10 +63,10 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     public void SaveCurrentTime()
     {
         // PlayerPrefsに残り時間を保存
-        PlayerPrefs.SetFloat(REMAINING_TIME_AT_CLEAR, _onTimeChanged.Value);
+        PlayerPrefs.SetFloat(REMAINING_TIME_AT_CLEAR, _onTimeChangedInternal.Value);
         PlayerPrefs.Save();
 
-        Debug.Log($"クリア時の残り時間としてPlayerPrefsに保存しました: {_onTimeChanged.Value:F2}秒");
+        Debug.Log($"クリア時の残り時間としてPlayerPrefsに保存しました: {_onTimeChangedInternal.Value:F2}秒");
         _isGameEnded = true;
     }
 
@@ -75,9 +78,9 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
     public void Fall()
     {
-        Debug.Log("Fall Penalty: " + _fallTimePenalty);
+        Debug.Log("Fall method called."); // 追加
         // 残り時間を減らしてプレイヤーをリスポーンさせる
-        OperateCurrentTime(_fallTimePenalty);
+        DecreasePeneltyTime(_fallTimePenalty);
         RespownPlayer();
     }
 
@@ -114,9 +117,22 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         SceneManager.LoadScene("TitleScene");
     }
 
-    public void OperateCurrentTime(float v)
+    public void DecreaseCurrentTime(float v)
     {
-        _onTimeChanged.Value += v;
+        // 減少量を0以上にクリップ
+        float actualDecreaseAmount = Math.Max(0, v);
+        // 残り時間を減らす
+        _onTimeChangedInternal.Value -= actualDecreaseAmount;
+    }
+
+    private void DecreasePeneltyTime(float v)
+    {
+        // 減少量を0以上にクリップ
+        float actualDecreaseAmount = Math.Max(0, v);
+        // 残り時間を減らす
+        _onTimeChangedInternal.Value -= actualDecreaseAmount;
+        // 落下ペナルティを購読者に通知
+        _onHappenTimePenalty.OnNext(v);
     }
 
     protected override void Awake()
@@ -132,7 +148,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         // スポーン地点を初期化
         ResetRespawnPosition();
         //タイマーを初期化
-        _onTimeChanged.Value = countDownDuration;
+        _onTimeChangedInternal.Value = countDownDuration;
         _isGameEnded = false;
     }
 
@@ -145,10 +161,10 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
         if (_isGameEnded) return;
         // 残り時間を数える
-        OperateCurrentTime(-Time.deltaTime);
-        if (_onTimeChanged.Value <= 0f)
+        DecreaseCurrentTime(Time.deltaTime);
+        if (_onTimeChangedInternal.Value <= 0f)
         {
-            _onTimeChanged.Value = 0f;
+            _onTimeChangedInternal.Value = 0f;
             Debug.Log("タイマーが0秒になりました");
             _isGameEnded = true;
             GameOver();
