@@ -47,10 +47,13 @@ MonoBehaviour:
   volume: {fileID: 0}
   saturationRange: {x: 0, y: 75}
   exposureRange: {x: 0, y: 4}
-  hueShiftSpeedRange: {x: 0, y: 250}
+  hueShiftSpeedRange: {x: 0, y: 0}
   hueShiftThreshold: 0.75
-  caIntensityRange: {x: 0, y: 5}
+  caIntensityRange: {x: 0, y: 100}
   ldIntensityRange: {x: 0, y: -0.85}
+  vignetteIntensityRange: {x: 0, y: 0.7}
+  vignetteStartDistance: 75
+  vignetteMaxDistance: 10
   kaleidoscopeClip: {fileID: 32900000, guid: 15c328549c8da4b39a1a7804a20949de, type: 3}
   maxKaleidoscopeAlpha: 0.25
   playbackSpeed: 0.2

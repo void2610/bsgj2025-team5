@@ -334,6 +334,8 @@ MonoBehaviour:
   mainTimerText: {fileID: 7928103422811979105}
   timePenaltyTextPrefab: {fileID: 403048505979767446}
   timePenaltyTextSpawnPoint: {fileID: 1529087537669328258}
+  timeBonusTextPrefab: {fileID: 0}
+  flashThresholdTime: 60
 --- !u!1 &6866070582696165679
 GameObject:
   m_ObjectHideFlags: 0
