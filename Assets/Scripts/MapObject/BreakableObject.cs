@@ -120,7 +120,7 @@ public class BreakableObject : MonoBehaviour
         FindFirstObjectByType<PlayerCamera>().ShakeCamera(cameraShakeMagnitude, 0.3f);
         
         // 確率でアイテムをドロップ
-        if (dropItemPrefab && Random.value <= dropChance)
+        if (dropItemPrefab && Random.value < dropChance)
         {
             var spawnPosition = transform.position + new Vector3(
                 Random.Range(dropPositionOffsetRange.x, dropPositionOffsetRange.y),
