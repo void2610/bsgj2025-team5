@@ -7,9 +7,11 @@ using System;
 
 public class TimerUI : MonoBehaviour
 {
-    [Tooltip("必要なUIの要素")] 
+    [Tooltip("必要なUIの要素")]
     // UI要素
-    [SerializeField] private TextMeshProUGUI mainTimerText; // タイマー表示テキスト
+    [SerializeField]
+    private TextMeshProUGUI mainTimerText; // タイマー表示テキスト
+
     [SerializeField] private TextMeshProUGUI timePenaltyTextPrefab; // 時間ペナルティー表示用のプレハブ
     [SerializeField] private Transform timePenaltyTextSpawnPoint; // 時間ペナルティー表示を生成する位置
 
@@ -25,7 +27,6 @@ public class TimerUI : MonoBehaviour
     private readonly float _timePenaltyAnimationDuration = 1.0f; // 時間アニメーションの期間
 
     private readonly float _timePenaltyMoveAmount = 50f; // 時間ペナルティアニメーションでテキストが移動する量 (上方向)
-    private readonly float _minPenaltyAmountToShow = 1.0f; // 表示する時間ペナルティー量の最小値
 
     // 内部状態管理用
     private MotionHandle _currentFlashMotionHandle; // 現在実行中のタイマー点滅モーションのハンドル
@@ -50,9 +51,8 @@ public class TimerUI : MonoBehaviour
             .Subscribe(v => UpdateTimer(v))
             .AddTo(this);
 
-        // 時間ペナルティ発生イベントを購読
+        // 時間ペナルティ発生イベントの登録
         GameManager.Instance.OnHappenTimePenalty
-            .Where(amount => amount > _minPenaltyAmountToShow) // 最小表示量より大きい場合のみ
             .Subscribe(amount => ShowTimePenaltyAnimation(amount))
             .AddTo(this);
     }

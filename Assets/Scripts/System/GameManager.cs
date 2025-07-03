@@ -123,7 +123,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     public void DecreaseCurrentTime(float v)
     {
         // 減少量を絶対値で扱う
-        float actualDecreaseAmount = Math.Abs(v);
+        float actualDecreaseAmount = Math.Max(0, v);
 
         _onTimeChanged.Value -= actualDecreaseAmount;
 
@@ -162,7 +162,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
         if (_isGameEnded) return;
         // 残り時間を数える
-        DecreaseCurrentTime(-Time.deltaTime);
+        DecreaseCurrentTime(Time.deltaTime);
         if (_onTimeChanged.Value <= 0f)
         {
             _onTimeChanged.Value = 0f;
