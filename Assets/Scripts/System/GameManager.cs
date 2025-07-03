@@ -16,7 +16,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
     // 残り時間。変更を通知するためにReactivePropertyにしている
     private readonly ReactiveProperty<float> _onTimeChangedInternal = new();
-    
+
     // 外部から残り時間を参照するためのプロパティ (読み取り専用)
     public ReadOnlyReactiveProperty<float> OnTimeChanged => _onTimeChangedInternal;
 
@@ -80,7 +80,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     {
         Debug.Log("Fall method called."); // 追加
         // 残り時間を減らしてプレイヤーをリスポーンさせる
-        DecreaseCurrentTime(_fallTimePenalty);
+        DecreasePeneltyTime(_fallTimePenalty);
         RespownPlayer();
     }
 
@@ -121,16 +121,18 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     {
         // 減少量を0以上にクリップ
         float actualDecreaseAmount = Math.Max(0, v);
-
+        // 残り時間を減らす
         _onTimeChangedInternal.Value -= actualDecreaseAmount;
+    }
 
-        // 減少量が20f以上の場合にOnHappenTimePenaltyを通知
-        if (actualDecreaseAmount >= 20f)
-        {
-            Debug.Log(
-                $"DecreaseCurrentTime: Large penalty of {actualDecreaseAmount} detected. Notifying OnHappenTimePenalty."); // デバッグログ追加
-            _onHappenTimePenalty.OnNext(actualDecreaseAmount);
-        }
+    private void DecreasePeneltyTime(float v)
+    {
+        // 減少量を0以上にクリップ
+        float actualDecreaseAmount = Math.Max(0, v);
+        // 残り時間を減らす
+        _onTimeChangedInternal.Value -= actualDecreaseAmount;
+        // 落下ペナルティを購読者に通知
+        _onHappenTimePenalty.OnNext(v);
     }
 
     protected override void Awake()
