@@ -85,7 +85,7 @@ public class Item : MonoBehaviour
             if (!_isVisible) return;
             
             ParticleManager.Instance.CreateParticle(itemAcquisitionParticleData, this.transform.position);
-            Camera.main.GetComponent<PlayerCamera>().ShakeCamera(0.2f, 0.1f);
+            Camera.main.GetComponent<PlayerCamera>().ShakeCamera(0.4f, 0.1f);
             
             GameManager.Instance.AddItemCount(this.transform.position);
             Destroy(gameObject);
