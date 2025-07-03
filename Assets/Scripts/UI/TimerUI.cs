@@ -20,7 +20,8 @@ public class TimerUI : MonoBehaviour
     private readonly Color _timerFlashColor = Color.red; // タイマーが点滅する色
 
     private readonly float _timerFlashDuration = 0.5f; // タイマー点滅の1サイクルにかかる時間
-    [SerializeField] private readonly float flashThresholdTime = 60.0f; // タイマー点滅を開始する残り時間
+
+    [SerializeField] private float flashThresholdTime = 60.0f; // タイマー点滅を開始する残り時間
 
     [Tooltip("時間ペナルティアニメーションの設定")]
     // 時間ペナルティーアニメーション設定

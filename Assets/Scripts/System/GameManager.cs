@@ -15,13 +15,10 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     [SerializeField] private float countDownDuration = 180f;
 
     // 残り時間。変更を通知するためにReactivePropertyにしている
-    private readonly ReactiveProperty<float> _onTimeChanged = new ReactiveProperty<float>();
-
-    // 残り時間を外部からはObservable<float>として購読可能にする
-    public Observable<float> OnTimeChanged => _onTimeChanged.AsObservable();
-
+    private readonly ReactiveProperty<float> _onTimeChangedInternal = new();
+    
     // 外部から残り時間を参照するためのプロパティ (読み取り専用)
-    public float CurrentTimeValue => _onTimeChanged.Value;
+    public ReadOnlyReactiveProperty<float> OnTimeChanged => _onTimeChangedInternal;
 
     // 落下ペナルティが発生したことを通知するためのSubject
     private readonly Subject<float> _onHappenTimePenalty = new Subject<float>();
@@ -40,7 +37,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
     public Player Player => player;
 
-    private readonly float _fallTimePenalty = -20f;
+    private readonly float _fallTimePenalty = 20f;
 
     private Rigidbody _playerqRigidbody;
 
@@ -66,10 +63,10 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     public void SaveCurrentTime()
     {
         // PlayerPrefsに残り時間を保存
-        PlayerPrefs.SetFloat(REMAINING_TIME_AT_CLEAR, _onTimeChanged.Value);
+        PlayerPrefs.SetFloat(REMAINING_TIME_AT_CLEAR, _onTimeChangedInternal.Value);
         PlayerPrefs.Save();
 
-        Debug.Log($"クリア時の残り時間としてPlayerPrefsに保存しました: {_onTimeChanged.Value:F2}秒");
+        Debug.Log($"クリア時の残り時間としてPlayerPrefsに保存しました: {_onTimeChangedInternal.Value:F2}秒");
         _isGameEnded = true;
     }
 
@@ -125,7 +122,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         // 減少量を0以上にクリップ
         float actualDecreaseAmount = Math.Max(0, v);
 
-        _onTimeChanged.Value -= actualDecreaseAmount;
+        _onTimeChangedInternal.Value -= actualDecreaseAmount;
 
         // 減少量が20f以上の場合にOnHappenTimePenaltyを通知
         if (actualDecreaseAmount >= 20f)
@@ -149,7 +146,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         // スポーン地点を初期化
         ResetRespawnPosition();
         //タイマーを初期化
-        _onTimeChanged.Value = countDownDuration;
+        _onTimeChangedInternal.Value = countDownDuration;
         _isGameEnded = false;
     }
 
@@ -163,9 +160,9 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         if (_isGameEnded) return;
         // 残り時間を数える
         DecreaseCurrentTime(Time.deltaTime);
-        if (_onTimeChanged.Value <= 0f)
+        if (_onTimeChangedInternal.Value <= 0f)
         {
-            _onTimeChanged.Value = 0f;
+            _onTimeChangedInternal.Value = 0f;
             Debug.Log("タイマーが0秒になりました");
             _isGameEnded = true;
             GameOver();
