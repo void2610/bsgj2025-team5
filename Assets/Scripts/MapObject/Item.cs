@@ -84,7 +84,14 @@ public class Item : MonoBehaviour
             // 表示状態の時のみ取得可能
             if (!_isVisible) return;
             
-            ParticleManager.Instance.CreateParticle(itemAcquisitionParticleData, this.transform.position);
+            if (itemAcquisitionParticleData != null)
+            {
+                ParticleManager.Instance.CreateParticle(itemAcquisitionParticleData, this.transform.position);
+            }
+            else
+            {
+                Debug.LogWarning("itemAcquisitionParticleData is not set. Skipping particle creation.");
+            }
             Camera.main.GetComponent<PlayerCamera>().ShakeCamera(0.4f, 0.1f);
             
             GameManager.Instance.AddItemCount(this.transform.position);
