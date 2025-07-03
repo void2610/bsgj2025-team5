@@ -105,6 +105,7 @@ MonoBehaviour:
   requiredSpeed: 3
   invertBehavior: 0
   particlePrefab: {fileID: 3514528225388775477, guid: a016f99fb9a4b46c4a26dfc0ffe1f9e6, type: 3}
+  itemAcquisitionParticleData: {fileID: 11400000, guid: 2db0ba404a80c44a482df8379c50221b, type: 2}
   visibleAlpha: 1
   hiddenAlpha: 0.5
 --- !u!114 &1673168534021675262

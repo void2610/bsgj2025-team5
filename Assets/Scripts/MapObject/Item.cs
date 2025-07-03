@@ -12,6 +12,9 @@ public class Item : MonoBehaviour
     [Tooltip("パーティクルのプレハブ（オプション）")]
     [SerializeField] private GameObject particlePrefab;
     
+    [Tooltip("アイテム取得時のパーティクル")]
+    [SerializeField] private ParticleData itemAcquisitionParticleData;
+    
     [Tooltip("表示状態の透明度")]
     [SerializeField, Range(0f, 1f)] private float visibleAlpha = 1f;
     
@@ -80,6 +83,9 @@ public class Item : MonoBehaviour
         {
             // 表示状態の時のみ取得可能
             if (!_isVisible) return;
+            
+            ParticleManager.Instance.CreateParticle(itemAcquisitionParticleData, this.transform.position);
+            Camera.main.GetComponent<PlayerCamera>().ShakeCamera(0.2f, 0.1f);
             
             GameManager.Instance.AddItemCount(this.transform.position);
             Destroy(gameObject);
