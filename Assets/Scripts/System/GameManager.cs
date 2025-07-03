@@ -135,6 +135,16 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         _onHappenTimePenalty.OnNext(v);
     }
 
+    // 残り時間を増やすメソッド
+    public void IncreaseTime(float amount)
+    {
+        // 増加量を0以上にクリップ
+        float actualIncreaseAmount = Math.Max(0, amount);
+        // 残り時間を増やす（最大値は初期時間の2倍まで）
+        _onTimeChangedInternal.Value = Math.Min(_onTimeChangedInternal.Value + actualIncreaseAmount, countDownDuration * 2f);
+        Debug.Log($"時間が{actualIncreaseAmount:F1}秒増えました。現在の残り時間: {_onTimeChangedInternal.Value:F1}秒");
+    }
+
     protected override void Awake()
     {
         base.Awake();

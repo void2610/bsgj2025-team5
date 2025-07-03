@@ -39,6 +39,19 @@ public class BreakableObject : MonoBehaviour
     [Tooltip("速度レベル別の設定（0:停止〜4:最高速）")]
     [SerializeField] private List<SpeedBasedSettings> speedSettings = new List<SpeedBasedSettings>();
     
+    [Header("アイテムドロップ設定")]
+    [Tooltip("ドロップするアイテムのプレハブ")]
+    [SerializeField] private GameObject dropItemPrefab;
+    
+    [Tooltip("アイテムをドロップする確率（0〜1）")]
+    [SerializeField, Range(0f, 1f)] private float dropChance = 0.3f;
+    
+    [Tooltip("ドロップするアイテムの高さオフセット")]
+    [SerializeField] private float dropHeightOffset = 0.5f;
+    
+    [Tooltip("ドロップするアイテムのランダムな位置オフセット範囲")]
+    [SerializeField] private Vector2 dropPositionOffsetRange = new Vector2(-0.5f, 0.5f);
+    
     private Rigidbody _rb;
     private Collider _collider;
     private Player _player;
@@ -105,6 +118,17 @@ public class BreakableObject : MonoBehaviour
         
         // カメラを揺らす
         FindFirstObjectByType<PlayerCamera>().ShakeCamera(cameraShakeMagnitude, 0.3f);
+        
+        // 確率でアイテムをドロップ
+        if (dropItemPrefab && Random.value <= dropChance)
+        {
+            var spawnPosition = transform.position + new Vector3(
+                Random.Range(dropPositionOffsetRange.x, dropPositionOffsetRange.y),
+                dropHeightOffset,
+                Random.Range(dropPositionOffsetRange.x, dropPositionOffsetRange.y)
+            );
+            Instantiate(dropItemPrefab, spawnPosition, Quaternion.identity);
+        }
         
         // 指定時間後に消滅
         Destroy(gameObject, destroyDelay);
