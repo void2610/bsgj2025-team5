@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -10,6 +11,9 @@ public class BreakableObject : MonoBehaviour
     
     [Tooltip("オブジェクトが消滅するまでの遅延時間")]
     [SerializeField] private float destroyDelay = 0.5f;
+    
+    [Tooltip("カメラを揺らす強さ")]
+    [SerializeField] private float cameraShakeMagnitude = 0.4f;
     
     [Tooltip("吹っ飛び時に加える力の強さ")]
     [SerializeField] private float blowForce = 80f;
@@ -98,6 +102,9 @@ public class BreakableObject : MonoBehaviour
         
         // プレイヤーを減速させる
         SlowDownPlayer(playerSpeed);
+        
+        // カメラを揺らす
+        FindFirstObjectByType<PlayerCamera>().ShakeCamera(cameraShakeMagnitude, 0.3f);
         
         // 指定時間後に消滅
         Destroy(gameObject, destroyDelay);
