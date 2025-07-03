@@ -21,6 +21,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     
     private readonly ReactiveProperty<float> _onTimeChangedInternal = new();
     private readonly Subject<float> _onHappenTimePenalty = new();
+    private readonly Subject<float> _onHappenTimeBonus = new();
     private readonly ReactiveProperty<int> _itemCount = new(0);
     
     private Rigidbody _playerRigidbody;
@@ -29,6 +30,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     
     public ReadOnlyReactiveProperty<float> OnTimeChanged => _onTimeChangedInternal;
     public Observable<float> OnHappenTimePenalty => _onHappenTimePenalty.AsObservable();
+    public Observable<float> OnHappenTimeBonus => _onHappenTimeBonus.AsObservable();
     public ReadOnlyReactiveProperty<int> ItemCount => _itemCount;
     public ReadOnlyReactiveProperty<float> ClosestEnemyDistance { get; private set; }
     public Player Player => player;
@@ -104,6 +106,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     {
         float actualIncreaseAmount = Math.Max(0, amount);
         _onTimeChangedInternal.Value = Math.Min(_onTimeChangedInternal.Value + actualIncreaseAmount, countDownDuration * 2f);
+        _onHappenTimeBonus.OnNext(actualIncreaseAmount);
     }
 
     protected override void Awake()
