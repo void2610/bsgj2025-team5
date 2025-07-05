@@ -40,29 +40,41 @@ public class Player : MonoBehaviour
     [SerializeField] private float bounciness = 0f;
     
     [Header("Visual")]
-    [Tooltip("衝突時に生成する砂のパーティクルエフェクト")]
+    [Tooltip("衝突時に生成する砂のパーティクル")]
     [SerializeField] private ParticleData sandParticleData;
+    
+    [Tooltip("移動時に生成する煙のパーティクル")]
+    [SerializeField] private ParticleSystem smokeParticleData;
+    [Tooltip("煙パーティクルの発生量の範囲")]
+    [SerializeField] private Vector2 smokeEmissionRange = new Vector2(0f, 2f);
 
     /// <summary>
     /// プレイヤーの速度を0-1のfloatで表す（現在はアイテム数ベース）
     /// </summary>
-    public ReadOnlyReactiveProperty<float> PlayerSpeedNorm => _speedNorm;
+    public ReadOnlyReactiveProperty<float> PlayerItemCountNorm => _itemCountNorm;
     /// <summary>
     /// プレイヤーの速度を0-4のintで表す（現在はアイテム数ベース）
     /// </summary>
-    public ReadOnlyReactiveProperty<int>  PlayerSpeedInt  { get; private set; }
+    public ReadOnlyReactiveProperty<int>  PlayerItemCountInt  { get; private set; }
     /// <summary>
     /// マウスの移動速度を表す（正規化されていない生の値）
     /// </summary>
     public ReadOnlyReactiveProperty<float> MouseSpeed => _mouseSpeed;
 
-    private readonly ReactiveProperty<float> _speedNorm = new(0f);
+    private readonly ReactiveProperty<float> _itemCountNorm = new(0f);
     private readonly ReactiveProperty<float> _mouseSpeed = new(0f);
+    private readonly ReactiveProperty<float> _playerSpeed = new(0f);
 
     private Rigidbody _rb;
     private Collider _collider;
     private PhysicsMaterial _physicsMaterial;
     private Vector2 _accumulatedInputDelta;
+
+    private void UpdateSmokeParticle(float speed)
+    {
+        var emission = smokeParticleData.emission;
+        emission.rateOverDistance = Mathf.Lerp(smokeEmissionRange.x, smokeEmissionRange.y, speed);
+    }
 
     private void Awake()
     {
@@ -74,7 +86,7 @@ public class Player : MonoBehaviour
         _rb.angularDamping = angularDamping;
         
         // Physics Materialの設定（既存のマテリアルがない場合のみ作成）
-        if (_collider.material == null)
+        if (!_collider.material)
         {
             _physicsMaterial = new PhysicsMaterial("PlayerPhysicsMaterial")
             {
@@ -92,7 +104,7 @@ public class Player : MonoBehaviour
         }
 
         // アイテム数ベースの正規化された値を5段階（0-4）に変換して公開する
-        PlayerSpeedInt = _speedNorm
+        PlayerItemCountInt = _itemCountNorm
             .Select(n => Mathf.Clamp(Mathf.FloorToInt(n * 5f), 0, 4))
             .ToReadOnlyReactiveProperty()
             .AddTo(this);
@@ -102,6 +114,9 @@ public class Player : MonoBehaviour
     {
         // GameManagerのアイテム数変化を購読して、_speedNormを更新
         GameManager.Instance.ItemCount.Subscribe(OnItemCountChanged).AddTo(this);
+        
+        // _playerSpeedの変更を監視して、煙のパーティクルの発生量を更新
+        _playerSpeed.Subscribe(UpdateSmokeParticle).AddTo(this);
         
         // 初期値設定
         OnItemCountChanged(GameManager.Instance.ItemCount.CurrentValue);
@@ -122,7 +137,7 @@ public class Player : MonoBehaviour
     private void OnItemCountChanged(int itemCount)
     {
         // アイテム数（0-5）を0-1の範囲にマッピング
-        _speedNorm.Value = Mathf.Clamp01(itemCount / 5f);
+        _itemCountNorm.Value = Mathf.Clamp01(itemCount / 5f);
     }
 
     private void FixedUpdate()
@@ -146,6 +161,9 @@ public class Player : MonoBehaviour
         
         // 使用済みの入力をリセット
         _accumulatedInputDelta = Vector2.zero;
+        
+        // プレイヤーの速度を更新
+        _playerSpeed.Value = _rb.linearVelocity.magnitude / maxLinearVelocity;
     }
 
     private void OnCollisionEnter(Collision other)

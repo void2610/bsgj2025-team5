@@ -76,7 +76,7 @@ public class VolumeManager : MonoBehaviour
 
     private void Start()
     {
-        GameManager.Instance.Player.PlayerSpeedNorm.Subscribe(SetValue).AddTo(this);
+        GameManager.Instance.Player.PlayerItemCountNorm.Subscribe(SetValue).AddTo(this);
         GameManager.Instance.ClosestEnemyDistance.Subscribe(UpdateVignette).AddTo(this);
     }
 

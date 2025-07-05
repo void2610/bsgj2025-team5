@@ -103,7 +103,7 @@ public class RevealableObject : MonoBehaviour
         
     private void Start()
     {
-        GameManager.Instance.Player.PlayerSpeedInt.Subscribe(OnChangePlayerSpeed).AddTo(this);
+        GameManager.Instance.Player.PlayerItemCountInt.Subscribe(OnChangePlayerSpeed).AddTo(this);
     }
 
     private void OnDestroy()
