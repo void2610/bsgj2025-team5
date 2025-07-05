@@ -92,10 +92,14 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     private async UniTask GameClear()
     {
         _isGameEnded = true;
-        SeManager.Instance.PlaySe(gameClearSe1);
-        await UniTask.Delay(2500);
-        SeManager.Instance.PlaySe(gameClearSe2);
-        await UniTask.Delay(1000);
+        
+        // プレイヤーの動きを完全に停止
+        player.StopMovement();
+        
+        await SeManager.Instance.PlaySeAsync(gameClearSe1, pitch: 1.0f, important: true);
+        await UniTask.Delay(200);
+        await SeManager.Instance.PlaySeAsync(gameClearSe2, pitch: 1.0f, important: true);
+        await UniTask.Delay(500);
         SceneManager.LoadScene("ClearScene");
     }
 

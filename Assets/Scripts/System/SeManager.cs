@@ -39,6 +39,14 @@ public class SeManager : SingletonMonoBehaviour<SeManager>
             PlayerPrefs.SetFloat("SeVolume", value);
         }
     }
+    
+    public async UniTask PlaySeAsync(SeData data, float volume = 1.0f, float pitch = -1.0f, bool important = false)
+    {
+        PlaySe(data, volume, pitch, important);
+        // 再生が完了するまで待機
+        var clipLength = data.audioClip.length;
+        await UniTask.Delay((int)(clipLength * 1000));
+    }
 
     /// <summary>
     /// 指定のAudioClipを再生する。AudioSourceプールから空きがない場合、importantでなければ再生されない。
