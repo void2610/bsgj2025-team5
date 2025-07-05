@@ -15,11 +15,6 @@ MonoBehaviour:
   m_GroupName: Default Local Group
   m_GUID: 597962e2086834640b46eb6f7ac771ca
   m_SerializeEntries:
-  - m_GUID: 49a4dce0b108749489567469959fe0d4
-    m_Address: Assets/Materials/Item.mat
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9dfc825aed78fcd4ba02077103263b40
     m_Address: Packages/com.unity.render-pipelines.universal/Runtime/Materials/Sprite-Unlit-Default.mat
     m_ReadOnly: 0
