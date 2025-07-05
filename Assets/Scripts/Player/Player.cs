@@ -166,6 +166,16 @@ public class Player : MonoBehaviour
         _playerSpeed.Value = _rb.linearVelocity.magnitude / maxLinearVelocity;
     }
 
+    /// <summary>
+    /// プレイヤーの動きを完全に停止する（ゲームクリア時の演出用）
+    /// </summary>
+    public void StopMovement()
+    {
+        _rb.linearVelocity = Vector3.zero;
+        _rb.angularVelocity = Vector3.zero;
+        _rb.isKinematic = true;
+    }
+
     private void OnCollisionEnter(Collision other)
     {
         // 一定以上の速度で衝突した場合、砂のパーティクルを生成する

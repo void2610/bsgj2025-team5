@@ -140,6 +140,7 @@ MonoBehaviour:
   action:
     m_PersistentCalls:
       m_Calls: []
+  chargeSe: {fileID: 11400000, guid: 6066ccb8010684df1b4349bad5da1596, type: 2}
 --- !u!1 &5680241213881648704
 GameObject:
   m_ObjectHideFlags: 0
