@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: TimePenalty
   m_EditorClassIdentifier: 
   audioClip: {fileID: 8300000, guid: 5dd601122c22f464da850723c7978e8b, type: 3}
-  volume: 1
+  volume: 0.5

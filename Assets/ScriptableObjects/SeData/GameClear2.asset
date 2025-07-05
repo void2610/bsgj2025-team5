@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: GameClear2
   m_EditorClassIdentifier: 
   audioClip: {fileID: 8300000, guid: 60d098568a77a4d18adc5b390fe4ae79, type: 3}
-  volume: 1
+  volume: 3
