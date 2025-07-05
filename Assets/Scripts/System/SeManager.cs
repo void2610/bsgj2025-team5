@@ -110,7 +110,7 @@ public class SeManager : SingletonMonoBehaviour<SeManager>
         if (pitch < 0f)
             pitch = Random.Range(0.9f, 1.1f);
         audioSource.pitch = pitch;
-
+        audioSource.loop = false; // Ensure the AudioSource does not loop
         audioSource.Play();
         
         // 現在再生中のSeDataを記録
