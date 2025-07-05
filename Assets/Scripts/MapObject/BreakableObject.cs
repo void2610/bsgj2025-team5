@@ -82,11 +82,11 @@ public class BreakableObject : MonoBehaviour
         
         var squaredDistance = (transform.position - _player.transform.position).sqrMagnitude;
         // 検知距離内にプレイヤーがいて、条件を満たしている場合
-        if (squaredDistance <= detectionDistance * detectionDistance && _player.PlayerSpeedInt.CurrentValue >= requiredSpeed)
+        if (squaredDistance <= detectionDistance * detectionDistance && _player.PlayerItemCountInt.CurrentValue >= requiredSpeed)
         {
             // コライダーを無効化してプレイヤーの減速を防ぐ
             Physics.IgnoreCollision(_collider, _player.GetComponent<Collider>());
-            BlowAway(_player.PlayerSpeedInt.CurrentValue);
+            BlowAway(_player.PlayerItemCountInt.CurrentValue);
         }
     }
 

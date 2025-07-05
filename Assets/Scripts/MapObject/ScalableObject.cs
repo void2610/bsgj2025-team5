@@ -59,7 +59,7 @@ public class ScalableObject : MonoBehaviour
         
     private void Start()
     {
-        GameManager.Instance.Player.PlayerSpeedNorm.Subscribe(OnChangePlayerSpeed).AddTo(this);
+        GameManager.Instance.Player.PlayerItemCountNorm.Subscribe(OnChangePlayerSpeed).AddTo(this);
     }
     
     private void OnDestroy()

@@ -911,6 +911,14 @@ PrefabInstance:
       propertyPath: playerCamera
       value: 
       objectReference: {fileID: 123485802}
+    - target: {fileID: 3935310138754294399, guid: 53a717c9050e34307b93f5e777290533, type: 3}
+      propertyPath: smokeParticleData
+      value: 
+      objectReference: {fileID: 1865793674}
+    - target: {fileID: 3935310138754294399, guid: 53a717c9050e34307b93f5e777290533, type: 3}
+      propertyPath: smokeEmissionRange.y
+      value: 1.5
+      objectReference: {fileID: 0}
     - target: {fileID: 7433976897722441484, guid: 53a717c9050e34307b93f5e777290533, type: 3}
       propertyPath: m_Name
       value: Player
@@ -1120,6 +1128,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9ba5cfa7cdb34f159f1eb238bc3b26a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!198 &1865793674 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 7044106737315279340, guid: fc7fa4f45b3b5450fa585b97d915661d, type: 3}
+  m_PrefabInstance: {fileID: 217599714}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1949756572
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -31,7 +31,7 @@ public class DynamicObstacle : MonoBehaviour
     */
     void Start()
     {
-        GameManager.Instance.Player.PlayerSpeedInt.Subscribe(ToggleObstacle).AddTo(this);
+        GameManager.Instance.Player.PlayerItemCountInt.Subscribe(ToggleObstacle).AddTo(this);
     }
 
     /* 
