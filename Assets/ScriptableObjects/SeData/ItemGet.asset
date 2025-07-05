@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9d45d1b6131b3449e9d6cac0aa57d822, type: 3}
-  m_Name: GetItem
+  m_Name: ItemGet
   m_EditorClassIdentifier: 
   audioClip: {fileID: 8300000, guid: dd469993730444f8a95059a00caf648c, type: 3}
   volume: 1

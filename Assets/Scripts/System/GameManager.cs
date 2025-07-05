@@ -2,6 +2,7 @@ using R3;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
+using Cysharp.Threading.Tasks;
 
 public class GameManager : SingletonMonoBehaviour<GameManager>
 {
@@ -15,6 +16,13 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     [Header("ゲーム設定")]
     [SerializeField] private float countDownDuration = 180f;
     [SerializeField] private Vector3 defaultRespawnPosition;
+    
+    [Header("SE設定")]
+    [SerializeField] private SeData timePenaltySe;
+    [SerializeField] private SeData timeBonusSe;
+    [SerializeField] private SeData itemGetSe;
+    [SerializeField] private SeData gameClearSe1;
+    [SerializeField] private SeData gameClearSe2;
     
     private const string REMAINING_TIME_AT_CLEAR = "RemainingTimeAtClear";
     private readonly float _fallTimePenalty = 20f;
@@ -42,11 +50,13 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         if (_itemCount.Value >= 5)
         {
             SaveCurrentTime();
-            GameClear();
+            GameClear().Forget();
+            return;
         }
+        SeManager.Instance.PlaySe(itemGetSe);
     }
 
-    public void SaveCurrentTime()
+    private void SaveCurrentTime()
     {
         PlayerPrefs.SetFloat(REMAINING_TIME_AT_CLEAR, _onTimeChangedInternal.Value);
         PlayerPrefs.Save();
@@ -79,8 +89,13 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         _respawnPosition = defaultRespawnPosition;
     }
 
-    public void GameClear()
+    private async UniTask GameClear()
     {
+        _isGameEnded = true;
+        SeManager.Instance.PlaySe(gameClearSe1);
+        await UniTask.Delay(2500);
+        SeManager.Instance.PlaySe(gameClearSe2);
+        await UniTask.Delay(1000);
         SceneManager.LoadScene("ClearScene");
     }
 
@@ -97,14 +112,16 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
     private void DecreasePenaltyTime(float v)
     {
-        float actualDecreaseAmount = Math.Max(0, v);
+        SeManager.Instance.PlaySe(timePenaltySe);
+        var actualDecreaseAmount = Math.Max(0, v);
         _onTimeChangedInternal.Value -= actualDecreaseAmount;
         _onHappenTimePenalty.OnNext(v);
     }
 
     public void IncreaseTime(float amount)
     {
-        float actualIncreaseAmount = Math.Max(0, amount);
+        SeManager.Instance.PlaySe(timeBonusSe);
+        var actualIncreaseAmount = Math.Max(0, amount);
         _onTimeChangedInternal.Value = Math.Min(_onTimeChangedInternal.Value + actualIncreaseAmount, countDownDuration * 2f);
         _onHappenTimeBonus.OnNext(actualIncreaseAmount);
     }
