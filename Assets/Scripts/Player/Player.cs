@@ -1,4 +1,6 @@
 using System;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using R3;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -6,7 +8,7 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(Rigidbody), typeof(Collider))]
 public class Player : MonoBehaviour
 {
-    [Header("Camera & Control")]
+    [Header("カメラと操作")]
     [Tooltip("プレイヤーを追従するカメラ")]
     [SerializeField] private Camera playerCamera;
     
@@ -16,7 +18,7 @@ public class Player : MonoBehaviour
     [Tooltip("ONの場合、マウスの上下操作が反転します")]
     [SerializeField] private bool   isVerticalInverted = false;
 
-    [Header("Physics")]
+    [Header("物理演算")]
     [Tooltip("マウス移動量を回転力に変換する倍率。大きいほど敏感に回転します")]
     [SerializeField] private float  torqueMultiplier   = 0.25f;
     
@@ -39,20 +41,30 @@ public class Player : MonoBehaviour
     [Tooltip("弾性。衝突時の跳ね返りの強さ（0=跳ね返りなし、1=完全弾性）")]
     [SerializeField] private float bounciness = 0f;
     
-    [Tooltip("衝突演出が発生する速度の閾値")]
-    [SerializeField] private float collisionSpeedThreshold = 0.2f;
-    
-    [Header("Visual")]
+    [Header("演出")]
     [Tooltip("衝突時に生成する砂のパーティクル")]
     [SerializeField] private ParticleData sandParticleData;
     
+    [Tooltip("衝突演出が発生する速度の閾値")]
+    [SerializeField] private float collisionSpeedThreshold = 0.2f;
+
     [Tooltip("移動時に生成する煙のパーティクル")]
     [SerializeField] private ParticleSystem smokeParticleData;
+    
     [Tooltip("煙パーティクルの発生量の範囲")]
     [SerializeField] private Vector2 smokeEmissionRange = new Vector2(0f, 2f);
     
     [Tooltip("衝突時のSE")]
     [SerializeField] private SeData collisionSe;
+    
+    [Tooltip("マウス加速時のSE")]
+    [SerializeField] private SeData mouseAccelerationSe;
+    
+    [Tooltip("マウス加速度の閾値。この値を超えると加速SEが再生されます")]
+    [SerializeField] private float mouseAccelerationThreshold = 50f;
+    
+    [Tooltip("SE再生のクールダウン時間（秒）")]
+    [SerializeField] private float mouseAccelerationSeCooldown = 0.5f;
 
     /// <summary>
     /// プレイヤーの速度を0-1のfloatで表す（現在はアイテム数ベース）
@@ -75,6 +87,11 @@ public class Player : MonoBehaviour
     private Collider _collider;
     private PhysicsMaterial _physicsMaterial;
     private Vector2 _accumulatedInputDelta;
+    
+    // マウス加速度検出用
+    private Vector2 _previousMouseDelta;
+    private bool _canPlayAccelerationSe = true;
+    private CancellationTokenSource _accelerationSeCts;
 
     private void UpdateSmokeParticle(float speed)
     {
@@ -133,6 +150,20 @@ public class Player : MonoBehaviour
         // マウスのdelta値を取得（ピクセル/フレーム）
         var currentDelta = Mouse.current?.delta.ReadValue() ?? Vector2.zero;
         
+        // マウス加速度の計算
+        var deltaChange = currentDelta - _previousMouseDelta;
+        var acceleration = deltaChange.magnitude / Time.deltaTime;
+        
+        // 加速度が閾値を超えた場合、かつ再生可能であればSEを再生
+        if (acceleration > mouseAccelerationThreshold && _canPlayAccelerationSe)
+        {
+            SeManager.Instance.PlaySe(mouseAccelerationSe);
+            PlayAccelerationSeWithCooldown().Forget();
+        }
+        
+        // 次フレームのために現在のdeltaを保存
+        _previousMouseDelta = currentDelta;
+        
         // FixedUpdate用に入力を蓄積
         _accumulatedInputDelta += currentDelta;
         
@@ -181,6 +212,30 @@ public class Player : MonoBehaviour
         _rb.angularVelocity = Vector3.zero;
         _rb.isKinematic = true;
     }
+    
+    /// <summary>
+    /// 加速SE再生のクールダウン処理
+    /// </summary>
+    private async UniTaskVoid PlayAccelerationSeWithCooldown()
+    {
+        _canPlayAccelerationSe = false;
+        
+        // 既存のトークンをキャンセル
+        _accelerationSeCts?.Cancel();
+        _accelerationSeCts?.Dispose();
+        _accelerationSeCts = new CancellationTokenSource();
+        
+        try
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(mouseAccelerationSeCooldown), 
+                cancellationToken: _accelerationSeCts.Token);
+            _canPlayAccelerationSe = true;
+        }
+        catch (OperationCanceledException)
+        {
+            // キャンセルされた場合は何もしない
+        }
+    }
 
     private void OnCollisionEnter(Collision other)
     {
@@ -197,5 +252,12 @@ public class Player : MonoBehaviour
             // 衝突音を再生
             SeManager.Instance.PlaySe(collisionSe);
         }
+    }
+    
+    private void OnDestroy()
+    {
+        // クリーンアップ
+        _accelerationSeCts?.Cancel();
+        _accelerationSeCts?.Dispose();
     }
 }
