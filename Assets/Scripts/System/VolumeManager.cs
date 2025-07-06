@@ -162,7 +162,6 @@ public class VolumeManager : MonoBehaviour
             // 評価されたカーブの値を使い、初期強度から最大強度へ補間します。
             float value = Mathf.Lerp(_vignetteInitialIntensity, _vignetteMaxIntensity, curveValue);
 
-            // 
             _vignette.intensity.value = Mathf.Lerp(_vignette.intensity.value, value, _lerpCoefficient);
         }
         else
