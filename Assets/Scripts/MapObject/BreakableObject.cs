@@ -27,6 +27,9 @@ public class BreakableObject : MonoBehaviour
     [Tooltip("プレイヤーを減速させる力の強さ")]
     [SerializeField] private float slowdownForce = 10f;
     
+    [Tooltip("破壊時のSE")]
+    [SerializeField] private SeData breakSe;
+    
     [System.Serializable]
     public class SpeedBasedSettings
     {
@@ -118,6 +121,8 @@ public class BreakableObject : MonoBehaviour
         
         // カメラを揺らす
         FindFirstObjectByType<PlayerCamera>().ShakeCamera(cameraShakeMagnitude, 0.3f);
+        // 破壊音を再生
+        SeManager.Instance.PlaySe(breakSe);
         
         // 確率でアイテムをドロップ
         if (dropItemPrefab && Random.value < dropChance)

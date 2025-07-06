@@ -39,6 +39,9 @@ public class Player : MonoBehaviour
     [Tooltip("弾性。衝突時の跳ね返りの強さ（0=跳ね返りなし、1=完全弾性）")]
     [SerializeField] private float bounciness = 0f;
     
+    [Tooltip("衝突演出が発生する速度の閾値")]
+    [SerializeField] private float collisionSpeedThreshold = 0.2f;
+    
     [Header("Visual")]
     [Tooltip("衝突時に生成する砂のパーティクル")]
     [SerializeField] private ParticleData sandParticleData;
@@ -47,6 +50,9 @@ public class Player : MonoBehaviour
     [SerializeField] private ParticleSystem smokeParticleData;
     [Tooltip("煙パーティクルの発生量の範囲")]
     [SerializeField] private Vector2 smokeEmissionRange = new Vector2(0f, 2f);
+    
+    [Tooltip("衝突時のSE")]
+    [SerializeField] private SeData collisionSe;
 
     /// <summary>
     /// プレイヤーの速度を0-1のfloatで表す（現在はアイテム数ベース）
@@ -181,13 +187,15 @@ public class Player : MonoBehaviour
         // 一定以上の速度で衝突した場合、砂のパーティクルを生成する
         // このようにコードから生成する場合はParticleManagerを通して生成すると、万が一、大量にこのコードが呼ばれても過剰な生成を防げる
 
-        if (_rb.linearVelocity.magnitude > 0.2f)
+        if (_rb.linearVelocity.magnitude > collisionSpeedThreshold && other.contacts.Length > 0)
         {
             var quaternion = Quaternion.FromToRotation(Vector3.up, other.contacts[0].normal);
             ParticleManager.Instance.CreateParticle(sandParticleData, this.transform.position + Vector3.down * 0.5f, quaternion);
             
             // カメラを揺らす
             playerCamera.GetComponent<PlayerCamera>().ShakeCamera(0.2f, 0.3f);
+            // 衝突音を再生
+            SeManager.Instance.PlaySe(collisionSe);
         }
     }
 }
