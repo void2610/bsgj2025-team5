@@ -159,4 +159,11 @@ MonoBehaviour:
   dynamicFriction: 0.01
   staticFriction: 0.01
   bounciness: 0
+  collisionSpeedThreshold: 0.2
   sandParticleData: {fileID: 11400000, guid: 6092c442923d44a4e830cd2b8755650f, type: 2}
+  smokeParticleData: {fileID: 0}
+  smokeEmissionRange: {x: 0, y: 1.5}
+  collisionSe: {fileID: 11400000, guid: fb413fd86a7cb4cc5871a113a8fe1bbd, type: 2}
+  mouseAccelerationSe: {fileID: 11400000, guid: 81c3a54d827c34fcb9d901c6749e57c0, type: 2}
+  mouseAccelerationThreshold: 1000
+  mouseAccelerationSeCooldown: 0.4

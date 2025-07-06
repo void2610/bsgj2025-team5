@@ -232,6 +232,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1867553516881644330}
+  - component: {fileID: 4295238507111269796}
   m_Layer: 5
   m_Name: GameOverContent
   m_TagString: Untagged
@@ -262,6 +263,19 @@ RectTransform:
   m_AnchoredPosition: {x: 480, y: 270}
   m_SizeDelta: {x: 960, y: 540}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &4295238507111269796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7615835358442042621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b97cbe0e5d7a476fb047830bd684a68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameOverSe: {fileID: 11400000, guid: b62ac3443c5bd425a9d2e308fcb82c09, type: 2}
 --- !u!1 &8071525342639045767
 GameObject:
   m_ObjectHideFlags: 0
