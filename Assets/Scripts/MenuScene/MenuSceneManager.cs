@@ -14,20 +14,14 @@ public class MenuSceneManager : MonoBehaviour
     [SerializeField] private Canvas mainCanvas; // メインのCanvas
     [SerializeField] private GameObject loadingUIPrefab; // ローディングUI全体のPrefab
 
-
-    // CanvasにあるPlayerImageのImageコンポーネント
-    [SerializeField] private Image playerImage;
-
-    // 動画をRenderTextureから表示するためのMaterial
-    [SerializeField] private Material videoRenderMaterial;
-
-    // 静止画を表示するためのMaterial (現在のTitlePlayerVideo Materialなど)
-    [SerializeField] private Material stillImageMaterial;
+    // 静止画表示用のPlayerImageオブジェクト
+    [SerializeField] private GameObject playerImageGameObject; // PlayerImageのGameObject
 
     // 動画再生に関する変数
     [SerializeField] private VideoClip titleVideoClip; // 再生したい動画クリップ (エディタで設定)
-    [SerializeField] private VideoPlayer videoPlayer; // シーン内のVideoPlayerコンポーネント
-    private RenderTexture videoRenderTexture; // VideoPlayerが動画をレンダリングするRenderTexture
+    [SerializeField] private VideoPlayer videoPlayer; // シーン内のVideoPlayerコンポーネント (Video Player GameObjectにアタッチされているもの)
+    [SerializeField] private GameObject videoPlayerGameObject; // VideoPlayerがアタッチされているGameObject (添付画像にある"Video Player"オブジェクト)
+
 
     private bool _isWebGLBuild = false; //WebGLビルドかどうかのフラグ
 
@@ -131,42 +125,56 @@ public class MenuSceneManager : MonoBehaviour
     /// </summary>
     private void ManageBackgroundDisplay()
     {
+        // オブジェクトが設定されているか確認
+        if (playerImageGameObject == null)
+        {
+            Debug.LogError("PlayerImage GameObjectが設定されていません。");
+            return;
+        }
+        if (videoPlayerGameObject == null || videoPlayer == null)
+        {
+            Debug.LogError("VideoPlayer GameObjectまたはVideoPlayerコンポーネントが設定されていません。");
+            return;
+        }
+
         if (_isWebGLBuild) // WebGLビルドの場合：静止画を表示
         {
             Debug.Log("WebGLビルド: 静止画を表示します。");
 
-            // Imageコンポーネントに静止画Materialを適用
-            playerImage.material = stillImageMaterial;
-
-            // VideoPlayerが存在すれば停止・無効化
-            if (videoPlayer != null)
-            {
-                videoPlayer.Stop();
-                videoPlayer.enabled = false;
-            }
+            playerImageGameObject.SetActive(true); // PlayerImage (静止画) を有効にする
+            videoPlayerGameObject.SetActive(false); // Video Player (動画) を無効にする
+            videoPlayer.Stop(); // 動画を停止
         }
         else // WebGL以外のビルドの場合：動画を再生
         {
             Debug.Log("WebGL以外のビルド: 動画を再生します。");
 
-            // Imageコンポーネントに動画Materialを適用
-            playerImage.material = videoRenderMaterial;
+            playerImageGameObject.SetActive(false); // PlayerImage (静止画) を無効にする
+            videoPlayerGameObject.SetActive(true); // Video Player (動画) を有効にする
 
-            // VideoPlayerが存在すれば再生
-            if (videoPlayer != null)
+            if (titleVideoClip != null)
             {
-                videoPlayer.enabled = true;
-                videoPlayer.clip = titleVideoClip; // スクリプトからクリップを設定
-                if (!videoPlayer.isPlaying) // 既に再生中でなければ再生開始
-                {
-                    videoPlayer.Play();
-                }
+                // VideoPlayerの設定と再生
+                videoPlayer.clip = titleVideoClip; // VideoClipを設定
+                videoPlayer.Prepare(); // 動画の準備を開始
+                videoPlayer.prepareCompleted += OnVideoPrepared; // 準備完了イベントを購読
+                Debug.Log($"動画クリップ '{titleVideoClip.name}' の準備を開始しました。");
             }
             else
             {
-                Debug.LogError("シーン内にVideoPlayerが見つかりません！動画再生にはVideoPlayerが必要です。");
+                Debug.LogError("Title Video Clipが設定されていません。動画再生ができません。静止画に戻します。");
+                // 動画クリップがない場合は、静止画を表示するフォールバック
+                playerImageGameObject.SetActive(true);
+                videoPlayerGameObject.SetActive(false);
             }
         }
+    }
+
+    private void OnVideoPrepared(VideoPlayer source)
+    {
+        source.prepareCompleted -= OnVideoPrepared; // イベントの購読を解除
+        source.Play(); // 動画の再生を開始
+        Debug.Log("動画の再生を開始しました。");
     }
 
     private void Awake()
