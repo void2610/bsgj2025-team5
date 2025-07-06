@@ -34,16 +34,16 @@ public class VolumeManager : MonoBehaviour
 
     [Header("ビネット調整用設定")]
     [Tooltip("ビネットを開始する残り時間（秒）")]
-    [SerializeField] private float _vignetteStartTime = 60f;
+    [SerializeField] private float vignetteStartTime = 60f;
 
     [Tooltip("ビネットが開始されたときの初期強度")]
-    [SerializeField] private float _vignetteInitialIntensity = 0f;
+    private float _vignetteInitialIntensity = 0f;
 
     [Tooltip("ビネットが最大になったときの最終強度")]
-    [SerializeField] private float _vignetteMaxIntensity = 1f;
+    private float _vignetteMaxIntensity = 1f;
 
     [Tooltip("ビネットの色")]
-    [SerializeField]  private Color _vignetteColor = Color.black;
+    private Color _vignetteColor = Color.black;
 
     [Tooltip("ビネットの強度変化カーブ。X軸:正規化された時間(0-1), Y軸:強度(0-1)")]
     [SerializeField] private AnimationCurve vignetteIntensityCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
@@ -151,10 +151,10 @@ public class VolumeManager : MonoBehaviour
     private void UpdateVignette(float remainingTime)
     {
         // ビネットの開始時間まで残り時間が減ったら
-        if (remainingTime <= _vignetteStartTime)
+        if (remainingTime <= vignetteStartTime)
         {
             // remainingTime (_vignetteStartTimeから0まで) を0から1の範囲に正規化します。
-            float normalizedTime = 1f - Mathf.Clamp01(remainingTime / _vignetteStartTime);
+            float normalizedTime = 1f - Mathf.Clamp01(remainingTime / vignetteStartTime);
 
             // 設定されたカーブを使って、正規化された時間に対応する0-1の値を評価します。
             float curveValue = vignetteIntensityCurve.Evaluate(normalizedTime);
