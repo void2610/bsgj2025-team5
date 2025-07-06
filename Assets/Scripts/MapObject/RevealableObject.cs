@@ -48,18 +48,19 @@ public class RevealableObject : MonoBehaviour
     private void RevealObject()
     {
         _isRevealed = true;
-        _collider.isTrigger = false;
+        
+        _collider.enabled = true;
         
         if (_currentMotion.IsActive()) _currentMotion.Cancel();
         
         // ディゾルブマテリアルに切り替え
-        _materialInstance = new Material(dissolveMaterial);
-        _materialInstance.SetTexture(_mainTex, _originalMaterial.mainTexture);
+        _materialInstance.SetFloat(_dissolveAmount, 0f);
         _renderer.material = _materialInstance;
         
         // ディゾルブアニメーション開始（0→1で出現）
         _currentMotion = LMotion.Create(0f, 1f, dissolveDuration)
             .WithEase(Ease.OutQuad)
+            .WithOnComplete(() => { _renderer.material = _originalMaterial; })
             .Bind(value => _materialInstance?.SetFloat(_dissolveAmount, value))
             .AddTo(this);
     }
@@ -70,15 +71,19 @@ public class RevealableObject : MonoBehaviour
     private void HideObject()
     {
         _isRevealed = false;
-        _collider.isTrigger = true;
+        
+        _collider.enabled = false;
         
         // 既存のアニメーションを停止
         if (_currentMotion.IsActive()) _currentMotion.Cancel();
         
-        // ディゾルブアニメーション開始
-        _currentMotion = LMotion.Create(1, 0f, dissolveDuration)
+        // ディゾルブマテリアルに切り替え
+        _materialInstance.SetFloat(_dissolveAmount, 1f);
+        _renderer.material = _materialInstance;
+        
+        // ディゾルブアニメーション開始（1→0で消失）
+        _currentMotion = LMotion.Create(1f, 0f, dissolveDuration)
             .WithEase(Ease.OutQuad)
-            .WithOnComplete(() => { _renderer.material = _originalMaterial; })
             .Bind(value => _materialInstance?.SetFloat(_dissolveAmount, value))
             .AddTo(this);
     }
@@ -91,18 +96,37 @@ public class RevealableObject : MonoBehaviour
         _originalMaterial = _renderer.material;
         _collider = this.GetComponent<Collider>();
         
-        // 初期状態では非表示（ディゾルブ値0）
+        // マテリアルインスタンスの準備（初期状態の設定はStart()で行う）
         _materialInstance = new Material(dissolveMaterial);
-        _materialInstance.SetFloat(_dissolveAmount, 0f);
         _materialInstance.SetTexture(_mainTex, _originalMaterial.mainTexture);
-        _renderer.material = _materialInstance;
-        
-        _isRevealed = false;
-        _collider.isTrigger = true;
     }
         
     private void Start()
     {
+        // 初期速度を取得（通常は0）
+        var initialSpeed = GameManager.Instance.Player.PlayerItemCountInt.CurrentValue;
+        
+        // 初期状態を設定
+        var shouldBeActiveInitially = invertBehavior ? initialSpeed <= requiredSpeed : initialSpeed >= requiredSpeed;
+        
+        if (shouldBeActiveInitially)
+        {
+            // 初期状態で表示する場合
+            _isRevealed = true;
+            _collider.enabled = true;
+            _materialInstance.SetFloat(_dissolveAmount, 1f);
+            _renderer.material = _originalMaterial;
+        }
+        else
+        {
+            // 初期状態で非表示の場合
+            _isRevealed = false;
+            _collider.enabled = false;
+            _materialInstance.SetFloat(_dissolveAmount, 0f);
+            _renderer.material = _materialInstance;
+        }
+        
+        // 速度変化の購読を開始
         GameManager.Instance.Player.PlayerItemCountInt.Subscribe(OnChangePlayerSpeed).AddTo(this);
     }
 
