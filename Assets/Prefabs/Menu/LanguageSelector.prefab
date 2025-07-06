@@ -45,5 +45,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   focusButtonPrefab: {fileID: 1999852034901345636, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
-  ySpacing: 55
-  buttonSize: 0.6
+  ySpacing: 65
+  buttonSize: 0.5
