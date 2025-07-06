@@ -10,18 +10,18 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
     [Tooltip("ポーズ画面のCanvasGroup")]
     [SerializeField] private CanvasGroup pauseCanvasGroup;
 
-    private bool _isPaused = false;
-    
-    public void TogglePause() => SetPause(!_isPaused);
+    public bool IsPaused { get; private set; } = false;
+
+    public void TogglePause() => SetPause(!IsPaused);
     
     public void SetPause(bool p)
     {
-        _isPaused = p;
+        IsPaused = p;
         
-        Time.timeScale = _isPaused ? 0 : 1;
-        pauseCanvasGroup.alpha = _isPaused ? 1 : 0;
-        pauseCanvasGroup.interactable = _isPaused;
-        pauseCanvasGroup.blocksRaycasts = _isPaused;
+        Time.timeScale = IsPaused ? 0 : 1;
+        pauseCanvasGroup.alpha = IsPaused ? 1 : 0;
+        pauseCanvasGroup.interactable = IsPaused;
+        pauseCanvasGroup.blocksRaycasts = IsPaused;
         
         Cursor.lockState = p ? CursorLockMode.None : CursorLockMode.Locked;
     }
