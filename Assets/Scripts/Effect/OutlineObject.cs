@@ -175,13 +175,49 @@ public class OutlineObject : MonoBehaviour
                 else
                 {
                     // OutlineOnlyモードの透明オブジェクト: 裏面カリングで裏側を隠す
-                    material.SetInt("_Cull", (int)UnityEngine.Rendering.CullMode.Front);
+                    material.SetInt("_Cull", (int)UnityEngine.Rendering.CullMode.Back);
                 }
             }
             else
             {
                 // 不透明オブジェクト: カリング無効でアウトラインを全周表示
                 material.SetInt("_Cull", (int)UnityEngine.Rendering.CullMode.Off);
+            }
+        }
+        
+        // 透明オブジェクトの深度テスト設定
+        if (isTransparent)
+        {
+            // 深度テストを有効にして、オブジェクトの裏側のアウトラインを隠す
+            if (material.HasProperty("_ZTest"))
+            {
+                material.SetInt("_ZTest", (int)UnityEngine.Rendering.CompareFunction.LessEqual);
+            }
+            
+            // 透明オブジェクトでは深度書き込みを無効にする
+            if (material.HasProperty("_ZWrite"))
+            {
+                material.SetInt("_ZWrite", 0);
+            }
+            
+            // アウトラインのレンダーキューを調整
+            if (outlineSettings.mode == OutlineMode.OutlineOnly)
+            {
+                // 透明オブジェクトより少し前に描画
+                material.renderQueue = 2999;
+            }
+        }
+        else
+        {
+            // 不透明オブジェクトでは通常の深度テスト
+            if (material.HasProperty("_ZTest"))
+            {
+                material.SetInt("_ZTest", (int)UnityEngine.Rendering.CompareFunction.LessEqual);
+            }
+            
+            if (material.HasProperty("_ZWrite"))
+            {
+                material.SetInt("_ZWrite", 1);
             }
         }
     }
@@ -215,13 +251,16 @@ public class OutlineObject : MonoBehaviour
                 
                 if (isTransparent)
                 {
-                    // 透明オブジェクトの場合、アウトラインを先に描画
+                    // 透明オブジェクトの場合、アウトラインを先に描画して深度バッファを初期化
                     materials = new Material[originalMats.Length + 1];
                     materials[0] = targetMaterial; // アウトラインを最初に
                     for (int i = 0; i < originalMats.Length; i++)
                     {
                         materials[i + 1] = originalMats[i];
                     }
+                    
+                    // アウトラインマテリアルのレンダーキューを調整
+                    targetMaterial.renderQueue = 2999; // 透明オブジェクトより少し前
                 }
                 else
                 {
@@ -232,6 +271,9 @@ public class OutlineObject : MonoBehaviour
                         materials[i] = originalMats[i];
                     }
                     materials[originalMats.Length] = targetMaterial; // アウトラインを最後に
+                    
+                    // 不透明オブジェクトのアウトラインは通常のレンダーキュー
+                    targetMaterial.renderQueue = 2000;
                 }
                 
                 renderer.materials = materials;

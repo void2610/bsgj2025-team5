@@ -16,6 +16,10 @@ public class OutlineRenderFeature : ScriptableRendererFeature
         public LayerMask layerMask = -1;
         public RenderPassEvent renderPassEvent = RenderPassEvent.AfterRenderingOpaques;
         
+        [Header("透明オブジェクト対応")]
+        public bool supportTransparentObjects = true;
+        public RenderPassEvent transparentRenderPassEvent = RenderPassEvent.BeforeRenderingTransparents;
+        
         [Header("フィルタリング設定")]
         public string[] shaderTagIds = new string[] { "SRPDefaultUnlit" };
         
@@ -40,6 +44,28 @@ public class OutlineRenderFeature : ScriptableRendererFeature
         var outlineObjects = OutlineObject.GetAllOutlineObjects();
         if (outlineObjects.Count > 0)
         {
+            // 透明オブジェクトが含まれているかチェック
+            bool hasTransparentObjects = false;
+            foreach (var obj in outlineObjects)
+            {
+                if (obj.IsTransparent())
+                {
+                    hasTransparentObjects = true;
+                    break;
+                }
+            }
+            
+            if (hasTransparentObjects && settings.supportTransparentObjects)
+            {
+                // 透明オブジェクトがある場合は、透明オブジェクトの描画前に実行
+                outlineRenderPass.renderPassEvent = settings.transparentRenderPassEvent;
+            }
+            else
+            {
+                // 通常のレンダリングタイミング
+                outlineRenderPass.renderPassEvent = settings.renderPassEvent;
+            }
+            
             renderer.EnqueuePass(outlineRenderPass);
         }
     }
