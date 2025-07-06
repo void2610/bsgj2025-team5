@@ -48,6 +48,9 @@ public class VolumeManager : MonoBehaviour
     [Tooltip("ビネットの強度変化カーブ。X軸:正規化された時間(0-1), Y軸:強度(0-1)")]
     [SerializeField] private AnimationCurve vignetteIntensityCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
+    [Tooltip("ビネットの時間増減による変化の線形補間係数")] 
+    private float _lerpCoefficient = 0.03f;
+
 
     [Header("Kaleidoscope Video")]
     [Tooltip("万華鏡効果の動画クリップ")]
@@ -86,7 +89,7 @@ public class VolumeManager : MonoBehaviour
     {
         GameManager.Instance.Player.PlayerItemCountNorm.Subscribe(SetValue).AddTo(this);
 
-        _vignette.color.Override(Color.black);
+        _vignette.color.Override(_vignetteColor);
         GameManager.Instance.OnTimeChanged.Subscribe(UpdateVignette).AddTo(this);
     }
 
@@ -151,14 +154,16 @@ public class VolumeManager : MonoBehaviour
         if (remainingTime <= _vignetteStartTime)
         {
             // remainingTime (_vignetteStartTimeから0まで) を0から1の範囲に正規化します。
-            // _vignetteStartTimeのときに0、0秒のときに1になります。
             float normalizedTime = 1f - Mathf.Clamp01(remainingTime / _vignetteStartTime);
 
             // 設定されたカーブを使って、正規化された時間に対応する0-1の値を評価します。
             float curveValue = vignetteIntensityCurve.Evaluate(normalizedTime);
 
             // 評価されたカーブの値を使い、初期強度から最大強度へ補間します。
-            _vignette.intensity.value = Mathf.Lerp(_vignetteInitialIntensity, _vignetteMaxIntensity, curveValue);
+            float value = Mathf.Lerp(_vignetteInitialIntensity, _vignetteMaxIntensity, curveValue);
+
+            // 
+            _vignette.intensity.value = Mathf.Lerp(_vignette.intensity.value, value, _lerpCoefficient);
         }
         else
         {

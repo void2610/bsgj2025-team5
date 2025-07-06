@@ -102,9 +102,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5947b0c2f9b0a408e82703b569074013, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeBonus: 10
+  timeBonus: 20
   particlePrefab: {fileID: 0}
-  pickupSound: {fileID: 0}
   rotationSpeed: 90
   floatHeight: 0.3
   floatSpeed: 2
