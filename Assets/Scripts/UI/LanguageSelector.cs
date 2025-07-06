@@ -1,7 +1,5 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Localization.Settings;
-using JetBrains.Annotations;
 using UnityEngine.Localization;
 
 public class LanguageSelector : MonoBehaviour
@@ -10,7 +8,16 @@ public class LanguageSelector : MonoBehaviour
     [SerializeField] private float ySpacing = 100; // ボタン間の間隔
     [SerializeField] private float buttonSize = 1; // ボタンのサイズ
     
-    private List<FocusButton>_focusButtons = new ();
+    private string GetLocaleName(Locale locale)
+    {
+        // 言語コードに基づいてネイティブな表示名を返す
+        return locale.Identifier.Code switch
+        {
+            "en" => "English",
+            "ja" => "日本語",
+            _ => locale.ToString()
+        };
+    }
 
     private async void Start()
     {
@@ -22,11 +29,10 @@ public class LanguageSelector : MonoBehaviour
         foreach (var locale in LocalizationSettings.AvailableLocales.Locales)
         {
             var fb = Instantiate(focusButtonPrefab, this.transform).GetComponent<FocusButton>();
-            _focusButtons.Add(fb);
             fb.transform.localPosition = new Vector3(0f, -(index * ySpacing), 0f);
             fb.transform.localScale = new Vector3(buttonSize, buttonSize, buttonSize);
             
-            fb.SetText(locale.LocaleName);
+            fb.SetText(GetLocaleName(locale));
             fb.SetAction(() => LocalizationSettings.SelectedLocale = locale);
             index++;
         }
