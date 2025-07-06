@@ -349,6 +349,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1533657687 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2141783979348822811, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
+  m_PrefabInstance: {fileID: 1718858927}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1718858927
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -437,6 +448,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2141783979348822811, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 7615835358442042621, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
       propertyPath: m_Name
       value: TitleContent
@@ -445,6 +460,30 @@ PrefabInstance:
       propertyPath: mainCanvas
       value: 
       objectReference: {fileID: 1189942494}
+    - target: {fileID: 8556061848987250536, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
+      propertyPath: playerImage
+      value: 
+      objectReference: {fileID: 1533657687}
+    - target: {fileID: 8556061848987250536, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
+      propertyPath: videoPlayer
+      value: 
+      objectReference: {fileID: 1451388208}
+    - target: {fileID: 8556061848987250536, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
+      propertyPath: titleVideoClip
+      value: 
+      objectReference: {fileID: 32900000, guid: 547b52f69dff549649a8edf50e031c45, type: 3}
+    - target: {fileID: 8556061848987250536, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
+      propertyPath: stillImageMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: b3b8126ca5adb4334ba7d67e48c57730, type: 2}
+    - target: {fileID: 8556061848987250536, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
+      propertyPath: videoRenderMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: b3b8126ca5adb4334ba7d67e48c57730, type: 2}
+    - target: {fileID: 8556061848987250536, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
+      propertyPath: backgroundImageComponent
+      value: 
+      objectReference: {fileID: 2070545518}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -777,6 +816,17 @@ MonoBehaviour:
   m_OnChangedRate:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &2070545518 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5846510718177364633, guid: ccb699285e42c48a0a32ec92b3a9026e, type: 3}
+  m_PrefabInstance: {fileID: 1718858927}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2070545511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3687870091981214501
 PrefabInstance:
   m_ObjectHideFlags: 0
