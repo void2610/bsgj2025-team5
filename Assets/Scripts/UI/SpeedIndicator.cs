@@ -21,7 +21,7 @@ public class SpeedIndicator : MonoBehaviour
 
         // プレイヤーの速度レベルを購読
         var player = GameManager.Instance.Player;
-        player.PlayerSpeedInt.Subscribe(UpdateSpeedDisplay).AddTo(this);
+        player.PlayerItemCountInt.Subscribe(UpdateSpeedDisplay).AddTo(this);
     }
 
     private void UpdateSpeedDisplay(int speedLevel)

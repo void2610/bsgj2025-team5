@@ -46,5 +46,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   enemyAI: {fileID: 0}
-  countdownTimer: {fileID: 0}
-  DefaultRespawnPosition: {x: -91.3, y: 1, z: -97.8}
+  countDownDuration: 180
+  defaultRespawnPosition: {x: 0, y: 0, z: 0}
+  timePenaltySe: {fileID: 11400000, guid: 0f1f21c87e4be4b56ac2509e869fc8cf, type: 2}
+  timeBonusSe: {fileID: 11400000, guid: d9d21d1f47b574fbba02fed93766cc83, type: 2}
+  itemGetSe: {fileID: 11400000, guid: d9d21d1f47b574fbba02fed93766cc83, type: 2}
+  gameClearSe1: {fileID: 11400000, guid: 8338cdc3fd5724cf1b95d3cdc9223254, type: 2}
+  gameClearSe2: {fileID: 11400000, guid: 8b2b06409765e4b05bce1c58b1a8782c, type: 2}

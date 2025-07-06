@@ -144,7 +144,7 @@ public class BGMManager : MonoBehaviour
         UniTaskAsyncEnumerable.Timer(TimeSpan.Zero, TimeSpan.FromSeconds(bgmUpdateInterval))
             .ForEachAsync(_ =>
             {
-                var nextSpeedLevel = GameManager.Instance.Player.PlayerSpeedInt.CurrentValue;
+                var nextSpeedLevel = GameManager.Instance.Player.PlayerItemCountInt.CurrentValue;
                 ChangeBGMAsync(nextSpeedLevel).Forget();
             }, this.GetCancellationTokenOnDestroy()).Forget();
     }

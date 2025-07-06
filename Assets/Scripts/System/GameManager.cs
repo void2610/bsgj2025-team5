@@ -2,48 +2,46 @@ using R3;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
+using Cysharp.Threading.Tasks;
 
 public class GameManager : SingletonMonoBehaviour<GameManager>
 {
-    [Tooltip("プレイヤーの参照。ゲーム開始時に設定する必要があります")] [SerializeField]
-    private Player player;
-
-    [Tooltip("敵の参照。ゲーム開始時に設定する必要があります")] [SerializeField]
-    private EnemyAI enemyAI;
-
-    // カウントダウンタイマーの初期時間
+    [Header("必須参照")]
+    [Tooltip("プレイヤーの参照。ゲーム開始時に設定する必要があります")]
+    [SerializeField] private Player player;
+    
+    [Tooltip("敵の参照。ゲーム開始時に設定する必要があります")]
+    [SerializeField] private EnemyAI enemyAI;
+    
+    [Header("ゲーム設定")]
     [SerializeField] private float countDownDuration = 180f;
-
-    // 残り時間。変更を通知するためにReactivePropertyにしている
-    private readonly ReactiveProperty<float> _onTimeChanged = new ReactiveProperty<float>(0f);
-
-    // 外部からはObservable<float>として購読可能にする
-    public Observable<float> OnTimeChanged => _onTimeChanged.AsObservable();
-
-    // 外部から残り時間を参照するためのプロパティ (読み取り専用)
-    public float CurrentTimeValue => _onTimeChanged.Value;
-
-    // PlayerPrefsに登録する残り時間のキー
-    private const string REMAINING_TIME_AT_CLEAR = "RemainingTimeAtClear";
-
-    public ReadOnlyReactiveProperty<int> ItemCount => _itemCount;
-
-    private readonly ReactiveProperty<int> _itemCount = new(0);
-
-    public ReadOnlyReactiveProperty<float> ClosestEnemyDistance { get; private set; }
-
-    public Player Player => player;
-
-    private readonly float _fallTimePenalty = -20f;
-
-    private Rigidbody _playerqRigidbody;
-
     [SerializeField] private Vector3 defaultRespawnPosition;
-
+    
+    [Header("SE設定")]
+    [SerializeField] private SeData timePenaltySe;
+    [SerializeField] private SeData timeBonusSe;
+    [SerializeField] private SeData itemGetSe;
+    [SerializeField] private SeData gameClearSe1;
+    [SerializeField] private SeData gameClearSe2;
+    
+    private const string REMAINING_TIME_AT_CLEAR = "RemainingTimeAtClear";
+    private readonly float _fallTimePenalty = 20f;
+    
+    private readonly ReactiveProperty<float> _onTimeChangedInternal = new();
+    private readonly Subject<float> _onHappenTimePenalty = new();
+    private readonly Subject<float> _onHappenTimeBonus = new();
+    private readonly ReactiveProperty<int> _itemCount = new(0);
+    
+    private Rigidbody _playerRigidbody;
     private Vector3 _respawnPosition;
-
-    // ゲーム終了フラグ
-    private bool _isGameEnded = false;
+    private bool _isGameEnded;
+    
+    public ReadOnlyReactiveProperty<float> OnTimeChanged => _onTimeChangedInternal;
+    public Observable<float> OnHappenTimePenalty => _onHappenTimePenalty.AsObservable();
+    public Observable<float> OnHappenTimeBonus => _onHappenTimeBonus.AsObservable();
+    public ReadOnlyReactiveProperty<int> ItemCount => _itemCount;
+    public ReadOnlyReactiveProperty<float> ClosestEnemyDistance { get; private set; }
+    public Player Player => player;
 
     public void AddItemCount(Vector3 itemPositon)
     {
@@ -51,61 +49,57 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         _respawnPosition = itemPositon; //最後に取得したアイテムの位置をリスポーン地点にする
         if (_itemCount.Value >= 5)
         {
-            // クリア時の残りタイムを保存する
             SaveCurrentTime();
-            GameClear();
+            GameClear().Forget();
+            return;
         }
+        SeManager.Instance.PlaySe(itemGetSe);
     }
 
-    public void SaveCurrentTime()
+    private void SaveCurrentTime()
     {
-        // PlayerPrefsに残り時間を保存
-        PlayerPrefs.SetFloat(REMAINING_TIME_AT_CLEAR, _onTimeChanged.Value);
+        PlayerPrefs.SetFloat(REMAINING_TIME_AT_CLEAR, _onTimeChangedInternal.Value);
         PlayerPrefs.Save();
-
-        Debug.Log($"クリア時の残り時間としてPlayerPrefsに保存しました: {_onTimeChanged.Value:F2}秒");
         _isGameEnded = true;
     }
 
     public void GameOver()
     {
-        Debug.Log("Game Over");
         SceneManager.LoadScene("GameOverScene");
     }
 
     public void Fall()
     {
-        Debug.Log("Fall Penalty: " + _fallTimePenalty);
-        // 残り時間を減らしてプレイヤーをリスポーンさせる
-        OperateCurrentTime(_fallTimePenalty);
-        RespownPlayer();
+        DecreasePenaltyTime(_fallTimePenalty);
+        RespawnPlayer();
     }
 
-    private void RespownPlayer()
+    private void RespawnPlayer()
     {
-        // playerのRigidbodyを束縛する
-        _playerqRigidbody = player.GetComponent<Rigidbody>();
-
-        Debug.Log($"リスポーン地点: 最後に拾ったアイテムの位置 ({_respawnPosition})");
-
-        // リスポーン地点に移動させる
-        _playerqRigidbody.transform.position = _respawnPosition;
         // 速度と慣性をリセット
-        _playerqRigidbody.linearVelocity = Vector3.zero;
-        _playerqRigidbody.angularVelocity = Vector3.zero;
+        _playerRigidbody = player.GetComponent<Rigidbody>();
+        _playerRigidbody.transform.position = _respawnPosition;
+        _playerRigidbody.linearVelocity = Vector3.zero;
+        _playerRigidbody.angularVelocity = Vector3.zero;
     }
 
     private void ResetRespawnPosition()
     {
         // 初期リスポーン地点を設定
         _respawnPosition = defaultRespawnPosition;
-        Debug.Log("初期リスポーン位置をセットしました。");
     }
 
-    // アイテムカウントによるゲームクリア処理
-    public void GameClear()
+    private async UniTask GameClear()
     {
-        Debug.Log("Game Clear!");
+        _isGameEnded = true;
+        
+        // プレイヤーの動きを完全に停止
+        player.StopMovement();
+        
+        await SeManager.Instance.PlaySeAsync(gameClearSe1, pitch: 1.0f, important: true);
+        await UniTask.Delay(200);
+        await SeManager.Instance.PlaySeAsync(gameClearSe2, pitch: 1.0f, important: true);
+        await UniTask.Delay(500);
         SceneManager.LoadScene("ClearScene");
     }
 
@@ -114,9 +108,26 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         SceneManager.LoadScene("TitleScene");
     }
 
-    public void OperateCurrentTime(float v)
+    public void DecreaseCurrentTime(float v)
     {
-        _onTimeChanged.Value += v;
+        float actualDecreaseAmount = Math.Max(0, v);
+        _onTimeChangedInternal.Value -= actualDecreaseAmount;
+    }
+
+    private void DecreasePenaltyTime(float v)
+    {
+        SeManager.Instance.PlaySe(timePenaltySe);
+        var actualDecreaseAmount = Math.Max(0, v);
+        _onTimeChangedInternal.Value -= actualDecreaseAmount;
+        _onHappenTimePenalty.OnNext(v);
+    }
+
+    public void IncreaseTime(float amount)
+    {
+        SeManager.Instance.PlaySe(timeBonusSe);
+        var actualIncreaseAmount = Math.Max(0, amount);
+        _onTimeChangedInternal.Value = Math.Min(_onTimeChangedInternal.Value + actualIncreaseAmount, countDownDuration * 2f);
+        _onHappenTimeBonus.OnNext(actualIncreaseAmount);
     }
 
     protected override void Awake()
@@ -132,7 +143,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         // スポーン地点を初期化
         ResetRespawnPosition();
         //タイマーを初期化
-        _onTimeChanged.Value = countDownDuration;
+        _onTimeChangedInternal.Value = countDownDuration;
         _isGameEnded = false;
     }
 
@@ -142,14 +153,13 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         {
             UIManager.Instance.TogglePause();
         }
-
+        
         if (_isGameEnded) return;
-        // 残り時間を数える
-        OperateCurrentTime(-Time.deltaTime);
-        if (_onTimeChanged.Value <= 0f)
+        
+        DecreaseCurrentTime(Time.deltaTime);
+        if (_onTimeChangedInternal.Value <= 0f)
         {
-            _onTimeChanged.Value = 0f;
-            Debug.Log("タイマーが0秒になりました");
+            _onTimeChangedInternal.Value = 0f;
             _isGameEnded = true;
             GameOver();
         }
