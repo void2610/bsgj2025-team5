@@ -366,7 +366,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 788211441163681178, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: m_fontSize
-      value: 60
+      value: 55
       objectReference: {fileID: 0}
     - target: {fileID: 788211441163681178, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: m_fontSizeBase
@@ -442,7 +442,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2436360128620611574, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -220
+      value: -175
       objectReference: {fileID: 0}
     - target: {fileID: 2436360128620611574, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -510,11 +510,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7942446902432864239, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 350
+      value: 2048
       objectReference: {fileID: 0}
     - target: {fileID: 7942446902432864239, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 80
+      value: 512
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -540,7 +540,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 788211441163681178, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: m_fontSize
-      value: 60
+      value: 55
       objectReference: {fileID: 0}
     - target: {fileID: 788211441163681178, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: m_fontSizeBase
@@ -682,13 +682,17 @@ PrefabInstance:
       propertyPath: m_StringReference.m_TableReference.m_TableCollectionName
       value: GUID:9c8c0df04e469443f9091642eb20b41b
       objectReference: {fileID: 0}
+    - target: {fileID: 7072814429644238111, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 2048
+      objectReference: {fileID: 0}
     - target: {fileID: 7942446902432864239, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 350
+      value: 2048
       objectReference: {fileID: 0}
     - target: {fileID: 7942446902432864239, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 80
+      value: 512
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
