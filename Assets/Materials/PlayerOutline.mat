@@ -16,7 +16,7 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 2950
   stringTagMap: {}
   disabledShaderPasses:
   - MOTIONVECTORS
@@ -105,13 +105,13 @@ Material:
     - _MinDistance: 1
     - _OcclusionStrength: 1
     - _OutlineAlpha: 1
-    - _OutlineWidth: 0
+    - _OutlineWidth: 0.03
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _ScaleWithDistance: 0
     - _SilhouetteSoftness: 0
-    - _SilhouetteThreshold: 0.2
+    - _SilhouetteThreshold: 0.25
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
