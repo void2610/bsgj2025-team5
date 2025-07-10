@@ -1,4 +1,6 @@
 using UnityEngine;
+using LitMotion;
+using LitMotion.Extensions;
 
 public class TimeBonusItem : MonoBehaviour
 {
@@ -20,20 +22,29 @@ public class TimeBonusItem : MonoBehaviour
     [SerializeField] private float floatSpeed = 2f;
     
     private Vector3 _startPosition;
-    private float _floatTimer;
     
-    private void Start()
+    // BreakableObjectから呼び出される初期化メソッド
+    public void Initialize()
     {
-        _startPosition = transform.position;
+        _startPosition = this.transform.position;
+        StartAnimations();
     }
     
-    private void Update()
+    private void StartAnimations()
     {
-        transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
+        // 回転アニメーション（無限ループ）
+        LMotion.Create(0f, 360f, 360f / rotationSpeed)
+            .WithEase(Ease.Linear)
+            .WithLoops(-1)
+            .Bind(rotationY => transform.rotation = Quaternion.Euler(0, rotationY, 0))
+            .AddTo(this);
         
-        _floatTimer += Time.deltaTime;
-        var newY = _startPosition.y + Mathf.Sin(_floatTimer * floatSpeed) * floatHeight;
-        transform.position = new Vector3(_startPosition.x, newY, _startPosition.z);
+        // 上下浮遊アニメーション（無限ループ）
+        LMotion.Create(_startPosition.y, _startPosition.y + floatHeight, 1f / floatSpeed)
+            .WithEase(Ease.InOutSine)
+            .WithLoops(-1, LoopType.Yoyo)
+            .BindToPositionY(this.transform)
+            .AddTo(this);
     }
     
     private void OnTriggerEnter(Collider other)

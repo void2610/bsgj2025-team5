@@ -151,8 +151,10 @@ MonoBehaviour:
     slowdownForceMultiplier: 0.1
   dropItemPrefab: {fileID: 2797429370328665877, guid: acb7c4ee58a11412cbc0a86534af216a, type: 3}
   dropChance: 0.3
-  dropHeightOffset: 1.5
-  dropPositionOffsetRange: {x: 5, y: 5}
+  dropHeightOffset: 6.5
+  dropAnimationDuration: 1.5
+  dropArchHeight: 7
+  dropArchEase: 11
 --- !u!65 &3943559155358807395
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -212,5 +214,5 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  positionOffsetMultiplier: 0.5
+  positionOffsetMultiplier: 0
   positionOffsetDirection: {x: 0, y: 1, z: 0}
