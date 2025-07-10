@@ -33,7 +33,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
-        m_Texture: {fileID: 2800000, guid: 7dc25409e3aa245ab9389580d10d352c, type: 3}
+        m_Texture: {fileID: 2800000, guid: 8d52c467b94e045bd9ddc2cb04d16c44, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
@@ -57,7 +57,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 7dc25409e3aa245ab9389580d10d352c, type: 3}
+        m_Texture: {fileID: 2800000, guid: 8d52c467b94e045bd9ddc2cb04d16c44, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskTex:
@@ -147,10 +147,10 @@ Material:
     - _WorkflowMode: 0
     - _ZWrite: 0
     m_Colors:
-    - _BaseColor: {r: 0.55, g: 0.55, b: 0.55, a: 1}
+    - _BaseColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}
     - _BaseColorAddSubDiff: {r: 0, g: 0, b: 0, a: 0}
     - _CameraFadeParams: {r: 0, g: Infinity, b: 0, a: 0}
-    - _Color: {r: 0.54999995, g: 0.54999995, b: 0.54999995, a: 1}
+    - _Color: {r: 0.9, g: 0.9, b: 0.9, a: 1}
     - _EmissionColor: {r: 0.920573, g: 0.920573, b: 0.920573, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
     - _SoftParticleFadeParams: {r: 0, g: 0, b: 0, a: 0}
