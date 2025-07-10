@@ -372,30 +372,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1949756573}
     m_Modifications:
-    - target: {fileID: 7044106737315279340, guid: fc7fa4f45b3b5450fa585b97d915661d, type: 3}
-      propertyPath: ShapeModule.radius.value
-      value: 0.15
-      objectReference: {fileID: 0}
-    - target: {fileID: 7044106737315279340, guid: fc7fa4f45b3b5450fa585b97d915661d, type: 3}
-      propertyPath: InitialModule.startSize.scalar
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7044106737315279340, guid: fc7fa4f45b3b5450fa585b97d915661d, type: 3}
-      propertyPath: InitialModule.startSize.minScalar
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7044106737315279340, guid: fc7fa4f45b3b5450fa585b97d915661d, type: 3}
-      propertyPath: InitialModule.startSize.minMaxState
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7044106737315279340, guid: fc7fa4f45b3b5450fa585b97d915661d, type: 3}
-      propertyPath: InitialModule.startSizeY.minMaxState
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7044106737315279340, guid: fc7fa4f45b3b5450fa585b97d915661d, type: 3}
-      propertyPath: InitialModule.startSizeZ.minMaxState
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 8673095679604567544, guid: fc7fa4f45b3b5450fa585b97d915661d, type: 3}
       propertyPath: m_Name
       value: SmokeParticle
