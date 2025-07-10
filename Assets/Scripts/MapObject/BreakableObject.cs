@@ -1,13 +1,23 @@
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
+using LitMotion;
+using Cysharp.Threading.Tasks;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Collider))]
 public class BreakableObject : MonoBehaviour
 {
+    [System.Serializable]
+    public class SpeedBasedSettings
+    {
+        [Tooltip("この速度レベルでの吹っ飛び力の倍率")]
+        public float blowForceMultiplier = 1f;
+        [Tooltip("この速度レベルでの減速力の倍率")]
+        public float slowdownForceMultiplier = 1f;
+    }
+    
     [Tooltip("壊すために必要な最低速度レベル（0:停止〜4:最高速）")]
-    [SerializeField, Range(0, 4)] private int requiredSpeed = 0;
+    [SerializeField, Range(0, 4)] private int requiredSpeed;
     
     [Tooltip("オブジェクトが消滅するまでの遅延時間")]
     [SerializeField] private float destroyDelay = 0.5f;
@@ -30,15 +40,6 @@ public class BreakableObject : MonoBehaviour
     [Tooltip("破壊時のSE")]
     [SerializeField] private SeData breakSe;
     
-    [System.Serializable]
-    public class SpeedBasedSettings
-    {
-        [Tooltip("この速度レベルでの吹っ飛び力の倍率")]
-        public float blowForceMultiplier = 1f;
-        [Tooltip("この速度レベルでの減速力の倍率")]
-        public float slowdownForceMultiplier = 1f;
-    }
-    
     [Tooltip("速度レベル別の設定（0:停止〜4:最高速）")]
     [SerializeField] private List<SpeedBasedSettings> speedSettings = new List<SpeedBasedSettings>();
     
@@ -52,8 +53,14 @@ public class BreakableObject : MonoBehaviour
     [Tooltip("ドロップするアイテムの高さオフセット")]
     [SerializeField] private float dropHeightOffset = 0.5f;
     
-    [Tooltip("ドロップするアイテムのランダムな位置オフセット範囲")]
-    [SerializeField] private Vector2 dropPositionOffsetRange = new Vector2(-0.5f, 0.5f);
+    [Tooltip("アイテムドロップ時のアーチアニメーション時間")]
+    [SerializeField] private float dropAnimationDuration = 0.8f;
+    
+    [Tooltip("アイテムドロップ時のアーチの高さ")]
+    [SerializeField] private float dropArchHeight = 2.0f;
+    
+    [Tooltip("アイテムドロップ時のアーチアニメーションイージング")]
+    [SerializeField] private Ease dropArchEase = Ease.OutQuart;
     
     private Rigidbody _rb;
     private Collider _collider;
@@ -127,12 +134,7 @@ public class BreakableObject : MonoBehaviour
         // 確率でアイテムをドロップ
         if (dropItemPrefab && Random.value < dropChance)
         {
-            var spawnPosition = transform.position + new Vector3(
-                Random.Range(dropPositionOffsetRange.x, dropPositionOffsetRange.y),
-                dropHeightOffset,
-                Random.Range(dropPositionOffsetRange.x, dropPositionOffsetRange.y)
-            );
-            Instantiate(dropItemPrefab, spawnPosition, Quaternion.identity);
+            DropItemWithAnimationAsync(direction).Forget();
         }
         
         // 指定時間後に消滅
@@ -155,5 +157,48 @@ public class BreakableObject : MonoBehaviour
         var newSpeed = Mathf.Max(0f, currentSpeed - slowdownAmount);
         // 速度の方向を保持したまま速度を調整
         if (currentSpeed > 0f) playerRb.linearVelocity = currentVelocity.normalized * newSpeed;
+    }
+
+    private async UniTaskVoid DropItemWithAnimationAsync(Vector3 collisionDirection)
+    {
+        // プレイヤーからの衝突方向にアイテムを配置（反対方向にスポーン）
+        var dir = collisionDirection.normalized;
+        // 放射状に散らばるためのランダムな角度を追加
+        var dropDirection = Quaternion.AngleAxis(Random.Range(-15f, 15f), Vector3.up) * dir;
+        // 最終的なドロップ位置を計算
+        var finalDropPosition = this.transform.position + dropDirection * 15f;
+        finalDropPosition.y += dropHeightOffset;
+        
+        // アイテムをBreakableObjectの位置にスポーン
+        var droppedItem = Instantiate(dropItemPrefab, this.transform.position, Quaternion.identity);
+        
+        // アーチアニメーションの設定
+        var startPosition = transform.position;
+        var midPoint = (startPosition + finalDropPosition) / 2f;
+        midPoint.y += dropArchHeight; // アーチの高さを追加
+        
+        // アーチを描く移動アニメーション（二次ベジェ曲線）
+        await LMotion.Create(0f, 1f, dropAnimationDuration)
+            .WithEase(dropArchEase)
+            .Bind(t => {
+                // 二次ベジェ曲線の計算
+                var position = CalculateQuadraticBezier(startPosition, midPoint, finalDropPosition, t);
+                droppedItem.transform.position = position;
+            })
+            .AddTo(droppedItem);
+        droppedItem.transform.position = finalDropPosition;
+        
+        droppedItem?.GetComponent<TimeBonusItem>()?.Initialize();
+    }
+    
+    // 二次ベジェ曲線の計算
+    private Vector3 CalculateQuadraticBezier(Vector3 p0, Vector3 p1, Vector3 p2, float t)
+    {
+        var u = 1f - t;
+        var tt = t * t;
+        var uu = u * u;
+        var uut = 2f * u * t;
+        
+        return uu * p0 + uut * p1 + tt * p2;
     }
 }
