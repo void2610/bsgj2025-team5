@@ -13,8 +13,8 @@ public class MenuSceneManager : MonoBehaviour
 {
     [SerializeField] private Canvas mainCanvas; // メインのCanvas
     [SerializeField] private GameObject loadingUIPrefab; // ローディングUI全体のPrefab
-
-    [SerializeField] private VideoPlayer videoPlayer; // 動画プレイヤーへの参照
+    [SerializeField] private Image playerImage; // 動画を表示するImageへの参照
+    [SerializeField] private Image backgroundImage; // 静止画を表示するImageへの参照
     private bool _isWebGLBuild = false; //WebGLビルドかどうかのフラグ
 
     public void GoToMainScene()
@@ -120,9 +120,22 @@ public class MenuSceneManager : MonoBehaviour
         if (_isWebGLBuild)
         {
             // WebGLビルドの場合
-            if (videoPlayer != null)
+            if (playerImage != null)
             {
-                videoPlayer.gameObject.SetActive(false); // VideoPlayerを含むGameObjectを非アクティブ化
+                playerImage.gameObject.SetActive(false); // 動画playerImageを含むGameObjectを非アクティブ化
+            }
+            else
+            {
+                Debug.Log("PlayerImageがセットされていません！");
+            }
+
+            if (backgroundImage != null)
+            {
+                backgroundImage.gameObject.SetActive(true); // 静止画backgroundImageを含むGameObjectをアクティブ化
+            }
+            else
+            {
+                Debug.Log("BackgroundImageがセットされていません！");
             }
 
             Debug.Log("WebGLビルドのため、静止画を表示します。");
@@ -130,10 +143,22 @@ public class MenuSceneManager : MonoBehaviour
         else
         {
             // その他のビルドの場合
-            if (videoPlayer != null)
+            if (playerImage != null)
             {
-                videoPlayer.gameObject.SetActive(true); // VideoPlayerを含むGameObjectをアクティブ化
-                videoPlayer.Play(); // 動画を再生
+                playerImage.gameObject.SetActive(true); // VideoPlayerを含むGameObjectをアクティブ化
+            }
+            else
+            {
+                Debug.Log("PlayerImageがセットされていません！");
+            }
+
+            if (backgroundImage != null)
+            {
+                backgroundImage.gameObject.SetActive(false); // 静止画Imageを含むGameObjectを非アクティブ化
+            }
+            else
+            {
+                Debug.Log("BackgroundImageがセットされていません！");
             }
 
             Debug.Log("WebGL以外のビルドのため、動画を再生します。");
@@ -157,7 +182,6 @@ public class MenuSceneManager : MonoBehaviour
 #if UNITY_WEBGL
         _isWebGLBuild = true;
 #else
-
         _isWebGLBuild = false;
 #endif
     }
