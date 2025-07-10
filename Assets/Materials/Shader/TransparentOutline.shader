@@ -3,8 +3,14 @@ Shader "Custom/URP/TransparentOutline"
     Properties
     {
         _OutlineColor ("Outline Color", Color) = (0,0,0,1)
-        _OutlineWidth ("Outline Width", Range(0.0, 1.0)) = 0.01
+        _OutlineWidth ("Outline Width", Range(0.0, 0.1)) = 0.01
         _OutlineAlpha ("Outline Alpha", Range(0.0, 1.0)) = 1.0
+        [Toggle] _ScaleWithDistance ("Scale With Distance", Float) = 1
+        _MinDistance ("Min Distance", Float) = 1.0
+        _MaxDistance ("Max Distance", Float) = 10.0
+        [Header(Silhouette Settings)]
+        _SilhouetteThreshold ("Silhouette Threshold", Range(0.0, 1.0)) = 0.3
+        _SilhouetteSoftness ("Silhouette Softness", Range(0.0, 0.5)) = 0.1
     }
 
     SubShader
@@ -12,7 +18,7 @@ Shader "Custom/URP/TransparentOutline"
         Tags 
         { 
             "RenderType" = "Transparent"
-            "Queue" = "Transparent-50"  // 2950: パーティクルより前に描画
+            "Queue" = "Transparent+1"  // 透明オブジェクトの後に描画
             "RenderPipeline" = "UniversalPipeline"
             "IgnoreProjector" = "True"
         }
@@ -27,10 +33,10 @@ Shader "Custom/URP/TransparentOutline"
             }
 
             Cull Front
-            ZWrite Off
+            ZWrite Off  // 透明オブジェクトなのでZWriteをOff
             ZTest LEqual
-            ColorMask RGBA
-            Blend SrcAlpha OneMinusSrcAlpha
+            ColorMask RGB
+            Blend SrcAlpha OneMinusSrcAlpha  // アルファブレンディング
 
             HLSLPROGRAM
             #pragma vertex OutlineVertexProgram
@@ -50,7 +56,8 @@ Shader "Custom/URP/TransparentOutline"
             {
                 float4 clipPos : SV_POSITION;
                 float fogCoord : TEXCOORD0;
-                float3 worldPos : TEXCOORD1;
+                float3 worldNormal : TEXCOORD1;
+                float3 worldPos : TEXCOORD2;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
                 UNITY_VERTEX_OUTPUT_STEREO
             };
@@ -59,6 +66,11 @@ Shader "Custom/URP/TransparentOutline"
                 float4 _OutlineColor;
                 float _OutlineWidth;
                 float _OutlineAlpha;
+                float _ScaleWithDistance;
+                float _MinDistance;
+                float _MaxDistance;
+                float _SilhouetteThreshold;
+                float _SilhouetteSoftness;
             CBUFFER_END
 
             VertexOutput OutlineVertexProgram(VertexInput v)
@@ -68,34 +80,40 @@ Shader "Custom/URP/TransparentOutline"
                 UNITY_TRANSFER_INSTANCE_ID(v, o);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
-                // オブジェクト空間での法線を正規化
-                float3 normalOS = normalize(v.normal);
-                
-                // ワールド空間での頂点位置と法線
+                // ワールド空間での頂点位置
                 float3 worldPos = TransformObjectToWorld(v.vertex.xyz);
-                float3 worldNormal = TransformObjectToWorldNormal(normalOS);
+                
+                // ワールド空間での法線
+                float3 worldNormal = TransformObjectToWorldNormal(v.normal);
                 worldNormal = normalize(worldNormal);
                 
-                // カメラからの距離を計算（距離に応じた太さ調整用）
-                float3 viewDir = _WorldSpaceCameraPos - worldPos;
-                float distance = length(viewDir);
+                // アウトライン用に出力
+                o.worldNormal = worldNormal;
+                o.worldPos = worldPos;
                 
-                // 距離に基づくスケール（1-10メートルの範囲で調整）
-                float distanceScale = saturate(distance / 10.0);
-                distanceScale = lerp(0.7, 1.5, distanceScale);
+                // カメラからの距離を計算
+                float distance = length(_WorldSpaceCameraPos - worldPos);
                 
-                // ビュー空間での法線計算（より安定したアウトライン）
-                float4 viewPos = mul(UNITY_MATRIX_V, float4(worldPos, 1.0));
-                float3 viewNormal = mul((float3x3)UNITY_MATRIX_V, worldNormal);
-                viewNormal.z = -0.5; // Z成分を調整してアウトラインを均一に
+                // 距離に基づくスケール調整
+                float outlineScale = 1.0;
+                if (_ScaleWithDistance > 0.5)
+                {
+                    outlineScale = smoothstep(_MinDistance, _MaxDistance, distance);
+                    outlineScale = lerp(0.5, 2.0, outlineScale);
+                }
+                
+                // ビュー空間での法線を計算（より安定したアウトライン）
+                float3 viewNormal = TransformWorldToViewDir(worldNormal);
                 viewNormal = normalize(viewNormal);
                 
-                // ビュー空間でアウトラインの太さを適用
-                viewPos.xy += viewNormal.xy * _OutlineWidth * distanceScale;
+                // ビュー空間での頂点位置
+                float4 viewPos = mul(UNITY_MATRIX_V, float4(worldPos, 1.0));
                 
-                // プロジェクション変換
+                // ビュー空間でアウトライン用に頂点を拡張
+                viewPos.xy += viewNormal.xy * _OutlineWidth * outlineScale;
+                
+                // クリップ空間に変換
                 o.clipPos = mul(UNITY_MATRIX_P, viewPos);
-                o.worldPos = worldPos;
                 
                 // フォグ計算
                 o.fogCoord = ComputeFogFactor(o.clipPos.z);
@@ -108,8 +126,26 @@ Shader "Custom/URP/TransparentOutline"
                 UNITY_SETUP_INSTANCE_ID(i);
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
                 
-                // アウトラインカラーとアルファを適用
-                half4 color = half4(_OutlineColor.rgb, _OutlineColor.a * _OutlineAlpha);
+                // カメラへの方向ベクトル
+                float3 viewDir = normalize(_WorldSpaceCameraPos - i.worldPos);
+                
+                // 法線とカメラ方向の内積（シルエットエッジの検出）
+                float NdotV = abs(dot(normalize(i.worldNormal), viewDir));
+                
+                // シルエットエッジの計算
+                // NdotVが小さい（0に近い）ほど、法線とカメラが垂直（輪郭部分）
+                float silhouette = 1.0 - smoothstep(_SilhouetteThreshold - _SilhouetteSoftness, 
+                                                    _SilhouetteThreshold + _SilhouetteSoftness, 
+                                                    NdotV);
+                
+                // アウトラインの色とアルファ
+                half4 color = half4(_OutlineColor.rgb, _OutlineAlpha * _OutlineColor.a * silhouette);
+                
+                // シルエット強度が低い場合は完全に透明にする
+                if (silhouette < 0.01)
+                {
+                    discard;
+                }
                 
                 // フォグ適用
                 color.rgb = MixFog(color.rgb, i.fogCoord);
