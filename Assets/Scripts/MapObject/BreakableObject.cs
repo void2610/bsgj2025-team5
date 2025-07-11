@@ -91,8 +91,12 @@ public class BreakableObject : MonoBehaviour
         if (_isBlownAway || !_player) return;
         
         var squaredDistance = (transform.position - _player.transform.position).sqrMagnitude;
+        // スケールを考慮した検知距離を計算（最大スケール値を使用）
+        var maxScale = Mathf.Max(transform.localScale.x, transform.localScale.y, transform.localScale.z);
+        var scaledDetectionDistance = detectionDistance * maxScale;
+        
         // 検知距離内にプレイヤーがいて、条件を満たしている場合
-        if (squaredDistance <= detectionDistance * detectionDistance && _player.PlayerItemCountInt.CurrentValue >= requiredSpeed)
+        if (squaredDistance <= scaledDetectionDistance * scaledDetectionDistance && _player.PlayerItemCountInt.CurrentValue >= requiredSpeed)
         {
             // コライダーを無効化してプレイヤーの減速を防ぐ
             Physics.IgnoreCollision(_collider, _player.GetComponent<Collider>());

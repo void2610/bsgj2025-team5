@@ -135,7 +135,7 @@ MonoBehaviour:
   cameraShakeMagnitude: 0.4
   blowForce: 80
   upwardForce: 30
-  detectionDistance: 3.5
+  detectionDistance: 15
   slowdownForce: 1000
   breakSe: {fileID: 11400000, guid: e3c4376e174024da3bf1474f07cfb7f3, type: 2}
   speedSettings:

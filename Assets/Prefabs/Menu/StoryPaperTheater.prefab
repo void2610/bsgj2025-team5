@@ -231,7 +231,14 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 967deeaba1206497db5d29422863c7ef, type: 3}
   displayTimePerImage: 4
   transitionDuration: 0.5
-  image: {fileID: 3311853290226965678}
+  frontImage: {fileID: 3311853290226965678}
+  slideInAngle: 30
+  slideInDistance: 300
+  rotationAmount: 15
+  backImageDarkenAmount: 0.7
+  backImageScale: 0.3
+  slideEase: 17
+  globalImageScale: 0.4
 --- !u!1001 &2562984177039703799
 PrefabInstance:
   m_ObjectHideFlags: 0
