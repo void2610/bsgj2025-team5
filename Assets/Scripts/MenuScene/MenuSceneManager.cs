@@ -17,14 +17,21 @@ public class MenuSceneManager : MonoBehaviour
     [SerializeField] private Image backgroundImage; // 静止画を表示するImageへの参照
     private bool _isWebGLBuild = false; //WebGLビルドかどうかのフラグ
 
+    [SerializeField] private StoryPaperTheater storyPaperTheater; // 紙芝居コンポーネント
+    [SerializeField] private AudioSource bgmSource; // BGM用AudioSource
+    
     public void GoToMainScene()
     {
-        LoadSceneAsync("MainScene").Forget();
+        GoToSceneWithStoryAsync("MainScene").Forget();
     }
-
-    public void GoToTutorialScene()
+    
+    private async UniTask GoToSceneWithStoryAsync(string sceneName)
     {
-        LoadSceneAsync("TutorialScene").Forget();
+        // BGMを停止
+        LMotion.Create(bgmSource.volume, 0f, 1f).BindToVolume(bgmSource).AddTo(this);
+        await storyPaperTheater.StartStoryAsync();
+        // 紙芝居終了後にシーンをロード
+        await LoadSceneAsync(sceneName);
     }
 
     private async UniTask LoadSceneAsync(string sceneName)

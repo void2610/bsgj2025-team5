@@ -80,6 +80,8 @@ public class PlayerCamera : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (UIManager.Instance.IsPaused) return;
+        
         if (autoAlign)
         {
             var v = _rb.linearVelocity;

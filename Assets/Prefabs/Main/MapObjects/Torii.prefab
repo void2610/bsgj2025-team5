@@ -78,6 +78,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2a9f3bc614744514899fe2f00cbf33cf, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3676193956059591696}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2a9f3bc614744514899fe2f00cbf33cf, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7851400642896004464}
   m_SourcePrefab: {fileID: 100100000, guid: 2a9f3bc614744514899fe2f00cbf33cf, type: 3}
 --- !u!1 &3963317384460717235 stripped
 GameObject:
@@ -146,4 +149,24 @@ MonoBehaviour:
     m_RotationOrder: 4
   positionOffsetMultiplier: 0.5
   positionOffsetDirection: {x: 0, y: 1, z: 0}
-  animationDuration: 2
+--- !u!114 &7851400642896004464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3963317384460717235}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12ce3de20a3f140f1aee1f0620a59354, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineSettings:
+    outlineColor: {r: 0, g: 0, b: 0, a: 1}
+    outlineWidth: 0.2
+    outlineAlpha: 1
+    mode: 0
+    enableOutline: 1
+    outlineLayer:
+      serializedVersion: 2
+      m_Bits: 1

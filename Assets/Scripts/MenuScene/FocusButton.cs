@@ -1,3 +1,5 @@
+using Coffee.UIEffectInternal;
+using Coffee.UIEffects;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -10,11 +12,13 @@ public class FocusButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     [SerializeField] private Image fillImage;
     [SerializeField] private UnityEvent action;
     [SerializeField] private SeData chargeSe;
+    [SerializeField] private AnimationCurve progressCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
     private bool _isPointerOver;
     private float _focusTime;
     private TextMeshProUGUI _text;
     private AudioSource _chargeAudioSource;
+    private UIEffect _uiEffect;
     
     public void SetText(string text) => _text.text = text;
     public void SetAction(UnityAction a) => action.AddListener(a.Invoke);
@@ -33,7 +37,7 @@ public class FocusButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         _focusTime = 0f;
         
         // チャージSEを停止
-        if (_chargeAudioSource != null)
+        if (_chargeAudioSource)
         {
             SeManager.Instance.StopSe(_chargeAudioSource);
             _chargeAudioSource = null;
@@ -43,12 +47,13 @@ public class FocusButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     private void Awake()
     {
         _text = this.GetComponentInChildren<TextMeshProUGUI>();
+        _uiEffect = this.transform.GetComponentInChildren<UIEffect>();
     }
     
     private void OnDisable()
     {
         // オブジェクトが無効化されたときにチャージSEを停止
-        if (_chargeAudioSource != null)
+        if (_chargeAudioSource)
         {
             SeManager.Instance.StopSe(_chargeAudioSource);
             _chargeAudioSource = null;
@@ -67,7 +72,7 @@ public class FocusButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
                 _focusTime = 0f;
                 
                 // アクション実行時にチャージSEを停止
-                if (_chargeAudioSource != null)
+                if (_chargeAudioSource)
                 {
                     SeManager.Instance.StopSe(_chargeAudioSource);
                     _chargeAudioSource = null;
@@ -75,7 +80,9 @@ public class FocusButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             }
         }
         
-        // fillAmountの値をなめらかに補完して更新
-        fillImage.fillAmount = Mathf.Lerp(fillImage.fillAmount, _focusTime / requiredTime, Time.unscaledDeltaTime * 10f);
+        // カーブを使用して進行度を計算
+        var normalizedTime = _focusTime / requiredTime;
+        var curvedValue = progressCurve.Evaluate(normalizedTime);
+        _uiEffect.transitionRange = new MinMax01(curvedValue, curvedValue - 0.1f);
     }
 }
