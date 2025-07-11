@@ -1259,22 +1259,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1949756573}
     m_Modifications:
-    - target: {fileID: 7044106737315279340, guid: fc7fa4f45b3b5450fa585b97d915661d, type: 3}
-      propertyPath: InitialModule.startSize.scalar
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7044106737315279340, guid: fc7fa4f45b3b5450fa585b97d915661d, type: 3}
-      propertyPath: InitialModule.startSize.minMaxState
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7044106737315279340, guid: fc7fa4f45b3b5450fa585b97d915661d, type: 3}
-      propertyPath: InitialModule.startSizeY.minMaxState
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7044106737315279340, guid: fc7fa4f45b3b5450fa585b97d915661d, type: 3}
-      propertyPath: InitialModule.startSizeZ.minMaxState
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8673095679604567544, guid: fc7fa4f45b3b5450fa585b97d915661d, type: 3}
       propertyPath: m_Name
       value: SmokeParticle
@@ -5335,18 +5319,6 @@ PrefabInstance:
       propertyPath: smokeParticleData
       value: 
       objectReference: {fileID: 1865793674}
-    - target: {fileID: 3935310138754294399, guid: 53a717c9050e34307b93f5e777290533, type: 3}
-      propertyPath: mouseAccelerationSe
-      value: 
-      objectReference: {fileID: 11400000, guid: 81c3a54d827c34fcb9d901c6749e57c0, type: 2}
-    - target: {fileID: 3935310138754294399, guid: 53a717c9050e34307b93f5e777290533, type: 3}
-      propertyPath: mouseAccelerationThreshold
-      value: 1000
-      objectReference: {fileID: 0}
-    - target: {fileID: 3935310138754294399, guid: 53a717c9050e34307b93f5e777290533, type: 3}
-      propertyPath: mouseAccelerationSeCooldown
-      value: 0.4
-      objectReference: {fileID: 0}
     - target: {fileID: 7433976897722441484, guid: 53a717c9050e34307b93f5e777290533, type: 3}
       propertyPath: m_Name
       value: Player

@@ -55,6 +55,10 @@ MonoBehaviour:
     m_Key: PAUSE
     m_Metadata:
       m_Items: []
+  - m_Id: 15120364727164928
+    m_Key: SKIP
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

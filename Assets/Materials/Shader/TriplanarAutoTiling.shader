@@ -1,7 +1,6 @@
-// URP対応 トライプラナー自動タイリングシェーダー
-// 3D オブジェクトの3軸（X、Y、Z）からテクスチャを投影し、法線に基づいてブレンドするシェーダー
-// オブジェクトのスケールに応じてタイリングを自動調整し、影の描画にも対応
-Shader "Universal Render Pipeline/Custom/TriplanarAutoTiling"
+// URP対応 トライプラナー自動タイリングシェーダー（修正版）
+// オブジェクトが移動してもテクスチャがスライドしない
+Shader "Universal Render Pipeline/Custom/TriplanarAutoTilingFixed"
 {
     // マテリアルのインスペクターで調整可能なプロパティ
     Properties
@@ -83,9 +82,11 @@ Shader "Universal Render Pipeline/Custom/TriplanarAutoTiling"
             {
                 float4 positionCS : SV_POSITION;    // クリップ空間での位置
                 float2 uv : TEXCOORD0;              // UV座標
-                float3 positionWS : TEXCOORD1;      // ワールド空間での位置
-                float3 normalWS : TEXCOORD2;        // ワールド空間での法線
-                float4 shadowCoord : TEXCOORD3;     // 影の座標
+                float3 positionOS : TEXCOORD1;      // オブジェクト空間での位置（修正：WSからOSに変更）
+                float3 positionWS : TEXCOORD2;      // ワールド空間での位置（ライティング用に保持）
+                float3 normalWS : TEXCOORD3;        // ワールド空間での法線
+                float3 normalOS : TEXCOORD4;        // オブジェクト空間での法線（修正：追加）
+                float4 shadowCoord : TEXCOORD5;     // 影の座標
                 UNITY_VERTEX_INPUT_INSTANCE_ID
                 UNITY_VERTEX_OUTPUT_STEREO
             };
@@ -114,8 +115,10 @@ Shader "Universal Render Pipeline/Custom/TriplanarAutoTiling"
                 VertexNormalInputs normalInput = GetVertexNormalInputs(input.normalOS);
 
                 output.positionCS = vertexInput.positionCS;
+                output.positionOS = input.positionOS.xyz;  // オブジェクト空間の位置を保存
                 output.positionWS = vertexInput.positionWS;
                 output.normalWS = normalInput.normalWS;
+                output.normalOS = input.normalOS;  // オブジェクト空間の法線を保存
                 output.uv = TRANSFORM_TEX(input.uv, _MainTex);
 
                 // 影の座標を計算
@@ -130,18 +133,36 @@ Shader "Universal Render Pipeline/Custom/TriplanarAutoTiling"
                 UNITY_SETUP_INSTANCE_ID(input);
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
-                // トライプラナーマッピング用のUV座標を3軸分計算
-                float2 uvX = input.positionWS.yz * _TileScale;  // X軸投影
-                float2 uvY = input.positionWS.xz * _TileScale;  // Y軸投影
-                float2 uvZ = input.positionWS.xy * _TileScale;  // Z軸投影
+                // オブジェクトのスケールを取得（unity_ObjectToWorldマトリックスから抽出）
+                float3 objectScale = float3(
+                    length(float3(unity_ObjectToWorld[0].x, unity_ObjectToWorld[1].x, unity_ObjectToWorld[2].x)),
+                    length(float3(unity_ObjectToWorld[0].y, unity_ObjectToWorld[1].y, unity_ObjectToWorld[2].y)),
+                    length(float3(unity_ObjectToWorld[0].z, unity_ObjectToWorld[1].z, unity_ObjectToWorld[2].z))
+                );
+
+                // トライプラナーマッピング用のUV座標を計算（各投影面でスケール補正）
+                // X軸投影（YZ平面）：Y,Zのスケールで補正
+                float2 uvX = input.positionOS.yz * _TileScale;
+                uvX.x *= objectScale.y;  // Y軸のスケールを適用
+                uvX.y *= objectScale.z;  // Z軸のスケールを適用
+                
+                // Y軸投影（XZ平面）：X,Zのスケールで補正
+                float2 uvY = input.positionOS.xz * _TileScale;
+                uvY.x *= objectScale.x;  // X軸のスケールを適用
+                uvY.y *= objectScale.z;  // Z軸のスケールを適用
+                
+                // Z軸投影（XY平面）：X,Yのスケールで補正
+                float2 uvZ = input.positionOS.xy * _TileScale;
+                uvZ.x *= objectScale.x;  // X軸のスケールを適用
+                uvZ.y *= objectScale.y;  // Y軸のスケールを適用
 
                 // 3つの軸からテクスチャをサンプリング
                 half4 texX = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uvX);
                 half4 texY = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uvY);
                 half4 texZ = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uvZ);
 
-                // ブレンド重みを計算
-                float3 blendWeights = abs(input.normalWS);
+                // ブレンド重みをオブジェクト空間の法線で計算（修正）
+                float3 blendWeights = abs(input.normalOS);
                 blendWeights = blendWeights / (blendWeights.x + blendWeights.y + blendWeights.z);
 
                 // 3つのテクスチャをブレンド
@@ -151,7 +172,7 @@ Shader "Universal Render Pipeline/Custom/TriplanarAutoTiling"
                 
                 albedo *= _Color;
 
-                // URPのライティング計算
+                // URPのライティング計算（ワールド空間の法線と位置を使用）
                 InputData inputData = (InputData)0;
                 inputData.positionWS = input.positionWS;
                 inputData.normalWS = normalize(input.normalWS);
