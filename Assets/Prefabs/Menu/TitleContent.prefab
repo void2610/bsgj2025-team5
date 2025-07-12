@@ -47,7 +47,7 @@ MonoBehaviour:
   mainCanvas: {fileID: 0}
   loadingUIPrefab: {fileID: 7729960160623458231, guid: f4178b1814d764ddc9fdc44b782db834, type: 3}
   playerImage: {fileID: 2141783979348822811}
-  backgroundImage: {fileID: 5170010648003534797}
+  stillImage: {fileID: 5170010648003534797}
   storyPaperTheater: {fileID: 7755367488483914830}
   bgmSource: {fileID: 0}
 --- !u!1 &3037040198699564227
@@ -62,7 +62,7 @@ GameObject:
   - component: {fileID: 1067271302356793126}
   - component: {fileID: 5170010648003534797}
   m_Layer: 5
-  m_Name: BackGroundImage
+  m_Name: StillImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -159,8 +159,8 @@ RectTransform:
   - {fileID: 2718249217904356938}
   - {fileID: 7892089820427318444}
   - {fileID: 1856049329465063124}
-  - {fileID: 1442307089032677591}
   - {fileID: 6758689944512902445}
+  - {fileID: 1442307089032677591}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}

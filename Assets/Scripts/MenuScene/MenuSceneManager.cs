@@ -14,7 +14,7 @@ public class MenuSceneManager : MonoBehaviour
     [SerializeField] private Canvas mainCanvas; // メインのCanvas
     [SerializeField] private GameObject loadingUIPrefab; // ローディングUI全体のPrefab
     [SerializeField] private Image playerImage; // 動画を表示するImageへの参照
-    [SerializeField] private Image backgroundImage; // 静止画を表示するImageへの参照
+    [SerializeField] private Image stillImage; // 静止画を表示するImageへの参照
     private bool _isWebGLBuild = false; //WebGLビルドかどうかのフラグ
 
     [SerializeField] private StoryPaperTheater storyPaperTheater; // 紙芝居コンポーネント
@@ -136,9 +136,9 @@ public class MenuSceneManager : MonoBehaviour
                 Debug.Log("PlayerImageがセットされていません！");
             }
 
-            if (backgroundImage != null)
+            if (stillImage != null)
             {
-                backgroundImage.gameObject.SetActive(true); // 静止画backgroundImageを含むGameObjectをアクティブ化
+                stillImage.gameObject.SetActive(true); // 静止画backgroundImageを含むGameObjectをアクティブ化
             }
             else
             {
@@ -159,9 +159,9 @@ public class MenuSceneManager : MonoBehaviour
                 Debug.Log("PlayerImageがセットされていません！");
             }
 
-            if (backgroundImage != null)
+            if (stillImage != null)
             {
-                backgroundImage.gameObject.SetActive(false); // 静止画Imageを含むGameObjectを非アクティブ化
+                stillImage.gameObject.SetActive(false); // 静止画Imageを含むGameObjectを非アクティブ化
             }
             else
             {
