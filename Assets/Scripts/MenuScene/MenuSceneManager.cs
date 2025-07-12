@@ -142,7 +142,7 @@ public class MenuSceneManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("BackgroundImageがセットされていません！");
+                Debug.Log("stillImageがセットされていません！");
             }
 
             Debug.Log("WebGLビルドのため、静止画を表示します。");
@@ -165,7 +165,7 @@ public class MenuSceneManager : MonoBehaviour
             }
             else
             {
-                Debug.Log("BackgroundImageがセットされていません！");
+                Debug.Log("stillImageがセットされていません！");
             }
 
             Debug.Log("WebGL以外のビルドのため、動画を再生します。");
