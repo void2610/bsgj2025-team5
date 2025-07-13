@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Honden_Base2_BaseColor_0: 4033811362162636279
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
