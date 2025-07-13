@@ -3,7 +3,17 @@ guid: e74746431f03347f883984d23d0bc550
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: OH_Outline_Material
+    second: {fileID: 2100000, guid: c709c9c58725f4e85bea752f61382fd4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Tourou
+    second: {fileID: 2100000, guid: abc459e757ffa42b7a13f756763309a7, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
