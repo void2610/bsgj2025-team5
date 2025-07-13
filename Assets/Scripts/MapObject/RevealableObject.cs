@@ -20,7 +20,9 @@ public class RevealableObject : MonoBehaviour
     [SerializeField] private float dissolveDuration = 2.0f;
     
     private Material _originalMaterial;
+    private Material _originalOutlineMaterial;
     private Material _materialInstance;
+    private Material _outlineMaterialInstance;
     private Collider _collider;
     private Renderer _renderer;
     private MotionHandle _currentMotion;
@@ -55,13 +57,29 @@ public class RevealableObject : MonoBehaviour
         
         // ディゾルブマテリアルに切り替え
         _materialInstance.SetFloat(_dissolveAmount, 0f);
-        _renderer.material = _materialInstance;
+        if (_outlineMaterialInstance)
+            _outlineMaterialInstance.SetFloat(_dissolveAmount, 0f);
+        
+        var materials = _renderer.materials;
+        materials[0] = _materialInstance;
+        if (materials.Length > 1 && _outlineMaterialInstance != null)
+            materials[1] = _outlineMaterialInstance;
+        _renderer.materials = materials;
         
         // ディゾルブアニメーション開始（0→1で出現）
         _currentMotion = LMotion.Create(0f, 1f, dissolveDuration)
             .WithEase(Ease.OutQuad)
-            .WithOnComplete(() => { _renderer.material = _originalMaterial; })
-            .Bind(value => _materialInstance?.SetFloat(_dissolveAmount, value))
+            .WithOnComplete(() => { 
+                var ms = _renderer.materials;
+                ms[0] = _originalMaterial;
+                if (ms.Length > 1 && _originalOutlineMaterial != null)
+                    ms[1] = _originalOutlineMaterial;
+                _renderer.materials = ms;
+            })
+            .Bind(value => {
+                _materialInstance?.SetFloat(_dissolveAmount, value);
+                _outlineMaterialInstance?.SetFloat(_dissolveAmount, value);
+            })
             .AddTo(this);
     }
     
@@ -79,12 +97,22 @@ public class RevealableObject : MonoBehaviour
         
         // ディゾルブマテリアルに切り替え
         _materialInstance.SetFloat(_dissolveAmount, 1f);
-        _renderer.material = _materialInstance;
+        if (_outlineMaterialInstance != null)
+            _outlineMaterialInstance.SetFloat(_dissolveAmount, 1f);
+        
+        var materials = _renderer.materials;
+        materials[0] = _materialInstance;
+        if (materials.Length > 1 && _outlineMaterialInstance != null)
+            materials[1] = _outlineMaterialInstance;
+        _renderer.materials = materials;
         
         // ディゾルブアニメーション開始（1→0で消失）
         _currentMotion = LMotion.Create(1f, 0f, dissolveDuration)
             .WithEase(Ease.OutQuad)
-            .Bind(value => _materialInstance?.SetFloat(_dissolveAmount, value))
+            .Bind(value => {
+                _materialInstance?.SetFloat(_dissolveAmount, value);
+                _outlineMaterialInstance?.SetFloat(_dissolveAmount, value);
+            })
             .AddTo(this);
     }
 
@@ -93,12 +121,22 @@ public class RevealableObject : MonoBehaviour
         if (particlePrefab) Instantiate(particlePrefab, this.transform.position, Quaternion.identity);
         
         _renderer = this.GetComponent<Renderer>();
-        _originalMaterial = _renderer.material;
+        var materials = _renderer.materials;
+        _originalMaterial = materials[0];
+        if (materials.Length > 1)
+            _originalOutlineMaterial = materials[1];
         _collider = this.GetComponent<Collider>();
         
         // マテリアルインスタンスの準備（初期状態の設定はStart()で行う）
         _materialInstance = new Material(dissolveMaterial);
         _materialInstance.SetTexture(_mainTex, _originalMaterial.mainTexture);
+        
+        // アウトライン用マテリアルインスタンスの準備
+        if (_originalOutlineMaterial)
+        {
+            _outlineMaterialInstance = new Material(dissolveMaterial);
+            _outlineMaterialInstance.SetTexture(_mainTex, _originalOutlineMaterial.mainTexture);
+        }
     }
         
     private void Start()
@@ -115,7 +153,11 @@ public class RevealableObject : MonoBehaviour
             _isRevealed = true;
             _collider.enabled = true;
             _materialInstance.SetFloat(_dissolveAmount, 1f);
-            _renderer.material = _originalMaterial;
+            var materials = _renderer.materials;
+            materials[0] = _originalMaterial;
+            if (materials.Length > 1 && _originalOutlineMaterial != null)
+                materials[1] = _originalOutlineMaterial;
+            _renderer.materials = materials;
         }
         else
         {
@@ -123,7 +165,13 @@ public class RevealableObject : MonoBehaviour
             _isRevealed = false;
             _collider.enabled = false;
             _materialInstance.SetFloat(_dissolveAmount, 0f);
-            _renderer.material = _materialInstance;
+            if (_outlineMaterialInstance != null)
+                _outlineMaterialInstance.SetFloat(_dissolveAmount, 0f);
+            var materials = _renderer.materials;
+            materials[0] = _materialInstance;
+            if (materials.Length > 1 && _outlineMaterialInstance != null)
+                materials[1] = _outlineMaterialInstance;
+            _renderer.materials = materials;
         }
         
         // 速度変化の購読を開始
@@ -136,5 +184,6 @@ public class RevealableObject : MonoBehaviour
         if (_currentMotion.IsActive()) _currentMotion.Cancel();
         // マテリアルインスタンスを破棄
         if (_materialInstance) DestroyImmediate(_materialInstance);
+        if (_outlineMaterialInstance) DestroyImmediate(_outlineMaterialInstance);
     }
 }
