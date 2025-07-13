@@ -24,20 +24,23 @@ public class IrisShot
         
         await LMotion.Create(Vector3.one * 20f, Vector3.one * 0.5f, 0.5f)
             .WithEase(Ease.InCubic)
+            .WithScheduler(MotionScheduler.UpdateIgnoreTimeScale)
             .Bind(scale => unMask.transform.localScale = scale)
             .ToUniTask();
             
         await LMotion.Create(Vector3.one * 0.5f, Vector3.one * 1.5f, 0.3f)
             .WithEase(Ease.OutCubic)
+            .WithScheduler(MotionScheduler.UpdateIgnoreTimeScale)
             .Bind(scale => unMask.transform.localScale = scale)
             .ToUniTask();
             
         await LMotion.Create(Vector3.one * 1.5f, Vector3.zero, 0.5f)
             .WithEase(Ease.InCubic)
+            .WithScheduler(MotionScheduler.UpdateIgnoreTimeScale)
             .Bind(scale => unMask.transform.localScale = scale)
             .ToUniTask();
 
-        await UniTask.Delay(500);
+        await UniTask.Delay(500, ignoreTimeScale: true);
     }
     
     public static async UniTask StartIrisIn(Canvas canvas = null)
@@ -47,22 +50,25 @@ public class IrisShot
         
         unMask.transform.localScale = Vector3.zero;
         
-        await LMotion.Create(Vector3.zero, Vector3.one * 0.5f, 0.5f)
+        await LMotion.Create(Vector3.zero, Vector3.one * 0.5f, 0.3f)
             .WithEase(Ease.OutCubic)
+            .WithScheduler(MotionScheduler.UpdateIgnoreTimeScale)
             .Bind(scale => unMask.transform.localScale = scale)
             .ToUniTask();
             
-        await LMotion.Create(Vector3.one * 0.5f, Vector3.one * 1.5f, 0.3f)
+        await LMotion.Create(Vector3.one * 0.5f, Vector3.one * 1.5f, 0.5f)
             .WithEase(Ease.InCubic)
+            .WithScheduler(MotionScheduler.UpdateIgnoreTimeScale)
             .Bind(scale => unMask.transform.localScale = scale)
             .ToUniTask();
             
-        await LMotion.Create(Vector3.one * 1.5f, Vector3.one * 20f, 0.5f)
+        await LMotion.Create(Vector3.one * 1.5f, Vector3.one * 20f, 0.3f)
             .WithEase(Ease.OutCubic)
+            .WithScheduler(MotionScheduler.UpdateIgnoreTimeScale)
             .Bind(scale => unMask.transform.localScale = scale)
             .ToUniTask();
 
-        await UniTask.Delay(500);
+        await UniTask.Delay(500, ignoreTimeScale: true);
     }
     
     private static async UniTask<GameObject> LoadIrisShotObj(Canvas canvas = null)

@@ -103,6 +103,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         await UniTask.Delay(200);
         await SeManager.Instance.PlaySeAsync(gameClearSe2, pitch: 1.0f, important: true);
         await UniTask.Delay(500);
+        await IrisShot.StartIrisOut(uiCanvas);
         SceneManager.LoadScene("ClearScene");
     }
     
@@ -113,7 +114,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
     private async UniTask GoToTitleSceneAsync()
     {
-        await IrisShot.StartIrisIn(uiCanvas);
+        await IrisShot.StartIrisOut(uiCanvas);
         SceneManager.LoadScene("TitleScene");
     }
 
