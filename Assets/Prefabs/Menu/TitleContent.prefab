@@ -1,49 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1100251622917864522
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2718249217904356938}
-  - component: {fileID: 8556061848987250536}
-  m_Layer: 0
-  m_Name: MenuSceneManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2718249217904356938
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1100251622917864522}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1867553516881644330}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8556061848987250536
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1100251622917864522}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c99529b2651e41c1b1d30b667e95f15, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3037040198699564227
 GameObject:
   m_ObjectHideFlags: 0
@@ -205,7 +161,6 @@ RectTransform:
   - {fileID: 2400422115381009561}
   - {fileID: 5708772893052026216}
   - {fileID: 7711201605421218809}
-  - {fileID: 2718249217904356938}
   - {fileID: 7892089820427318444}
   - {fileID: 1856049329465063124}
   - {fileID: 6758689944512902445}
@@ -737,10 +692,6 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5496838663090027307, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
-      propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 8556061848987250536}
-    - target: {fileID: 5496838663090027307, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
@@ -750,7 +701,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5496838663090027307, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: MenuSceneManager, Assembly-CSharp
+      value: MenuSceneFunctions, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5496838663090027307, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
@@ -995,18 +946,18 @@ PrefabInstance:
     - target: {fileID: 5496838663090027307, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 8556061848987250536}
+      objectReference: {fileID: 1841446125251925829}
     - target: {fileID: 5496838663090027307, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5496838663090027307, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: GoToMainScene
+      value: GoToMainSceneWithStory
       objectReference: {fileID: 0}
     - target: {fileID: 5496838663090027307, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: MenuSceneManager, Assembly-CSharp
+      value: TitleSceneManager, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5496838663090027307, guid: c68c4fa0ad7ab442f9bb06db396e6452, type: 3}
       propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
