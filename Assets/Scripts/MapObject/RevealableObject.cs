@@ -5,10 +5,10 @@ using LitMotion;
 public class RevealableObject : MonoBehaviour
 {
     [Tooltip("オブジェクトが表示される最低速度レベル（0:停止〜4:最高速）")]
-    [SerializeField, Range(0, 4)] private int requiredSpeed = 0;
+    [SerializeField, Range(0, 4)] private int requiredSpeed;
     
     [Tooltip("ONの場合、指定速度以下で表示、OFFの場合、指定速度以上で表示")]
-    [SerializeField] private bool invertBehavior = false;
+    [SerializeField] private bool invertBehavior;
     
     [Tooltip("パーティクルのプレハブ（オプション）")]
     [SerializeField] private GameObject particlePrefab;
@@ -26,7 +26,7 @@ public class RevealableObject : MonoBehaviour
     private Collider _collider;
     private Renderer _renderer;
     private MotionHandle _currentMotion;
-    private bool _isRevealed = false;
+    private bool _isRevealed;
     
     private static readonly int _dissolveAmount = Shader.PropertyToID("_Dissolve");
     private static readonly int _mainTex = Shader.PropertyToID("_MainTex");
@@ -62,7 +62,7 @@ public class RevealableObject : MonoBehaviour
         
         var materials = _renderer.materials;
         materials[0] = _materialInstance;
-        if (materials.Length > 1 && _outlineMaterialInstance != null)
+        if (materials.Length > 1 && _outlineMaterialInstance)
             materials[1] = _outlineMaterialInstance;
         _renderer.materials = materials;
         
@@ -72,7 +72,7 @@ public class RevealableObject : MonoBehaviour
             .WithOnComplete(() => { 
                 var ms = _renderer.materials;
                 ms[0] = _originalMaterial;
-                if (ms.Length > 1 && _originalOutlineMaterial != null)
+                if (ms.Length > 1 && _originalOutlineMaterial)
                     ms[1] = _originalOutlineMaterial;
                 _renderer.materials = ms;
             })
@@ -97,12 +97,12 @@ public class RevealableObject : MonoBehaviour
         
         // ディゾルブマテリアルに切り替え
         _materialInstance.SetFloat(_dissolveAmount, 1f);
-        if (_outlineMaterialInstance != null)
+        if (_outlineMaterialInstance)
             _outlineMaterialInstance.SetFloat(_dissolveAmount, 1f);
         
         var materials = _renderer.materials;
         materials[0] = _materialInstance;
-        if (materials.Length > 1 && _outlineMaterialInstance != null)
+        if (materials.Length > 1 && _outlineMaterialInstance)
             materials[1] = _outlineMaterialInstance;
         _renderer.materials = materials;
         
@@ -155,7 +155,7 @@ public class RevealableObject : MonoBehaviour
             _materialInstance.SetFloat(_dissolveAmount, 1f);
             var materials = _renderer.materials;
             materials[0] = _originalMaterial;
-            if (materials.Length > 1 && _originalOutlineMaterial != null)
+            if (materials.Length > 1 && _originalOutlineMaterial)
                 materials[1] = _originalOutlineMaterial;
             _renderer.materials = materials;
         }
@@ -165,11 +165,11 @@ public class RevealableObject : MonoBehaviour
             _isRevealed = false;
             _collider.enabled = false;
             _materialInstance.SetFloat(_dissolveAmount, 0f);
-            if (_outlineMaterialInstance != null)
+            if (_outlineMaterialInstance)
                 _outlineMaterialInstance.SetFloat(_dissolveAmount, 0f);
             var materials = _renderer.materials;
             materials[0] = _materialInstance;
-            if (materials.Length > 1 && _outlineMaterialInstance != null)
+            if (materials.Length > 1 && _outlineMaterialInstance)
                 materials[1] = _outlineMaterialInstance;
             _renderer.materials = materials;
         }
