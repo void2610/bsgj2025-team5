@@ -8,10 +8,19 @@ public class IrisShot
 {
     private static GameObject _irisShotObj;
     
-    public static async UniTask StartIrisOut()
+    // シーン遷移時にクリアする
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void Init()
     {
-        var irisShotObj = await LoadIrisShotObj();
+        _irisShotObj = null;
+    }
+    
+    public static async UniTask StartIrisOut(Canvas canvas = null)
+    {
+        var irisShotObj = await LoadIrisShotObj(canvas);
         var unMask = irisShotObj.GetComponentInChildren<Unmask>();
+        
+        unMask.transform.localScale = Vector3.one * 20f;
         
         await LMotion.Create(Vector3.one * 20f, Vector3.one * 0.5f, 0.5f)
             .WithEase(Ease.InCubic)
@@ -31,18 +40,20 @@ public class IrisShot
         await UniTask.Delay(500);
     }
     
-    public static async UniTask StartIrisIn()
+    public static async UniTask StartIrisIn(Canvas canvas = null)
     {
-        var irisShotObj = await LoadIrisShotObj();
+        var irisShotObj = await LoadIrisShotObj(canvas);
         var unMask = irisShotObj.GetComponentInChildren<Unmask>();
         
-        await LMotion.Create(Vector3.zero, Vector3.one * 0.5f, 0.3f)
+        unMask.transform.localScale = Vector3.zero;
+        
+        await LMotion.Create(Vector3.zero, Vector3.one * 0.5f, 0.5f)
             .WithEase(Ease.OutCubic)
             .Bind(scale => unMask.transform.localScale = scale)
             .ToUniTask();
             
-        await LMotion.Create(Vector3.one * 0.5f, Vector3.one * 1.5f, 0.2f)
-            .WithEase(Ease.InQuad)
+        await LMotion.Create(Vector3.one * 0.5f, Vector3.one * 1.5f, 0.3f)
+            .WithEase(Ease.InCubic)
             .Bind(scale => unMask.transform.localScale = scale)
             .ToUniTask();
             
@@ -54,23 +65,24 @@ public class IrisShot
         await UniTask.Delay(500);
     }
     
-    private static async UniTask<GameObject> LoadIrisShotObj()
+    private static async UniTask<GameObject> LoadIrisShotObj(Canvas canvas = null)
     {
         if (_irisShotObj) return _irisShotObj;
         
-        var prefab = await Addressables.LoadAssetAsync<GameObject>("IrisShot").ToUniTask();
-        
-        // キャンバスを探してその子としてインスタンス化
-        var canvas = Object.FindFirstObjectByType<Canvas>();
+        // キャンバスを探す
         if (!canvas)
         {
-            Debug.LogError("Canvas not found in scene");
-            return null;
+            canvas = Object.FindFirstObjectByType<Canvas>();
+            if (!canvas)
+            {
+                Debug.LogError("Canvas not found in the scene.");
+                return null;
+            }
         }
         
+        var prefab = await Addressables.LoadAssetAsync<GameObject>("IrisShot").ToUniTask();
         var instance = Object.Instantiate(prefab, canvas.transform);
         _irisShotObj = instance;
-        
         return _irisShotObj;
     }
 }

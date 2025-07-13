@@ -1040,6 +1040,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
+--- !u!223 &1412241354 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 2120364841502204461, guid: c5bd990a06c1042b49b241c6641c94ce, type: 3}
+  m_PrefabInstance: {fileID: 1412241353}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1432960161 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3935310138754294399, guid: 53a717c9050e34307b93f5e777290533, type: 3}
@@ -1428,6 +1433,10 @@ PrefabInstance:
       propertyPath: enemyAI
       value: 
       objectReference: {fileID: 1638045983}
+    - target: {fileID: 8785554058055454799, guid: e7960efeaae96482da914062fc0009be, type: 3}
+      propertyPath: uiCanvas
+      value: 
+      objectReference: {fileID: 1412241354}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

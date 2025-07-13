@@ -46,7 +46,7 @@ public class TitleSceneManager : MonoBehaviour
         // BGMを停止
         LMotion.Create(bgmSource.volume, 0f, 1f).BindToVolume(bgmSource).AddTo(this);
         await storyPaperTheater.StartStoryAsync();
-        // 紙芝居終了後にシーンをロード
+        await IrisShot.StartIrisOut();
         await LoadSceneAsync(sceneName);
     }
 

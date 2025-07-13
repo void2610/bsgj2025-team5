@@ -10,6 +10,9 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     [Tooltip("プレイヤーの参照。ゲーム開始時に設定する必要があります")]
     [SerializeField] private Player player;
     
+    [Tooltip("UIのキャンバス")]
+    [SerializeField] private Canvas uiCanvas;
+    
     [Tooltip("敵の参照。ゲーム開始時に設定する必要があります")]
     [SerializeField] private EnemyAI enemyAI;
     
@@ -102,9 +105,15 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         await UniTask.Delay(500);
         SceneManager.LoadScene("ClearScene");
     }
-
+    
     public void GoToTitleScene()
     {
+        GoToTitleSceneAsync().Forget();
+    }
+
+    private async UniTask GoToTitleSceneAsync()
+    {
+        await IrisShot.StartIrisIn(uiCanvas);
         SceneManager.LoadScene("TitleScene");
     }
 
@@ -145,6 +154,11 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         //タイマーを初期化
         _onTimeChangedInternal.Value = countDownDuration;
         _isGameEnded = false;
+    }
+
+    private void Start()
+    {
+        IrisShot.StartIrisIn(uiCanvas).Forget();
     }
 
     private void Update()
