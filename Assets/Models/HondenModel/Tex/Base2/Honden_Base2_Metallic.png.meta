@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Honden_Base2_Metallic_0: 4424356089831230574
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

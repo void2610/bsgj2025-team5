@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Honden_Roof_Roughness_0: -1494843970049620962
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

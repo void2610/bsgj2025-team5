@@ -1,26 +1,42 @@
-using R3;
-using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
-using TMPro;
 using LitMotion;
 using LitMotion.Extensions;
-using UnityEngine.Video;
+using TMPro;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-public class MenuSceneManager : MonoBehaviour
+public class TitleSceneManager : MonoBehaviour
 {
     [SerializeField] private Canvas mainCanvas; // メインのCanvas
     [SerializeField] private GameObject loadingUIPrefab; // ローディングUI全体のPrefab
     [SerializeField] private Image playerImage; // 動画を表示するImageへの参照
     [SerializeField] private Image stillImage; // 静止画を表示するImageへの参照
-    private bool _isWebGLBuild = false; //WebGLビルドかどうかのフラグ
-
     [SerializeField] private StoryPaperTheater storyPaperTheater; // 紙芝居コンポーネント
     [SerializeField] private AudioSource bgmSource; // BGM用AudioSource
     
-    public void GoToMainScene()
+    private bool _isWebGLBuild = false; //WebGLビルドかどうかのフラグ
+    /// <summary>
+    /// ビルドターゲットに応じて背景の画像・動画を切り替える
+    /// </summary>
+    private void ManageBackgroundDisplay()
+    {
+        if (_isWebGLBuild)
+        {
+            // WebGLビルドの場合
+            playerImage?.gameObject.SetActive(false); // 動画playerImageを含むGameObjectを非アクティブ化
+            stillImage?.gameObject.SetActive(true); // 静止画backgroundImageを含むGameObjectをアクティブ化
+            Debug.Log("WebGLビルドのため、静止画を表示します。");
+        }
+        else
+        { 
+            playerImage?.gameObject.SetActive(true); // VideoPlayerを含むGameObjectをアクティブ化
+            stillImage?.gameObject.SetActive(false); // 静止画Imageを含むGameObjectを非アクティブ化
+            Debug.Log("WebGL以外のビルドのため、動画を再生します。");
+        }
+    }
+    
+    public void GoToMainSceneWithStory()
     {
         GoToSceneWithStoryAsync("MainScene").Forget();
     }
@@ -104,88 +120,9 @@ public class MenuSceneManager : MonoBehaviour
             await UniTask.Yield();
         }
     }
-
-    public void GoToTitleScene()
-    {
-        SceneManager.LoadScene("TitleScene");
-    }
-
-    public void ExitGame()
-    {
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
-            Application.Quit();
-#endif
-    }
-
-    /// <summary>
-    /// ビルドターゲットに応じて背景の画像・動画を切り替える
-    /// </summary>
-    private void ManageBackgroundDisplay()
-    {
-        if (_isWebGLBuild)
-        {
-            // WebGLビルドの場合
-            if (playerImage != null)
-            {
-                playerImage.gameObject.SetActive(false); // 動画playerImageを含むGameObjectを非アクティブ化
-            }
-            else
-            {
-                Debug.Log("PlayerImageがセットされていません！");
-            }
-
-            if (stillImage != null)
-            {
-                stillImage.gameObject.SetActive(true); // 静止画backgroundImageを含むGameObjectをアクティブ化
-            }
-            else
-            {
-                Debug.Log("stillImageがセットされていません！");
-            }
-
-            Debug.Log("WebGLビルドのため、静止画を表示します。");
-        }
-        else
-        {
-            // その他のビルドの場合
-            if (playerImage != null)
-            {
-                playerImage.gameObject.SetActive(true); // VideoPlayerを含むGameObjectをアクティブ化
-            }
-            else
-            {
-                Debug.Log("PlayerImageがセットされていません！");
-            }
-
-            if (stillImage != null)
-            {
-                stillImage.gameObject.SetActive(false); // 静止画Imageを含むGameObjectを非アクティブ化
-            }
-            else
-            {
-                Debug.Log("stillImageがセットされていません！");
-            }
-
-            Debug.Log("WebGL以外のビルドのため、動画を再生します。");
-        }
-    }
-
-
+    
     private void Awake()
     {
-        Time.timeScale = 1;
-        Cursor.lockState = CursorLockMode.None;
-
-        // 毎フレームをストリーム化
-        Observable.EveryUpdate()
-            // 左クリック or 任意キー押下を検知
-            .Where(_ => Input.GetMouseButtonDown(0) || Input.anyKeyDown)
-            .Take(1) // 最初の1回だけ
-            .Subscribe(_ => Cursor.visible = false)
-            .AddTo(this); // GameObject が破棄されたら自動Dispose
-
 #if UNITY_WEBGL
         _isWebGLBuild = true;
 #else
@@ -195,7 +132,6 @@ public class MenuSceneManager : MonoBehaviour
 
     private void Start()
     {
-        // 背景の画像・動画の切り替え
         ManageBackgroundDisplay();
     }
 }

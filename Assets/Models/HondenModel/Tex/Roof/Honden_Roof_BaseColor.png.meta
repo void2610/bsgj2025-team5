@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Honden_Roof_BaseColor_0: -6586929321135830709
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
