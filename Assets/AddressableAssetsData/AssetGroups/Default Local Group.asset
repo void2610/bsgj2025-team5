@@ -20,11 +20,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: c622f957a303039499d5625f690a241b
-    m_Address: Assets/Models/GoshinbokuModel/Materials/TreeObj_TreeObj_BaseColor.mat
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 81d9843d996924995b1c06fd0287139e, type: 2}
   m_SchemaSet:
