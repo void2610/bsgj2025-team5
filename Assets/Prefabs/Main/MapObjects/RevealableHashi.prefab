@@ -67,7 +67,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2533851574484771456, guid: 35080be07a6164ac6bd6b67578cac866, type: 3}
+  - {fileID: 2100000, guid: b862791b9c33d4e669c4be02231d73b3, type: 2}
+  - {fileID: 2100000, guid: 4c500890468ba4dfcac4b38e89ee7616, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -246,7 +247,7 @@ VisualEffect:
         m_Overridden: 1
     m_NamedObject:
       m_Array:
-      - m_Value: {fileID: -1550514412580984892, guid: 6394009537d174b6895e391d493c0495, type: 3}
+      - m_Value: {fileID: 2657879184811184420, guid: 35080be07a6164ac6bd6b67578cac866, type: 3}
         m_Name: Mesh
         m_Overridden: 1
     m_Bool:
