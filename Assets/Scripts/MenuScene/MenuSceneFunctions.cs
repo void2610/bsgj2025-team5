@@ -15,7 +15,7 @@ public class MenuSceneFunctions : MonoBehaviour
     {
         // シーン遷移の前にIrisShotを実行
         await IrisShot.StartIrisOut();
-        SceneManager.LoadSceneAsync(sceneName);
+        SceneManager.LoadScene(sceneName);
     }
 
     public void ExitGame()
