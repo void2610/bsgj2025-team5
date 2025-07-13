@@ -1,6 +1,0 @@
-Material
-
-BaseColor -> BaseMap
-Roughness -> MetallicMap
-Normal -> NormalMap
-Emissive -> EmissionMap
