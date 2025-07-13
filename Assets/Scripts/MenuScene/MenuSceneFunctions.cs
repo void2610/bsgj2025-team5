@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using R3;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -5,14 +6,16 @@ using UnityEngine.SceneManagement;
 public class MenuSceneFunctions : MonoBehaviour
 {
     
-    public void GoToMainScene()
+    public void MoveScene(string sceneName)
     {
-        SceneManager.LoadScene("MainScene");
+        MoveSceneAsync(sceneName).Forget();
     }
     
-    public void GoToTitleScene()
+    private async UniTaskVoid MoveSceneAsync(string sceneName)
     {
-        SceneManager.LoadScene("TitleScene");
+        // シーン遷移の前にIrisShotを実行
+        await IrisShot.StartIrisOut();
+        SceneManager.LoadSceneAsync(sceneName);
     }
 
     public void ExitGame()
@@ -36,6 +39,10 @@ public class MenuSceneFunctions : MonoBehaviour
             .Take(1) // 最初の1回だけ
             .Subscribe(_ => Cursor.visible = false)
             .AddTo(this); // GameObject が破棄されたら自動Dispose
+    }
 
+    private void Start()
+    {
+        IrisShot.StartIrisIn().Forget();
     }
 }
