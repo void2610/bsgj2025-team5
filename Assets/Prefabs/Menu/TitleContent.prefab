@@ -205,6 +205,7 @@ MonoBehaviour:
   storyPaperTheater: {fileID: 7755367488483914830}
   bgmSource: {fileID: 0}
   fadeImage: {fileID: 7930542237605487642}
+  popupPrefab: {fileID: 5144204375733055259, guid: a2bc77c5dadc541718b686a8df61b70e, type: 3}
 --- !u!1 &7615835358442042621
 GameObject:
   m_ObjectHideFlags: 0
@@ -1184,7 +1185,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8011880758905499412, guid: 8b4c46651df8c405aadcc5fa91594de4, type: 3}
       propertyPath: m_StringReference.m_TableEntryReference.m_KeyId
-      value: 15120364727164928
+      value: 17471030321733632
       objectReference: {fileID: 0}
     - target: {fileID: 8148735119343726134, guid: 8b4c46651df8c405aadcc5fa91594de4, type: 3}
       propertyPath: m_Name
