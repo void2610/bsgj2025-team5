@@ -1380,6 +1380,10 @@ PrefabInstance:
       propertyPath: volume
       value: 
       objectReference: {fileID: 6943145281269625769}
+    - target: {fileID: 3980535131468680562, guid: 2540937b5163f407ca016c114981b389, type: 3}
+      propertyPath: kaleidoscopeClip
+      value: 
+      objectReference: {fileID: 32900000, guid: 260320a79e65c45c4809b36a770e2c76, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
