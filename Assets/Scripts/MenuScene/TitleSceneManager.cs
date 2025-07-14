@@ -15,12 +15,19 @@ public class TitleSceneManager : MonoBehaviour
     [SerializeField] private StoryPaperTheater storyPaperTheater; // 紙芝居コンポーネント
     [SerializeField] private AudioSource bgmSource; // BGM用AudioSource
     [SerializeField] private Image fadeImage; // フェード用のImage
+    [SerializeField] private GameObject popupPrefab; // ポップアップのPrefab
     
     private bool _isWebGLBuild = false; //WebGLビルドかどうかのフラグ
+    
+    public void GoToMainSceneWithStory()
+    {
+        GoToSceneWithStoryAsync("MainScene").Forget();
+    }
+    
     /// <summary>
-    /// ビルドターゲットに応じて背景の画像・動画を切り替える
+    /// ビルドターゲットに応じて、動画または静止画を表示するための設定を行います。
     /// </summary>
-    private void ManageBackgroundDisplay()
+    private void ManagePlayerImage()
     {
         if (_isWebGLBuild)
         {
@@ -35,11 +42,6 @@ public class TitleSceneManager : MonoBehaviour
             stillImage?.gameObject.SetActive(false); // 静止画Imageを含むGameObjectを非アクティブ化
             Debug.Log("WebGL以外のビルドのため、動画を再生します。");
         }
-    }
-    
-    public void GoToMainSceneWithStory()
-    {
-        GoToSceneWithStoryAsync("MainScene").Forget();
     }
     
     private async UniTask GoToSceneWithStoryAsync(string sceneName)
@@ -122,6 +124,30 @@ public class TitleSceneManager : MonoBehaviour
         }
     }
     
+    private async UniTask ManageWebBuildPopup()
+    {
+        if (!_isWebGLBuild) return;
+        
+        // WebGLビルドの場合、ポップアップを表示
+        var popupInstance = Instantiate(popupPrefab, mainCanvas.transform);
+        
+        popupInstance.transform.localScale = Vector3.zero;
+        
+        await LMotion.Create(Vector3.zero, Vector3.one, 0.3f)
+            .WithEase(Ease.OutBack)
+            .BindToLocalScale(popupInstance.transform)
+            .ToUniTask();
+        
+        await UniTask.Delay(3500);
+        
+        await LMotion.Create(Vector3.one, Vector3.zero, 0.3f)
+            .WithEase(Ease.InBack)
+            .BindToLocalScale(popupInstance.transform)
+            .ToUniTask();
+        
+        Destroy(popupInstance);
+    }
+    
     private void Awake()
     {
 #if UNITY_WEBGL
@@ -133,11 +159,14 @@ public class TitleSceneManager : MonoBehaviour
 
     private async UniTaskVoid Start()
     {
-        ManageBackgroundDisplay();
+        ManagePlayerImage();
         
         // IrisShotの読み込みが一瞬遅れるので、一番最初に読み込まれるシーンは一瞬黒い画像で隠す
         fadeImage.color = new Color(0f, 0f, 0f, 1f);
         await IrisShot.LoadIrisShotObj();
         fadeImage.color = new Color(0f, 0f, 0f, 0f);
+        await UniTask.Delay(1500);
+        // WebGLビルドの場合、ポップアップを表示
+        await ManageWebBuildPopup();
     }
 }
