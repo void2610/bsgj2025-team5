@@ -20,10 +20,24 @@ public class MenuSceneFunctions : MonoBehaviour
 
     public void ExitGame()
     {
+        ExitGameAsync().Forget();
+    }
+    
+    private async UniTaskVoid ExitGameAsync()
+    {
 #if UNITY_EDITOR
+        await UniTask.Yield(); // 警告を回避するため
         UnityEditor.EditorApplication.isPlaying = false;
 #else
-            Application.Quit();
+        // Windows固有のフリーズ問題を回避するため、短い遅延を追加
+        await UniTask.Delay(100);
+        // カーソルを表示状態に戻す
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        // 音声を停止
+        AudioListener.pause = true;
+        // アプリケーションを終了
+        Application.Quit();
 #endif
     }
 
