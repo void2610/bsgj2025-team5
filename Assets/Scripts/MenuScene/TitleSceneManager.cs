@@ -14,6 +14,7 @@ public class TitleSceneManager : MonoBehaviour
     [SerializeField] private Image stillImage; // 静止画を表示するImageへの参照
     [SerializeField] private StoryPaperTheater storyPaperTheater; // 紙芝居コンポーネント
     [SerializeField] private AudioSource bgmSource; // BGM用AudioSource
+    [SerializeField] private Image fadeImage; // フェード用のImage
     
     private bool _isWebGLBuild = false; //WebGLビルドかどうかのフラグ
     /// <summary>
@@ -46,7 +47,7 @@ public class TitleSceneManager : MonoBehaviour
         // BGMを停止
         LMotion.Create(bgmSource.volume, 0f, 1f).BindToVolume(bgmSource).AddTo(this);
         await storyPaperTheater.StartStoryAsync();
-        // 紙芝居終了後にシーンをロード
+        await IrisShot.StartIrisOut();
         await LoadSceneAsync(sceneName);
     }
 
@@ -130,8 +131,13 @@ public class TitleSceneManager : MonoBehaviour
 #endif
     }
 
-    private void Start()
+    private async UniTaskVoid Start()
     {
         ManageBackgroundDisplay();
+        
+        // IrisShotの読み込みが一瞬遅れるので、一番最初に読み込まれるシーンは一瞬黒い画像で隠す
+        fadeImage.color = new Color(0f, 0f, 0f, 1f);
+        await IrisShot.LoadIrisShotObj();
+        fadeImage.color = new Color(0f, 0f, 0f, 0f);
     }
 }
