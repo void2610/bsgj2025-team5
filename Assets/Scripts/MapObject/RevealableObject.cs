@@ -62,8 +62,7 @@ public class RevealableObject : MonoBehaviour
     {
         _isRevealed = true;
         
-        // コライダーを有効化
-        _collider.enabled = true;
+        if (_collider) _collider.enabled = true;
         
         if (_currentMotion.IsActive()) _currentMotion.Cancel();
         
@@ -118,8 +117,7 @@ public class RevealableObject : MonoBehaviour
     {
         _isRevealed = false;
         
-        // コライダーを無効化
-        _collider.enabled = false;
+        if (_collider) _collider.enabled = false;
         
         // 既存のアニメーションを停止
         if (_currentMotion.IsActive()) _currentMotion.Cancel();
@@ -160,11 +158,11 @@ public class RevealableObject : MonoBehaviour
         
         // レンダラータイプを判定
         _spriteRenderer = this.GetComponent<SpriteRenderer>();
+        _collider = this.GetComponent<Collider>();
         if (_spriteRenderer)
         {
             _is2D = true;
             _originalMaterial = _spriteRenderer.material;
-            _collider = this.GetComponent<Collider>();
             
             // マテリアルインスタンスの準備
             _materialInstance = new Material(dissolveMaterial);
@@ -189,7 +187,6 @@ public class RevealableObject : MonoBehaviour
             _originalMaterial = materials[0];
             if (materials.Length > 1)
                 _originalOutlineMaterial = materials[1];
-            _collider = this.GetComponent<Collider>();
             
             // マテリアルインスタンスの準備（初期状態の設定はStart()で行う）
             _materialInstance = new Material(dissolveMaterial);
@@ -218,7 +215,7 @@ public class RevealableObject : MonoBehaviour
             _isRevealed = true;
             _materialInstance.SetFloat(_dissolveAmount, 1f);
             
-            _collider.enabled = true;
+            if (_collider) _collider.enabled = true;
             
             if (_is2D)
             {
@@ -239,7 +236,7 @@ public class RevealableObject : MonoBehaviour
             _isRevealed = false;
             _materialInstance.SetFloat(_dissolveAmount, 0f);
             
-            _collider.enabled = false;
+            if (_collider) _collider.enabled = false;
             
             if (_is2D)
             {
