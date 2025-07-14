@@ -46,6 +46,13 @@ public class PlayerCamera : MonoBehaviour
     private MotionHandle _shakeHandle;
     private Vector3 _shakeOffset;
     
+    // 演出制御用
+    public float GetCurrentPitch() => _pitch;
+    public float GetCurrentYaw() => _yaw;
+    public bool IsIntroMode { get; private set; } = false;
+    
+    public void SetIntroMode(bool isIntro) => IsIntroMode = isIntro;
+
     public void ShakeCamera(float magnitude, float duration, int frequency = 10, float dampingRatio = 0.5f) => 
         ShakeCameraAsync(magnitude, duration, frequency, dampingRatio).Forget();
 
@@ -80,7 +87,7 @@ public class PlayerCamera : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (UIManager.Instance.IsPaused) return;
+        if (UIManager.Instance.IsPaused || IsIntroMode) return;
         
         if (autoAlign)
         {

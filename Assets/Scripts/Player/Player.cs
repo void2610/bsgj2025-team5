@@ -92,6 +92,9 @@ public class Player : MonoBehaviour
     private Vector2 _previousMouseDelta;
     private bool _canPlayAccelerationSe = true;
     private CancellationTokenSource _accelerationSeCts;
+    
+    // 操作制御用
+    private bool _inputEnabled = true;
 
     private void UpdateSmokeParticle(float speed)
     {
@@ -147,6 +150,9 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        // 入力が無効な場合は処理しない
+        if (!_inputEnabled) return;
+        
         // マウスのdelta値を取得（ピクセル/フレーム）
         var currentDelta = Mouse.current?.delta.ReadValue() ?? Vector2.zero;
         
@@ -179,6 +185,13 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // 入力が無効な場合は入力をリセットして処理しない
+        if (!_inputEnabled)
+        {
+            _accumulatedInputDelta = Vector2.zero;
+            return;
+        }
+        
         // 蓄積された入力を使用
         if (_accumulatedInputDelta.sqrMagnitude < 1e-4f) return;
 
@@ -211,6 +224,19 @@ public class Player : MonoBehaviour
         _rb.linearVelocity = Vector3.zero;
         _rb.angularVelocity = Vector3.zero;
         _rb.isKinematic = true;
+    }
+    
+    /// <summary>
+    /// プレイヤーの入力を有効/無効にする（演出中の操作制御用）
+    /// </summary>
+    public void SetInputEnabled(bool enabled)
+    {
+        _inputEnabled = enabled;
+        if (!enabled)
+        {
+            // 入力を無効にするときは蓄積された入力をリセット
+            _accumulatedInputDelta = Vector2.zero;
+        }
     }
     
     /// <summary>

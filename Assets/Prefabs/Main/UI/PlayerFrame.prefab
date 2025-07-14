@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5016160042958030986}
   - component: {fileID: 5442731669287410332}
   - component: {fileID: 7587556231910850122}
+  - component: {fileID: 5911005750766440516}
   m_Layer: 5
   m_Name: PlayerFrame
   m_TagString: Untagged
@@ -76,6 +77,24 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5911005750766440516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3620911658779808041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26a4483b93346414a8b275cf53ca347f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slideDirection: 0
+  slideDistance: 500
+  duration: 1
+  delay: 0.6
+  ease: 8
+  autoStart: 0
 --- !u!1 &3811262183601786681
 GameObject:
   m_ObjectHideFlags: 0

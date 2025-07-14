@@ -7,13 +7,13 @@ using Cysharp.Threading.Tasks;
 public class GameManager : SingletonMonoBehaviour<GameManager>
 {
     [Header("必須参照")]
-    [Tooltip("プレイヤーの参照。ゲーム開始時に設定する必要があります")]
+    [Tooltip("プレイヤーの参照")]
     [SerializeField] private Player player;
-    
+    [Tooltip("プレイヤーカメラの参照")]
+    [SerializeField] private PlayerCamera playerCamera;
     [Tooltip("UIのキャンバス")]
     [SerializeField] private Canvas uiCanvas;
-    
-    [Tooltip("敵の参照。ゲーム開始時に設定する必要があります")]
+    [Tooltip("敵の参照")]
     [SerializeField] private EnemyAI enemyAI;
     
     [Header("ゲーム設定")]
@@ -38,6 +38,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     private Rigidbody _playerRigidbody;
     private Vector3 _respawnPosition;
     private bool _isGameEnded;
+    private bool _isGameStarted = false;
     
     public ReadOnlyReactiveProperty<float> OnTimeChanged => _onTimeChangedInternal;
     public Observable<float> OnHappenTimePenalty => _onHappenTimePenalty.AsObservable();
@@ -157,11 +158,18 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         _isGameEnded = false;
     }
 
-    private void Start()
+    private async UniTaskVoid Start()
     {
-        IrisShot.StartIrisIn(uiCanvas).Forget();
+        var gameStartSequence = new GameStartSequence(player, playerCamera, uiCanvas);
+        
+        player.SetInputEnabled(false);
+        await gameStartSequence.StartSequenceAsync();
+        player.SetInputEnabled(true);
+        
+        // 演出完了後にゲーム開始フラグを設定
+        _isGameStarted = true;
     }
-
+    
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.P))
@@ -169,7 +177,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
             UIManager.Instance.TogglePause();
         }
         
-        if (_isGameEnded) return;
+        // ゲーム開始前または終了後はタイマーを更新しない
+        if (!_isGameStarted || _isGameEnded) return;
         
         DecreaseCurrentTime(Time.deltaTime);
         if (_onTimeChangedInternal.Value <= 0f)
