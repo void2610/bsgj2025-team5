@@ -1454,9 +1454,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 954743564}
     - target: {fileID: 8785554058055454799, guid: e7960efeaae96482da914062fc0009be, type: 3}
-      propertyPath: gameStartSequence
-      value: 
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
