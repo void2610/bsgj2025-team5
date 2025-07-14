@@ -173,8 +173,7 @@ public class BreakableObject : MonoBehaviour
         var finalDropPosition = this.transform.position + dropDirection * 15f;
         // オブジェクトの底面位置を基準にしてY座標を設定
         var bounds = _collider.bounds;
-        var bottomY = bounds.min.y;
-        finalDropPosition.y = bottomY + dropHeightOffset;
+        finalDropPosition.y = bounds.min.y + dropHeightOffset;
         
         // アイテムをBreakableObjectの位置にスポーン
         var droppedItem = Instantiate(dropItemPrefab, this.transform.position, Quaternion.identity);
