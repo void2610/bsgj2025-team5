@@ -58,8 +58,13 @@ MonoBehaviour:
     m_Localized: Pause
     m_Metadata:
       m_Items: []
-  - m_Id: 15120364727164928
-    m_Localized: Skip
+  - m_Id: 17463152886145024
+    m_Localized: Notice
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17463244154200064
+    m_Localized: "Some graphics features are limited in the web version. \nTo experience
+      the full game,\nplease download the Windows or Mac version."
     m_Metadata:
       m_Items: []
   references:
