@@ -1,6 +1,5 @@
 using UnityEngine;
 using LitMotion;
-using LitMotion.Extensions;
 
 public class TimeBonusItem : MonoBehaviour
 {
@@ -22,6 +21,8 @@ public class TimeBonusItem : MonoBehaviour
     [SerializeField] private float floatSpeed = 2f;
     
     private Vector3 _startPosition;
+    private MotionHandle _rotationHandle;
+    private MotionHandle _floatHandle;
     
     // BreakableObjectから呼び出される初期化メソッド
     public void Initialize()
@@ -33,17 +34,29 @@ public class TimeBonusItem : MonoBehaviour
     private void StartAnimations()
     {
         // 回転アニメーション（無限ループ）
-        LMotion.Create(0f, 360f, 360f / rotationSpeed)
+        _rotationHandle = LMotion.Create(0f, 360f, 360f / rotationSpeed)
             .WithEase(Ease.Linear)
             .WithLoops(-1)
-            .Bind(rotationY => transform.rotation = Quaternion.Euler(0, rotationY, 0))
+            .Bind(rotationY => {
+                if (this && transform)
+                {
+                    transform.rotation = Quaternion.Euler(0, rotationY, 0);
+                }
+            })
             .AddTo(this);
         
         // 上下浮遊アニメーション（無限ループ）
-        LMotion.Create(_startPosition.y, _startPosition.y + floatHeight, 1f / floatSpeed)
+        _floatHandle = LMotion.Create(_startPosition.y, _startPosition.y + floatHeight, 1f / floatSpeed)
             .WithEase(Ease.InOutSine)
             .WithLoops(-1, LoopType.Yoyo)
-            .BindToPositionY(this.transform)
+            .Bind(positionY => {
+                if (this && transform)
+                {
+                    var pos = transform.position;
+                    pos.y = positionY;
+                    transform.position = pos;
+                }
+            })
             .AddTo(this);
     }
     
@@ -58,7 +71,26 @@ public class TimeBonusItem : MonoBehaviour
                 Instantiate(particlePrefab, transform.position, Quaternion.identity);
             }
             
+            // アニメーションを停止してからオブジェクトを破棄
+            StopAnimations();
             Destroy(gameObject);
         }
+    }
+    
+    /// <summary>
+    /// アニメーションを停止する
+    /// </summary>
+    private void StopAnimations()
+    {
+        if (_rotationHandle.IsPlaying()) _rotationHandle.Cancel();
+        if (_floatHandle.IsPlaying()) _floatHandle.Cancel();
+    }
+    
+    /// <summary>
+    /// オブジェクト破棄時にアニメーションを確実に停止
+    /// </summary>
+    private void OnDestroy()
+    {
+        StopAnimations();
     }
 }
