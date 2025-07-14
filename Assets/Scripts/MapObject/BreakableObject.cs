@@ -171,7 +171,10 @@ public class BreakableObject : MonoBehaviour
         var dropDirection = Quaternion.AngleAxis(Random.Range(-15f, 15f), Vector3.up) * dir;
         // 最終的なドロップ位置を計算
         var finalDropPosition = this.transform.position + dropDirection * 15f;
-        finalDropPosition.y += dropHeightOffset;
+        // オブジェクトの底面位置を基準にしてY座標を設定
+        var bounds = _collider.bounds;
+        var bottomY = bounds.min.y;
+        finalDropPosition.y = bottomY + dropHeightOffset;
         
         // アイテムをBreakableObjectの位置にスポーン
         var droppedItem = Instantiate(dropItemPrefab, this.transform.position, Quaternion.identity);
