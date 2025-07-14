@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Tourou_Tourou_BaseColor_0: 5324019311366132816
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
