@@ -38,6 +38,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     private Rigidbody _playerRigidbody;
     private Vector3 _respawnPosition;
     private bool _isGameEnded;
+    private bool _isGameStarted = false;
     
     public ReadOnlyReactiveProperty<float> OnTimeChanged => _onTimeChangedInternal;
     public Observable<float> OnHappenTimePenalty => _onHappenTimePenalty.AsObservable();
@@ -164,6 +165,9 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         player.SetInputEnabled(false);
         await gameStartSequence.StartSequenceAsync();
         player.SetInputEnabled(true);
+        
+        // 演出完了後にゲーム開始フラグを設定
+        _isGameStarted = true;
     }
     
     private void Update()
@@ -173,7 +177,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
             UIManager.Instance.TogglePause();
         }
         
-        if (_isGameEnded) return;
+        // ゲーム開始前または終了後はタイマーを更新しない
+        if (!_isGameStarted || _isGameEnded) return;
         
         DecreaseCurrentTime(Time.deltaTime);
         if (_onTimeChangedInternal.Value <= 0f)
