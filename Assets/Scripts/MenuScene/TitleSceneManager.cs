@@ -137,7 +137,7 @@ public class TitleSceneManager : MonoBehaviour
         
         // IrisShotの読み込みが一瞬遅れるので、一番最初に読み込まれるシーンは一瞬黒い画像で隠す
         fadeImage.color = new Color(0f, 0f, 0f, 1f);
-        await UniTask.Delay(100);
+        await IrisShot.LoadIrisShotObj();
         fadeImage.color = new Color(0f, 0f, 0f, 0f);
     }
 }

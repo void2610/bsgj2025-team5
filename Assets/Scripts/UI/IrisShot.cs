@@ -71,7 +71,7 @@ public class IrisShot
         await UniTask.Delay(500, ignoreTimeScale: true);
     }
     
-    private static async UniTask<GameObject> LoadIrisShotObj(Canvas canvas = null)
+    public static async UniTask<GameObject> LoadIrisShotObj(Canvas canvas = null)
     {
         if (_irisShotObj) return _irisShotObj;
         
