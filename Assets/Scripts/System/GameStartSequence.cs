@@ -8,10 +8,10 @@ using LitMotion;
 public class GameStartSequence
 {
     // 演出定数
-    private const float INTRO_SEQUENCE_DURATION = 3f;      // カメラ演出の継続時間
-    private const float FRONT_VIEW_DISTANCE = 8f;         // プレイヤー正面からの距離
-    private const float FRONT_VIEW_HEIGHT_OFFSET = 1f;    // プレイヤー正面からの高さオフセット
-    private const Ease INTRO_CAMERA_EASE = Ease.OutCubic; // 演出のイージング
+    private const float INTRO_SEQUENCE_DURATION = 3.5f;      // カメラ演出の継続時間
+    private const float FRONT_VIEW_DISTANCE = 6f;         // プレイヤー正面からの距離
+    private const float FRONT_VIEW_HEIGHT_OFFSET = 1.25f;    // プレイヤー正面からの高さオフセット
+    private const Ease INTRO_CAMERA_EASE = Ease.InOutQuart; // 演出のイージング
 
     private readonly Player _player;
     private readonly PlayerCamera _playerCamera;
