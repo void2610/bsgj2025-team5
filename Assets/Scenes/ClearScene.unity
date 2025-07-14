@@ -343,6 +343,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 1867553516881644330, guid: dd62bf834f14640289beb95f2f076623, type: 3}
   m_PrefabInstance: {fileID: 1189942490}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1189942492 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4615017806073817820, guid: dd62bf834f14640289beb95f2f076623, type: 3}
+  m_PrefabInstance: {fileID: 1189942490}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c99529b2651e41c1b1d30b667e95f15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1327346418
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -351,6 +362,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1189942491}
     m_Modifications:
+    - target: {fileID: 469693784675567396, guid: 33f4bce9b8e504a3c812bb7e3c69afcc, type: 3}
+      propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 469693784675567396, guid: 33f4bce9b8e504a3c812bb7e3c69afcc, type: 3}
+      propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1189942492}
+    - target: {fileID: 469693784675567396, guid: 33f4bce9b8e504a3c812bb7e3c69afcc, type: 3}
+      propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: MoveScene
+      objectReference: {fileID: 0}
+    - target: {fileID: 469693784675567396, guid: 33f4bce9b8e504a3c812bb7e3c69afcc, type: 3}
+      propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: TitleScene
+      objectReference: {fileID: 0}
     - target: {fileID: 1867553516881644330, guid: 33f4bce9b8e504a3c812bb7e3c69afcc, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -430,6 +457,22 @@ PrefabInstance:
     - target: {fileID: 1867553516881644330, guid: 33f4bce9b8e504a3c812bb7e3c69afcc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2503618420247413173, guid: 33f4bce9b8e504a3c812bb7e3c69afcc, type: 3}
+      propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2503618420247413173, guid: 33f4bce9b8e504a3c812bb7e3c69afcc, type: 3}
+      propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1189942492}
+    - target: {fileID: 2503618420247413173, guid: 33f4bce9b8e504a3c812bb7e3c69afcc, type: 3}
+      propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: MoveScene
+      objectReference: {fileID: 0}
+    - target: {fileID: 2503618420247413173, guid: 33f4bce9b8e504a3c812bb7e3c69afcc, type: 3}
+      propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: MainScene
       objectReference: {fileID: 0}
     - target: {fileID: 7615835358442042621, guid: 33f4bce9b8e504a3c812bb7e3c69afcc, type: 3}
       propertyPath: m_Name
