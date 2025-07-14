@@ -126,7 +126,7 @@ public class TitleSceneManager : MonoBehaviour
     
     private async UniTask ManageWebBuildPopup()
     {
-        // if (!_isWebGLBuild) return;
+        if (!_isWebGLBuild) return;
         
         // WebGLビルドの場合、ポップアップを表示
         var popupInstance = Instantiate(popupPrefab, mainCanvas.transform);
