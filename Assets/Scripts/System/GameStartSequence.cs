@@ -32,10 +32,11 @@ public class GameStartSequence
     {
         SetupInitialCameraPosition();
         
-        // アイリス演出
         await IrisShot.StartIrisIn(_uiCanvas);
-        // カメラ演出を実行
         await StartCameraIntroAsync();
+        await UniTask.Delay(200);
+        await StartUISlideAnimationsAsync();
+        await UniTask.Delay(500);
     }
     
     /// <summary>
@@ -92,5 +93,30 @@ public class GameStartSequence
         
         // カメラの通常更新を停止
         _playerCamera.SetIntroMode(true);
+    }
+    
+    /// <summary>
+    /// UIスライドアニメーションを実行する
+    /// </summary>
+    private async UniTask StartUISlideAnimationsAsync()
+    {
+        // uiCanvas内の全てのUISlideAnimationコンポーネントを取得
+        var slideAnimations = _uiCanvas.GetComponentsInChildren<UISlideAnimation>(true);
+        
+        if (slideAnimations.Length == 0)
+        {
+            // スライドアニメーションが無い場合は即座に完了
+            return;
+        }
+        
+        // 全てのスライドアニメーションを並行実行
+        var slideTasks = new UniTask[slideAnimations.Length];
+        for (int i = 0; i < slideAnimations.Length; i++)
+        {
+            slideTasks[i] = slideAnimations[i].StartSlideAnimationAsync();
+        }
+        
+        // 全てのスライドアニメーションが完了するまで待機
+        await UniTask.WhenAll(slideTasks);
     }
 }

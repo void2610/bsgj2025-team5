@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1184951734472029187}
   - component: {fileID: 3742065027567964941}
   - component: {fileID: 7542603442648519908}
+  - component: {fileID: 1537997198365861465}
   m_Layer: 5
   m_Name: SpeedIndicator
   m_TagString: Untagged
@@ -94,3 +95,21 @@ MonoBehaviour:
   - {fileID: 1142382552821547494, guid: a8546388429dc49378ba3110d19d7dc6, type: 3}
   - {fileID: -8027058188932923848, guid: 8991fb485fc914a0bb4f62092c0a11f6, type: 3}
   - {fileID: 4532397505356956931, guid: 78a3ae330cc57481f8f2e93c781321f0, type: 3}
+--- !u!114 &1537997198365861465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4170987357034737003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26a4483b93346414a8b275cf53ca347f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slideDirection: 0
+  slideDistance: 500
+  duration: 1
+  delay: 0.5
+  ease: 8
+  autoStart: 0
