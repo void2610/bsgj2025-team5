@@ -51,7 +51,6 @@ public class VolumeManager : MonoBehaviour
     [Tooltip("ビネットの時間増減による変化の線形補間係数")] 
     private float _lerpCoefficient = 0.03f;
 
-
     [Header("Kaleidoscope Video")]
     [Tooltip("万華鏡効果の動画クリップ")]
     [SerializeField] private VideoClip kaleidoscopeClip;
