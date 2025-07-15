@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 78a3ae330cc57481f8f2e93c781321f0
+guid: 1b1be31902bf94a5baf010e7314ddc1e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4532397505356956931
-    second: SpeedIndicator4_0
+      213: 5878236555311252235
+    second: sokudo1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: SpeedIndicator4_0
+      name: sokudo1_0
       rect:
         serializedVersion: 2
-        x: 251
-        y: 154
-        width: 1282
-        height: 1880
+        x: 0
+        y: 2
+        width: 900
+        height: 1021
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3050ba7748f46ee30800000000000000
-      internalID: 4532397505356956931
+      spriteID: b030b09b001b39150800000000000000
+      internalID: 5878236555311252235
       vertices: []
       indices: 
       edges: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      SpeedIndicator4_0: 4532397505356956931
+      sokudo1_0: 5878236555311252235
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

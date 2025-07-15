@@ -9,10 +9,11 @@ using LitMotion.Extensions;
 
 public class StoryPaperTheater : MonoBehaviour
 {
-    [SerializeField] private List<Sprite> storyPaperSprites;
-    [SerializeField] private float displayTimePerImage = 2f;
-    [SerializeField] private float transitionDuration = 0.5f;
-    [SerializeField] private Image frontImage;
+    [SerializeField] private List<Sprite> storyPaperSprites; // 紙芝居の画像リスト
+    [SerializeField] private float displayTimePerImage = 2f; // 画像を表示する時間
+    [SerializeField] private float transitionDuration = 0.5f; // 画像の切り替えにかかる時間
+    [SerializeField] private Image frontImage; // 前面に表示する画像
+    [SerializeField] private SeData slideSeData; // スライド時のSEデータ
     
     [Header("紙芝居アニメーション設定")]
     [SerializeField] private float slideInAngle = 30f; // 斜めに入ってくる角度
@@ -71,7 +72,7 @@ public class StoryPaperTheater : MonoBehaviour
             
             await UniTask.Delay(1000, cancellationToken: _cancellationTokenSource.Token);
 
-            for (int i = 0; i < storyPaperSprites.Count; i++)
+            for (var i = 0; i < storyPaperSprites.Count; i++)
             {
                 var sprite = storyPaperSprites[i];
                 var isFirstImage = (i == 0);
@@ -93,6 +94,7 @@ public class StoryPaperTheater : MonoBehaviour
     
     private async UniTask ShowImageWithAnimationAsync(Sprite sprite, bool isFirstImage)
     {
+        SeManager.Instance.PlaySe(slideSeData);
         // 現在の画像と次の画像を決定
         var currentImage = _isUsingFrontImage ? frontImage : _backImage;
         var previousImage = _isUsingFrontImage ? _backImage : frontImage;

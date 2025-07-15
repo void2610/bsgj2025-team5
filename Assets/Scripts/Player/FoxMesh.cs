@@ -1,7 +1,12 @@
+using R3;
 using UnityEngine;
 
 public class FoxMesh : MonoBehaviour
 {
+	private static readonly int _speed = Animator.StringToHash("Speed");
+
+	[Tooltip("プレイヤーのアニメーター")]
+	[SerializeField] private Animator playerAnimator;
 	[Tooltip("プレイヤーカメラ")]
 	[SerializeField] private PlayerCamera playerCamera;
 	[Tooltip("追従するプレイヤーの球体オブジェクト")]
@@ -19,10 +24,25 @@ public class FoxMesh : MonoBehaviour
 		var angle = playerCamera.transform.eulerAngles.y;
 		this.transform.rotation = Quaternion.Euler(0, angle + offsetAngle, 0);
 	}
+	
+	private void OnPlayerSpeedChanged(float speed)
+	{
+		if (playerAnimator)
+		{
+			playerAnimator.SetFloat(_speed, speed);
+		}
+	}
 
 	private void Awake()
 	{
 		UpdateMesh();
+	}
+
+	private void Start()
+	{
+		GameManager.Instance.Player.PlayerSpeed
+			.Subscribe(OnPlayerSpeedChanged)
+			.AddTo(this);
 	}
 	
     private void Update()
