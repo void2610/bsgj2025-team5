@@ -44,7 +44,6 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     public Observable<float> OnHappenTimePenalty => _onHappenTimePenalty.AsObservable();
     public Observable<float> OnHappenTimeBonus => _onHappenTimeBonus.AsObservable();
     public ReadOnlyReactiveProperty<int> ItemCount => _itemCount;
-    public ReadOnlyReactiveProperty<float> ClosestEnemyDistance { get; private set; }
     public Player Player => player;
 
     public void AddItemCount(Vector3 itemPositon)
@@ -144,12 +143,6 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     protected override void Awake()
     {
         base.Awake();
-
-        // R3を使った敵との距離計算
-        ClosestEnemyDistance = ObservableExtensions
-            .Select(Observable.EveryUpdate(),
-                _ => Vector3.Distance(player.transform.position, enemyAI.transform.position))
-            .ToReadOnlyReactiveProperty(float.MaxValue);
 
         // スポーン地点を初期化
         ResetRespawnPosition();

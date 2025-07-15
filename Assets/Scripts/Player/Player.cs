@@ -78,6 +78,10 @@ public class Player : MonoBehaviour
     /// マウスの移動速度を表す（正規化されていない生の値）
     /// </summary>
     public ReadOnlyReactiveProperty<float> MouseSpeed => _mouseSpeed;
+    /// <summary>
+    /// プレイヤーの速度を0-1のfloatで表す（現在はRigidbodyの線形速度ベース）
+    /// </summary>
+    public ReadOnlyReactiveProperty<float> PlayerSpeed => _playerSpeed;
     
     /// <summary>
     /// 衝突イベント（衝突位置と強度を通知）
@@ -235,10 +239,10 @@ public class Player : MonoBehaviour
     /// <summary>
     /// プレイヤーの入力を有効/無効にする（演出中の操作制御用）
     /// </summary>
-    public void SetInputEnabled(bool enabled)
+    public void SetInputEnabled(bool e)
     {
-        _inputEnabled = enabled;
-        if (!enabled)
+        _inputEnabled = e;
+        if (!e)
         {
             // 入力を無効にするときは蓄積された入力をリセット
             _accumulatedInputDelta = Vector2.zero;

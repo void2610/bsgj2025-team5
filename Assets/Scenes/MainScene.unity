@@ -339,6 +339,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33f3129db62d64a118dda0372c4c9e2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerAnimator: {fileID: 154684977}
   playerCamera: {fileID: 954743564}
   playerSphere: {fileID: 1362242712}
   offsetY: -0.5
