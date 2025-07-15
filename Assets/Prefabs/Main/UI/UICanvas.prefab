@@ -137,7 +137,7 @@ MonoBehaviour:
   slideDirection: 0
   slideDistance: 500
   duration: 1
-  delay: 1
+  delay: 0.8
   ease: 8
   autoStart: 0
 --- !u!1 &6866070582696165679
@@ -719,8 +719,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 2651819803509938095, guid: 756fadc90fb6b48269d73f7ba80a33ee, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
