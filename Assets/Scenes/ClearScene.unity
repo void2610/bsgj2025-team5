@@ -363,21 +363,9 @@ PrefabInstance:
     m_TransformParent: {fileID: 1189942491}
     m_Modifications:
     - target: {fileID: 469693784675567396, guid: 33f4bce9b8e504a3c812bb7e3c69afcc, type: 3}
-      propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 469693784675567396, guid: 33f4bce9b8e504a3c812bb7e3c69afcc, type: 3}
       propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1189942492}
-    - target: {fileID: 469693784675567396, guid: 33f4bce9b8e504a3c812bb7e3c69afcc, type: 3}
-      propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: MoveScene
-      objectReference: {fileID: 0}
-    - target: {fileID: 469693784675567396, guid: 33f4bce9b8e504a3c812bb7e3c69afcc, type: 3}
-      propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
-      value: TitleScene
-      objectReference: {fileID: 0}
     - target: {fileID: 1867553516881644330, guid: 33f4bce9b8e504a3c812bb7e3c69afcc, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -459,21 +447,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2503618420247413173, guid: 33f4bce9b8e504a3c812bb7e3c69afcc, type: 3}
-      propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2503618420247413173, guid: 33f4bce9b8e504a3c812bb7e3c69afcc, type: 3}
       propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1189942492}
-    - target: {fileID: 2503618420247413173, guid: 33f4bce9b8e504a3c812bb7e3c69afcc, type: 3}
-      propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: MoveScene
-      objectReference: {fileID: 0}
-    - target: {fileID: 2503618420247413173, guid: 33f4bce9b8e504a3c812bb7e3c69afcc, type: 3}
-      propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
-      value: MainScene
-      objectReference: {fileID: 0}
     - target: {fileID: 7615835358442042621, guid: 33f4bce9b8e504a3c812bb7e3c69afcc, type: 3}
       propertyPath: m_Name
       value: ClearContent
