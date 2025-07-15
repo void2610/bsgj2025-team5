@@ -78,10 +78,16 @@ public class Player : MonoBehaviour
     /// マウスの移動速度を表す（正規化されていない生の値）
     /// </summary>
     public ReadOnlyReactiveProperty<float> MouseSpeed => _mouseSpeed;
+    
+    /// <summary>
+    /// 衝突イベント（衝突位置と強度を通知）
+    /// </summary>
+    public Observable<(Vector3 position, float intensity)> OnCollisionEvent => _collisionSubject;
 
     private readonly ReactiveProperty<float> _itemCountNorm = new(0f);
     private readonly ReactiveProperty<float> _mouseSpeed = new(0f);
     private readonly ReactiveProperty<float> _playerSpeed = new(0f);
+    private readonly Subject<(Vector3 position, float intensity)> _collisionSubject = new();
 
     private Rigidbody _rb;
     private Collider _collider;
@@ -277,6 +283,9 @@ public class Player : MonoBehaviour
             playerCamera.GetComponent<PlayerCamera>().ShakeCamera(0.2f, 0.3f);
             // 衝突音を再生
             SeManager.Instance.PlaySe(collisionSe);
+            
+            // 衝突イベントを発行（位置と速度の強度）
+            _collisionSubject.OnNext((other.contacts[0].point, _rb.linearVelocity.magnitude));
         }
     }
     
@@ -285,5 +294,6 @@ public class Player : MonoBehaviour
         // クリーンアップ
         _accelerationSeCts?.Cancel();
         _accelerationSeCts?.Dispose();
+        _collisionSubject?.Dispose();
     }
 }
