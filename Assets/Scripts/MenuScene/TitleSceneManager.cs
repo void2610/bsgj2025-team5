@@ -46,8 +46,9 @@ public class TitleSceneManager : MonoBehaviour
     
     private async UniTask GoToSceneWithStoryAsync(string sceneName)
     {
-        // BGMを停止
-        LMotion.Create(bgmSource.volume, 0f, 1f).BindToVolume(bgmSource).AddTo(this);
+        // WebGLビルドの場合、ポップアップを表示
+        await ManageWebBuildPopup();
+        LMotion.Create(bgmSource.volume, 0.05f, 1f).BindToVolume(bgmSource).AddTo(this);
         await storyPaperTheater.StartStoryAsync();
         await IrisShot.StartIrisOut();
         await LoadSceneAsync(sceneName);
@@ -166,7 +167,5 @@ public class TitleSceneManager : MonoBehaviour
         await IrisShot.LoadIrisShotObj();
         fadeImage.color = new Color(0f, 0f, 0f, 0f);
         await UniTask.Delay(1500);
-        // WebGLビルドの場合、ポップアップを表示
-        await ManageWebBuildPopup();
     }
 }
