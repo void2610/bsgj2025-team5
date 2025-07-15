@@ -474,6 +474,10 @@ PrefabInstance:
       propertyPath: action.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
       value: MainScene
       objectReference: {fileID: 0}
+    - target: {fileID: 5523218059728377654, guid: 33f4bce9b8e504a3c812bb7e3c69afcc, type: 3}
+      propertyPath: m_Name
+      value: GameClearUI
+      objectReference: {fileID: 0}
     - target: {fileID: 7615835358442042621, guid: 33f4bce9b8e504a3c812bb7e3c69afcc, type: 3}
       propertyPath: m_Name
       value: ClearContent
