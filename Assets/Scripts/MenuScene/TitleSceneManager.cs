@@ -48,7 +48,7 @@ public class TitleSceneManager : MonoBehaviour
     {
         // WebGLビルドの場合、ポップアップを表示
         await ManageWebBuildPopup();
-        LMotion.Create(bgmSource.volume, 0.05f, 1f).BindToVolume(bgmSource).AddTo(this);
+        LMotion.Create(bgmSource.volume, 0.2f, 1f).BindToVolume(bgmSource).AddTo(this);
         await storyPaperTheater.StartStoryAsync();
         await IrisShot.StartIrisOut();
         await LoadSceneAsync(sceneName);

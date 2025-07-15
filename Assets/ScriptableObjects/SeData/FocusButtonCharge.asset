@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: FocusButtonCharge
   m_EditorClassIdentifier: 
   audioClip: {fileID: 8300000, guid: 80698aff6f32f489aa0bffd3454254ee, type: 3}
-  volume: 0.05
+  volume: 0.1
