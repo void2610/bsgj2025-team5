@@ -27,10 +27,7 @@ public class FoxMesh : MonoBehaviour
 	
 	private void OnPlayerSpeedChanged(float speed)
 	{
-		if (playerAnimator)
-		{
-			playerAnimator.SetFloat(_speed, speed);
-		}
+		playerAnimator.SetFloat(_speed, speed);
 	}
 
 	private void Awake()

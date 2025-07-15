@@ -202,6 +202,8 @@ public class Player : MonoBehaviour
             return;
         }
         
+        _playerSpeed.Value = _rb.linearVelocity.magnitude / maxLinearVelocity;
+        
         // 蓄積された入力を使用
         if (_accumulatedInputDelta.sqrMagnitude < 1e-4f) return;
 
@@ -221,9 +223,6 @@ public class Player : MonoBehaviour
         
         // 使用済みの入力をリセット
         _accumulatedInputDelta = Vector2.zero;
-        
-        // プレイヤーの速度を更新
-        _playerSpeed.Value = _rb.linearVelocity.magnitude / maxLinearVelocity;
     }
 
     /// <summary>
