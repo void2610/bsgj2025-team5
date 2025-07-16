@@ -1771,6 +1771,10 @@ PrefabInstance:
       propertyPath: playerCamera
       value: 
       objectReference: {fileID: 954743564}
+    - target: {fileID: 8785554058055454799, guid: e7960efeaae96482da914062fc0009be, type: 3}
+      propertyPath: foxGameObjectPrefab
+      value: 
+      objectReference: {fileID: 154684974}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

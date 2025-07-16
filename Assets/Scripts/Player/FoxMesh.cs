@@ -21,7 +21,7 @@ public class FoxMesh : MonoBehaviour
 		this.transform.position = p;
 	    
 		// 向く方向を変える
-		var angle = playerCamera.transform.eulerAngles.y;
+		var angle = playerSphere.transform.eulerAngles.y;
 		this.transform.rotation = Quaternion.Euler(0, angle + offsetAngle, 0);
 	}
 	
