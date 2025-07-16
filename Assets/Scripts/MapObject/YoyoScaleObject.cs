@@ -100,6 +100,6 @@ public class YoyoScaleObject : MonoBehaviour
     /// </summary>
     private void OnDestroy()
     {
-        if (_scaleMotion.IsActive()) _scaleMotion.Cancel();
+        if (_scaleMotion != null && _scaleMotion.IsActive()) _scaleMotion.Cancel();
     }
 }
