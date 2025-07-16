@@ -87,3 +87,6 @@ SceneManager.LoadScene("SceneName");
 - Lose condition: Touch enemy
 - Localization: All UI text should use localized strings
 - Audio: Separate BGM and SE managers with mixer groups
+
+## Security Warnings
+- Gizmo機能は絶対に使うな。

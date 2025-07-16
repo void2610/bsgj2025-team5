@@ -13,9 +13,8 @@ GameObject:
   - component: {fileID: 1551825575292809446}
   - component: {fileID: 6883920764469968040}
   - component: {fileID: 2915758770078705743}
-  - component: {fileID: 3935310138754294399}
   m_Layer: 0
-  m_Name: Player
+  m_Name: GashaSphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -138,33 +137,3 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!114 &3935310138754294399
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7433976897722441484}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c306fccd261b44718e91c8f6f6b5d0e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerCamera: {fileID: 0}
-  isHorizontalInverted: 1
-  isVerticalInverted: 1
-  torqueMultiplier: 1
-  maxLinearVelocity: 50
-  maxAngularVelocity: 50
-  angularDamping: 1
-  dynamicFriction: 0.01
-  staticFriction: 0.01
-  bounciness: 0
-  sandParticleData: {fileID: 11400000, guid: 6092c442923d44a4e830cd2b8755650f, type: 2}
-  collisionSpeedThreshold: 0.2
-  smokeParticleData: {fileID: 0}
-  smokeEmissionRange: {x: 0, y: 1.5}
-  collisionSe: {fileID: 11400000, guid: fb413fd86a7cb4cc5871a113a8fe1bbd, type: 2}
-  mouseAccelerationSe: {fileID: 11400000, guid: 81c3a54d827c34fcb9d901c6749e57c0, type: 2}
-  mouseAccelerationThreshold: 1000
-  mouseAccelerationSeCooldown: 0.4
