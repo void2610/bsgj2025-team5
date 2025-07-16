@@ -72,7 +72,7 @@ public class RotatableObject : MonoBehaviour
     private void UpdateRotation()
     {
         // 既存の回転モーションを停止
-        if (_rotationMotion.IsActive()) _rotationMotion.Cancel();
+        if (_rotationMotion != null && _rotationMotion.IsActive()) _rotationMotion.Cancel();
         
         // 回転速度が0に近い場合は停止
         if (Mathf.Abs(_currentRotationSpeed) < 0.01f) return;
