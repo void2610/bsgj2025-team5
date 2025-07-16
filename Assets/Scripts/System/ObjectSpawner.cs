@@ -1,9 +1,10 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using System.Threading;
+using R3;
 
 /// <summary>
-/// 定期的に指定したオブジェクトを生成するコンポーネント
+/// プレイヤーのアイテム個数に応じてオブジェクトを生成するコンポーネント
 /// </summary>
 public class ObjectSpawner : MonoBehaviour
 {
@@ -11,8 +12,8 @@ public class ObjectSpawner : MonoBehaviour
     [Tooltip("生成するプレハブ")]
     [SerializeField] private GameObject prefabToSpawn;
     
-    [Tooltip("生成間隔（秒）")]
-    [SerializeField] private float spawnInterval = 1f;
+    [Tooltip("各PlayerItemCountレベルでの1秒あたりの生成数")]
+    [SerializeField] private float[] spawnRatesPerLevel = { 0f, 0.5f, 1f, 1.5f, 2f };
     
     [Header("オプション")]
     [Tooltip("生成時にランダムな位置オフセットを追加")]
@@ -22,6 +23,7 @@ public class ObjectSpawner : MonoBehaviour
     [SerializeField] private Transform parentTransform;
     
     private CancellationTokenSource _cts;
+    private float _currentSpawnRate;
     
     private void Start()
     {
@@ -30,6 +32,14 @@ public class ObjectSpawner : MonoBehaviour
             Debug.LogError("生成するプレハブが設定されていません", this);
             return;
         }
+        
+        // プレイヤーのアイテム数変化を購読
+        GameManager.Instance.Player.PlayerItemCountInt
+            .Subscribe(OnChangePlayerItemCount)
+            .AddTo(this);
+        
+        // 初期生成レートを設定
+        OnChangePlayerItemCount(GameManager.Instance.Player.PlayerItemCountInt.CurrentValue);
         
         StartSpawning();
     }
@@ -82,11 +92,21 @@ public class ObjectSpawner : MonoBehaviour
     }
     
     /// <summary>
-    /// 生成間隔を変更
+    /// プレイヤーアイテム数が変化した時の処理
     /// </summary>
-    public void SetSpawnInterval(float interval)
+    private void OnChangePlayerItemCount(int itemCount)
     {
-        spawnInterval = Mathf.Max(0.1f, interval);
+        // アイテム数を配列のインデックスに変換（0-4の範囲）
+        int levelIndex = Mathf.Clamp(itemCount, 0, spawnRatesPerLevel.Length - 1);
+        _currentSpawnRate = spawnRatesPerLevel[levelIndex];
+    }
+    
+    /// <summary>
+    /// 生成レートを変更
+    /// </summary>
+    public void SetSpawnRate(float rate)
+    {
+        _currentSpawnRate = Mathf.Max(0f, rate);
     }
     
     /// <summary>
@@ -96,13 +116,20 @@ public class ObjectSpawner : MonoBehaviour
     {
         try
         {
-            // 最初は待機してから生成開始
-            await UniTask.Delay((int)(spawnInterval * 1000), cancellationToken: ct);
-            
             while (!ct.IsCancellationRequested)
             {
+                // 生成レートが0の場合は待機
+                if (_currentSpawnRate <= 0f)
+                {
+                    await UniTask.Delay(100, cancellationToken: ct); // 100ms待機
+                    continue;
+                }
+                
+                // 生成間隔を計算（1秒 / 生成レート）
+                float interval = 1f / _currentSpawnRate;
+                
                 SpawnObject();
-                await UniTask.Delay((int)(spawnInterval * 1000), cancellationToken: ct);
+                await UniTask.Delay((int)(interval * 1000), cancellationToken: ct);
             }
         }
         catch (System.OperationCanceledException)
