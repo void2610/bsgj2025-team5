@@ -72,7 +72,7 @@ public class YoyoScaleObject : MonoBehaviour
     private void UpdateScale()
     {
         // 既存のスケールモーションを停止
-        if (_scaleMotion.IsActive()) _scaleMotion.Cancel();
+        if (_scaleMotion != null && _scaleMotion.IsActive()) _scaleMotion.Cancel();
         
         // 設定がない場合は停止
         if (_currentSettings == null) return;
