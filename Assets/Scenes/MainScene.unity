@@ -328,6 +328,8 @@ MonoBehaviour:
   playerSphere: {fileID: 1362242712}
   offsetY: -0.5
   offsetAngle: 170
+  leftEyeRenderer: {fileID: 1949756575}
+  rightEyeRenderer: {fileID: 1949756574}
 --- !u!95 &154684977
 Animator:
   serializedVersion: 7
@@ -1303,6 +1305,16 @@ PrefabInstance:
 --- !u!4 &1949756573 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9b5e3e2f94c3c422fbfb1d0233b97773, type: 3}
+  m_PrefabInstance: {fileID: 1949756572}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &1949756574 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2674498840362988503, guid: 9b5e3e2f94c3c422fbfb1d0233b97773, type: 3}
+  m_PrefabInstance: {fileID: 1949756572}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &1949756575 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 579163500693744052, guid: 9b5e3e2f94c3c422fbfb1d0233b97773, type: 3}
   m_PrefabInstance: {fileID: 1949756572}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &2004605825 stripped
