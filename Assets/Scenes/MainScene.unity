@@ -1350,19 +1350,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6301444538802962348, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[1].m_Value.x
-      value: 0.00030999712
+      value: -0.0006665654
       objectReference: {fileID: 0}
     - target: {fileID: 6301444538802962348, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[1].m_Value.y
-      value: -1.1000005
+      value: -1.1000001
       objectReference: {fileID: 0}
     - target: {fileID: 6301444538802962348, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[1].m_Value.z
-      value: -0.00011112955
+      value: 0.000010940763
       objectReference: {fileID: 0}
     - target: {fileID: 6301444538802962348, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[2].m_Value.y
-      value: 2.0000002
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6505465345080430903, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1378,15 +1378,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7401371298047503717, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[1].m_Value.x
-      value: 0.0000913673
+      value: -0.000030703013
       objectReference: {fileID: 0}
     - target: {fileID: 7401371298047503717, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[1].m_Value.z
-      value: -0.000040888786
+      value: 0.000081181526
       objectReference: {fileID: 0}
     - target: {fileID: 7401371298047503717, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
       propertyPath: m_PropertySheet.m_Vector3f.m_Array.Array.data[2].m_Value.y
-      value: 2.0000002
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7870623909809894433, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
       propertyPath: m_Mass
@@ -3640,6 +3640,10 @@ PrefabInstance:
       propertyPath: enemyAI
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 8785554058055454799, guid: e7960efeaae96482da914062fc0009be, type: 3}
+      propertyPath: foxMesh
+      value: 
+      objectReference: {fileID: 154684975}
     - target: {fileID: 8785554058055454799, guid: e7960efeaae96482da914062fc0009be, type: 3}
       propertyPath: uiCanvas
       value: 

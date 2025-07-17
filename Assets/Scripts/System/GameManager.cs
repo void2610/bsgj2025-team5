@@ -15,6 +15,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     [SerializeField] private Canvas uiCanvas;
     [Tooltip("敵の参照")] 
     [SerializeField] private EnemyAI enemyAI;
+    [Tooltip("狐メッシュの参照")]
+    [SerializeField] private FoxMesh foxMesh;
 
     [Header("ゲーム設定")]
     [SerializeField] private float countDownDuration = 180f;
@@ -98,7 +100,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         var gameClearSequence = new GameClearSequence(
             player,
             playerCamera,
-            uiCanvas
+            uiCanvas,
+            foxMesh
         );
         
         // クリア演出を実行

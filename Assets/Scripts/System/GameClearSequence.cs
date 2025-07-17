@@ -13,8 +13,6 @@ public class GameClearSequence
     private const float CAMERA_ANIMATION_DURATION = 3.5f;    // カメラ演出の継続時間
     private const float FRONT_VIEW_DISTANCE = 6f;            // プレイヤー正面からの距離
     private const float FRONT_VIEW_HEIGHT_OFFSET = 1.25f;    // プレイヤー正面からの高さオフセット
-    private const float SHAKE_AMOUNT = 0.1f;                 // 振動の強度
-    private const float SHAKE_DURATION = 1f;                 // 振動の継続時間
     private const float BASE_EXPLOSION_FORCE = 6f;           // ガシャ玉が飛ぶ力
     private const float UPWARD_FORCE_MULTIPLIER = 1.0f;     // 上方向への力の倍率
     private const float TORQUE_FORCE = 15f;                  // 回転力
@@ -29,15 +27,18 @@ public class GameClearSequence
     private readonly Player _player;
     private readonly PlayerCamera _playerCamera;
     private readonly Canvas _uiCanvas;
+    private readonly FoxMesh _foxMesh;
     
     public GameClearSequence(
         Player player,
         PlayerCamera playerCamera,
-        Canvas uiCanvas)
+        Canvas uiCanvas,
+        FoxMesh foxMesh)
     {
         this._player = player;
         this._playerCamera = playerCamera;
         this._uiCanvas = uiCanvas;
+        this._foxMesh = foxMesh;
     }
     
     /// <summary>
@@ -47,7 +48,6 @@ public class GameClearSequence
     {
         _player.StopMovement();
         HideUISlideAnimationsAsync();
-        var shakeMotion = StartGashaShake(_player.transform);
         
         // プレイヤーの回転を初期状態に戻す
         await ResetPlayerRotationAsync();
@@ -66,11 +66,12 @@ public class GameClearSequence
         
         await UniTask.Delay(100);
         
-        BGMManager.Instance.FadeOutBGM(0.1f, 1.5f);
+        BGMManager.Instance.FadeOutBGM(0.3f, 1.5f);
         await MoveCameraToFrontAsync();
         await UniTask.Delay(500);
         
         // ガシャ玉振動と力溜めSE
+        var shakeMotion = StartGashaShake(_player.transform);
         var powerChargeSeTask = SeManager.Instance.PlaySeAsync(gameClearSe1, pitch: 1.0f, important: true);
         
         // パーティクル再生
@@ -132,13 +133,14 @@ public class GameClearSequence
         var startPosition = _playerCamera.transform.position;
         var startRotation = _playerCamera.transform.rotation;
         
-        // プレイヤーの位置と向きを取得
-        var playerPosition = _player.transform.position;
-        var playerForward = _player.transform.forward;
+        // 狐の位置と向きを取得
+        var foxPosition = _foxMesh.transform.position;
+        var foxForward = _foxMesh.transform.forward;
         
-        // 正面カメラの位置と回転を計算（プレイヤーの前方から見る）
-        var finalCameraPosition = playerPosition + playerForward * FRONT_VIEW_DISTANCE + Vector3.up * FRONT_VIEW_HEIGHT_OFFSET;
-        var finalCameraRotation = Quaternion.LookRotation(-playerForward);
+        // 正面カメラの位置と回転を計算（狐の正面から撮影）
+        var finalCameraPosition = foxPosition - foxForward * FRONT_VIEW_DISTANCE + Vector3.up * FRONT_VIEW_HEIGHT_OFFSET;
+        var lookAtDirection = foxPosition - finalCameraPosition;
+        var finalCameraRotation = Quaternion.LookRotation(lookAtDirection);
         
         // 位置と回転のアニメーションを同時実行
         var positionTask = LMotion.Create(startPosition, finalCameraPosition, CAMERA_ANIMATION_DURATION)
@@ -169,15 +171,20 @@ public class GameClearSequence
     }
     
     /// <summary>
-    /// ガシャ玉の振動を開始する
+    /// ガシャ玉の振動を開始する（元の位置と振動位置を足し算）
     /// </summary>
     private MotionHandle StartGashaShake(Transform target)
     {
-        return LMotion.Shake.Create(SHAKE_AMOUNT, SHAKE_AMOUNT, SHAKE_DURATION)
+        var originalPosition = target.position;
+        
+        return LMotion.Shake.Create(Vector3.one * 0.3f, Vector3.one * 0.3f, 1f)
             .WithLoops(-1, LoopType.Flip)
             .WithFrequency(25)
             .WithDampingRatio(0.2f)
-            .BindToPositionX(target);
+            .Bind(shakeOffset => 
+            {
+                target.position = originalPosition + shakeOffset;
+            });
     }
     
     /// <summary>

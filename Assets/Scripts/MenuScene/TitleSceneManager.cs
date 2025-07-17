@@ -62,16 +62,16 @@ public class TitleSceneManager : MonoBehaviour
         // 生成されたオブジェクトから名前で必要なコンポーネントを取得
         var progressBar = loadingInstance.transform.Find("ProgressBar").GetComponent<Slider>();
         var progressText = loadingInstance.transform.Find("ProgressText").GetComponent<TextMeshProUGUI>();
-        var fadeImage = loadingInstance.transform.Find("FadeImage").GetComponent<Image>();
+        var image = loadingInstance.transform.Find("FadeImage").GetComponent<Image>();
 
         if (!progressBar) throw new System.Exception("ProgressBar is not found in the loading UI prefab.");
         if (!progressText) throw new System.Exception("ProgressText is not found in the loading UI prefab.");
-        if (!fadeImage) throw new System.Exception("FadeImage is not found in the loading UI prefab.");
+        if (!image) throw new System.Exception("FadeImage is not found in the loading UI prefab.");
 
         // フェード用Imageの初期化
-        var color = fadeImage.color;
+        var color = image.color;
         color.a = 0f;
-        fadeImage.color = color;
+        image.color = color;
 
         // プログレスを初期化
         progressBar.value = 0f;
@@ -113,7 +113,7 @@ public class TitleSceneManager : MonoBehaviour
                 // LitMotionでフェードアウト
                 await LMotion.Create(0f, 1f, 1f)
                     .WithEase(Ease.InOutSine)
-                    .BindToColorA(fadeImage)
+                    .BindToColorA(image)
                     .ToUniTask();
 
                 // 画面が真っ黒になってからシーンをアクティベート
