@@ -88,7 +88,7 @@ public class GameClearSequence
         HidePlayerGasha();
         var separatedGashaInstance = Object.Instantiate(separatedGashaPrefab, currentGashaPosition, Quaternion.identity);
         separatedGashaInstance.transform.rotation = _player.transform.rotation;
-        shakeMotion = StartGashaShake(separatedGashaInstance.transform, frequency: 15, dampingRatio: 0.2f, seed: 456);
+        shakeMotion = StartGashaShake(separatedGashaInstance.transform);
         
         await UniTask.Delay(500);
         
@@ -175,13 +175,12 @@ public class GameClearSequence
     /// <summary>
     /// ガシャ玉の振動を開始する
     /// </summary>
-    private MotionHandle StartGashaShake(Transform target, int frequency = 20, float dampingRatio = 0.1f, uint seed = 123)
+    private MotionHandle StartGashaShake(Transform target)
     {
         return LMotion.Shake.Create(SHAKE_AMOUNT, SHAKE_AMOUNT, SHAKE_DURATION)
             .WithLoops(-1, LoopType.Flip)
-            .WithFrequency(frequency)
-            .WithDampingRatio(dampingRatio)
-            .WithRandomSeed(seed)
+            .WithFrequency(25)
+            .WithDampingRatio(0.2f)
             .BindToPositionX(target);
     }
     
