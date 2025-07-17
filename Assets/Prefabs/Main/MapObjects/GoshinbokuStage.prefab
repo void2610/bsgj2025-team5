@@ -111,6 +111,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 23c26208e976e492b9fc951d7d382924, type: 3}
       insertIndex: -1
       addedObject: {fileID: -3955559178542720336}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 23c26208e976e492b9fc951d7d382924, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -6655649338045384370}
     - targetCorrespondingSourceObject: {fileID: 375517915199365746, guid: 23c26208e976e492b9fc951d7d382924, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2718131625412950518}
@@ -160,6 +163,39 @@ MonoBehaviour:
     m_RotationOrder: 4
   positionOffsetMultiplier: -0.5
   positionOffsetDirection: {x: 0, y: 1, z: 0}
+--- !u!114 &-6655649338045384370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2535042514164704549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5f9a8efa45274b73a492ad16b944b3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelSettings:
+  - speed: 0
+    minScale: 0.8
+    maxScale: 1.2
+    easing: 3
+  - speed: 0
+    minScale: 0.8
+    maxScale: 1.2
+    easing: 3
+  - speed: 0
+    minScale: 0.8
+    maxScale: 1.2
+    easing: 3
+  - speed: 1
+    minScale: 0.8
+    maxScale: 1.2
+    easing: 3
+  - speed: 1
+    minScale: 0.8
+    maxScale: 1.2
+    easing: 3
 --- !u!1 &3087558256818731526 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 375517915199365746, guid: 23c26208e976e492b9fc951d7d382924, type: 3}
