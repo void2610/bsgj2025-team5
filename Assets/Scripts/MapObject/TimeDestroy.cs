@@ -1,15 +1,20 @@
+using Cysharp.Threading.Tasks;
+using LitMotion;
+using LitMotion.Extensions;
 using UnityEngine;
 
 public class TimeDestroy : MonoBehaviour
 {
     [SerializeField]
-    private float destroyTime = 10f;  // Time in seconds before the object is destroyed
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private float destroyTime = 10f;
+
+    private async UniTask Start()
     {
-        Destroy(gameObject, destroyTime);
-
+        await UniTask.Delay((int)(destroyTime * 1000));
+        var scale = transform.localScale;
+        await LMotion.Create(scale, Vector3.zero, 0.5f)
+            .WithEase(Ease.InBounce)
+            .BindToLocalScale(this.transform)
+            .ToUniTask();
     }
-
-// Removed the empty Update() method as it is unnecessary.
 }

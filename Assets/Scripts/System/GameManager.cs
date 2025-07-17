@@ -6,40 +6,39 @@ using Cysharp.Threading.Tasks;
 
 public class GameManager : SingletonMonoBehaviour<GameManager>
 {
-    [Header("必須参照")]
+    [Header("必須参照")] 
     [Tooltip("プレイヤーの参照")]
     [SerializeField] private Player player;
-    [Tooltip("プレイヤーカメラの参照")]
+    [Tooltip("プレイヤーカメラの参照")] 
     [SerializeField] private PlayerCamera playerCamera;
     [Tooltip("UIのキャンバス")]
     [SerializeField] private Canvas uiCanvas;
-    [Tooltip("敵の参照")]
+    [Tooltip("敵の参照")] 
     [SerializeField] private EnemyAI enemyAI;
-    
+    [Tooltip("狐メッシュの参照")]
+    [SerializeField] private FoxMesh foxMesh;
+
     [Header("ゲーム設定")]
     [SerializeField] private float countDownDuration = 180f;
     [SerializeField] private Vector3 defaultRespawnPosition;
-    
-    [Header("SE設定")]
-    [SerializeField] private SeData timePenaltySe;
+
+    [Header("SE設定")] [SerializeField] private SeData timePenaltySe;
     [SerializeField] private SeData timeBonusSe;
     [SerializeField] private SeData itemGetSe;
-    [SerializeField] private SeData gameClearSe1;
-    [SerializeField] private SeData gameClearSe2;
-    
+
     private const string REMAINING_TIME_AT_CLEAR = "RemainingTimeAtClear";
-    private readonly float _fallTimePenalty = 20f;
-    
+    private const float FALL_TIME_PENALTY = 20f;
+
     private readonly ReactiveProperty<float> _onTimeChangedInternal = new();
     private readonly Subject<float> _onHappenTimePenalty = new();
     private readonly Subject<float> _onHappenTimeBonus = new();
     private readonly ReactiveProperty<int> _itemCount = new(0);
-    
+
     private Rigidbody _playerRigidbody;
     private Vector3 _respawnPosition;
     private bool _isGameEnded;
     private bool _isGameStarted = false;
-    
+
     public ReadOnlyReactiveProperty<float> OnTimeChanged => _onTimeChangedInternal;
     public Observable<float> OnHappenTimePenalty => _onHappenTimePenalty.AsObservable();
     public Observable<float> OnHappenTimeBonus => _onHappenTimeBonus.AsObservable();
@@ -56,6 +55,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
             GameClear().Forget();
             return;
         }
+
         SeManager.Instance.PlaySe(itemGetSe);
     }
 
@@ -73,7 +73,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
 
     public void Fall()
     {
-        DecreasePenaltyTime(_fallTimePenalty);
+        DecreasePenaltyTime(FALL_TIME_PENALTY);
         RespawnPlayer();
     }
 
@@ -96,17 +96,23 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     {
         _isGameEnded = true;
         
-        // プレイヤーの動きを完全に停止
-        player.StopMovement();
+        // GameClearSequenceのインスタンスを作成
+        var gameClearSequence = new GameClearSequence(
+            player,
+            playerCamera,
+            uiCanvas,
+            foxMesh
+        );
         
-        await SeManager.Instance.PlaySeAsync(gameClearSe1, pitch: 1.0f, important: true);
-        await UniTask.Delay(200);
-        await SeManager.Instance.PlaySeAsync(gameClearSe2, pitch: 1.0f, important: true);
-        await UniTask.Delay(500);
+        // クリア演出を実行
+        await gameClearSequence.StartSequenceAsync();
+        
+        // シーン遷移 
         await IrisShot.StartIrisOut(uiCanvas);
         SceneManager.LoadScene("ClearScene");
     }
-    
+
+
     public void GoToTitleScene()
     {
         GoToTitleSceneAsync().Forget();
@@ -136,7 +142,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     {
         SeManager.Instance.PlaySe(timeBonusSe);
         var actualIncreaseAmount = Math.Max(0, amount);
-        _onTimeChangedInternal.Value = Math.Min(_onTimeChangedInternal.Value + actualIncreaseAmount, countDownDuration * 2f);
+        _onTimeChangedInternal.Value =
+            Math.Min(_onTimeChangedInternal.Value + actualIncreaseAmount, countDownDuration * 2f);
         _onHappenTimeBonus.OnNext(actualIncreaseAmount);
     }
 
@@ -154,25 +161,25 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     private async UniTaskVoid Start()
     {
         var gameStartSequence = new GameStartSequence(player, playerCamera, uiCanvas);
-        
+
         player.SetInputEnabled(false);
         await gameStartSequence.StartSequenceAsync();
         player.SetInputEnabled(true);
-        
+
         // 演出完了後にゲーム開始フラグを設定
         _isGameStarted = true;
     }
-    
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
             UIManager.Instance.TogglePause();
         }
-        
+
         // ゲーム開始前または終了後はタイマーを更新しない
         if (!_isGameStarted || _isGameEnded) return;
-        
+
         DecreaseCurrentTime(Time.deltaTime);
         if (_onTimeChangedInternal.Value <= 0f)
         {
