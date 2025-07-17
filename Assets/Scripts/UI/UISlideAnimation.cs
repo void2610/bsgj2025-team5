@@ -114,11 +114,27 @@ public class UISlideAnimation : MonoBehaviour
     }
     
     /// <summary>
-    /// スライドアニメーションを開始（Fire and Forget）
+    /// スライドアウトアニメーションを開始（非同期）
+    /// 現在位置から画面外へ移動
     /// </summary>
-    public void StartSlideAnimation()
+    public async UniTask StartSlideOutAnimationAsync()
     {
-        StartSlideAnimationAsync().Forget();
+        if (!_isInitialized)
+        {
+            Initialize();
+        }
+        
+        // 現在の位置を取得
+        var currentPosition = _rectTransform.anchoredPosition;
+        
+        // スライドアウト終了位置を計算（画面外）
+        var outPosition = currentPosition + GetSlideOffset();
+        
+        // スライドアウトアニメーションを実行
+        await LMotion.Create(currentPosition, outPosition, duration)
+            .WithEase(ease)
+            .Bind(pos => _rectTransform.anchoredPosition = pos)
+            .AddTo(this);
     }
     
     /// <summary>

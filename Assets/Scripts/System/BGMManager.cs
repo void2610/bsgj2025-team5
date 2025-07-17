@@ -10,7 +10,7 @@ using R3;
 /// プレイヤーの速度に応じてBGMのテンポを変更するクラス
 /// </summary>
 [RequireComponent(typeof(AudioSource))]
-public class BGMManager : MonoBehaviour
+public class BGMManager : SingletonMonoBehaviour<BGMManager>
 {
     [Header("BGM設定")]
     [Tooltip("曲1: サイケデリックレベル0-2で使用")]
@@ -45,6 +45,18 @@ public class BGMManager : MonoBehaviour
     private AudioSource _audioSource2;
     private MotionHandle _fadeHandle;
     private bool _isUsingSource1 = true;
+    
+    public void FadeOutBGM(float volume, float duration = 1.0f)
+    {
+        var currentSource = _isUsingSource1 ? _audioSource : _audioSource2;
+        
+        if (_fadeHandle.IsActive()) _fadeHandle.Cancel();
+        
+        _fadeHandle = LMotion.Create(currentSource.volume, volume, duration)
+            .WithEase(Ease.InOutQuad)
+            .Bind(v => currentSource.volume = v)
+            .AddTo(this);
+    }
 
     private async UniTask ChangeBGMAsync(int newSpeedLevel)
     {
@@ -114,8 +126,9 @@ public class BGMManager : MonoBehaviour
         }
     }
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         // 2つのAudioSourceをセットアップ
         _audioSource = GetComponent<AudioSource>();
         _audioSource2 = gameObject.AddComponent<AudioSource>();

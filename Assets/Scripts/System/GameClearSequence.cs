@@ -29,15 +29,18 @@ public class GameClearSequence
     private readonly Player _player;
     private readonly PlayerCamera _playerCamera;
     private readonly GameObject _foxGameObject;
+    private readonly Canvas _uiCanvas;
     
     public GameClearSequence(
         Player player,
         PlayerCamera playerCamera,
-        GameObject foxGameObject)
+        GameObject foxGameObject,
+        Canvas uiCanvas)
     {
         this._player = player;
         this._playerCamera = playerCamera;
         this._foxGameObject = foxGameObject;
+        this._uiCanvas = uiCanvas;
     }
     
     /// <summary>
@@ -45,6 +48,18 @@ public class GameClearSequence
     /// </summary>
     public async UniTask StartSequenceAsync()
     {
+        _player.StopMovement();
+        HideUISlideAnimationsAsync();
+        var shakeMotion = StartGashaShake(_player.transform);
+        
+        await UniTask.Delay(100);
+        
+        // BGMを小さくする
+        BGMManager.Instance.FadeOutBGM(0.1f, 0.5f);
+        
+        // プレイヤーの回転を初期状態に戻す
+        await ResetPlayerRotationAsync();
+        
         // 必要なアセットを事前ロード
         var seData1Task = LoadSeDataAsync(GAME_CLEAR_SE1_ADDRESSABLE_KEY);
         var seData2Task = LoadSeDataAsync(GAME_CLEAR_SE2_ADDRESSABLE_KEY);
@@ -57,14 +72,9 @@ public class GameClearSequence
         var particlePrefab = await particleTask;
         var separatedGashaPrefab = await separatedGashaTask;
         
-        // プレイヤーの動きを完全に停止
-        _player.StopMovement();
         await UniTask.Delay(100);
         
         var currentGashaPosition = _player.transform.position;
-        
-        // プレイヤーの回転を初期状態に戻す
-        await ResetPlayerRotationAsync();
         
         // カメラをプレイヤーの正面に移動させる
         await MoveCameraToFrontAsync(_foxGameObject);
@@ -72,25 +82,22 @@ public class GameClearSequence
         
         // ガシャ玉振動と力溜めSE
         var powerChargeSeTask = SeManager.Instance.PlaySeAsync(gameClearSe1, pitch: 1.0f, important: true);
-        var shakeMotion = StartGashaShake(_player.transform);
         
         // パーティクル再生
         var particleInstance = Object.Instantiate(particlePrefab, currentGashaPosition, Quaternion.identity);
         var particleSystem = particleInstance.GetComponent<ParticleSystem>();
         
-        // プレイヤーのガシャ玉を非表示
-        HidePlayerGasha();
+        await UniTask.Delay(1300);
         
-        // 2つに分かれたガシャ玉を生成
-        var separatedGashaInstance = Object.Instantiate(separatedGashaPrefab, currentGashaPosition, Quaternion.identity);
+        // 割れるガシャ玉に切り替え
         shakeMotion.Cancel();
-        
-        // 新しいガシャ玉を振動開始
+        HidePlayerGasha();
+        var separatedGashaInstance = Object.Instantiate(separatedGashaPrefab, currentGashaPosition, Quaternion.identity);
+        separatedGashaInstance.transform.rotation = _player.transform.rotation;
         shakeMotion = StartGashaShake(separatedGashaInstance.transform, frequency: 15, dampingRatio: 0.2f, seed: 456);
         
         await UniTask.Delay(500);
         
-        // パーティクルを停止
         particleSystem.Stop();
         
         await UniTask.Delay(500);
@@ -98,23 +105,29 @@ public class GameClearSequence
         
         shakeMotion.Cancel();
         
-        // 2秒待機
         await UniTask.Delay(2000);
         
         // ガシャ玉を飛ばす
         ExplodeGashaPieces(separatedGashaInstance);
-        
         // ガシャ玉が割れるSE再生
         await SeManager.Instance.PlaySeAsync(gameClearSe2, pitch: 1.0f, important: true);
-        
         // 演出終了待機
-        await UniTask.Delay(2500, cancellationToken: _player.GetCancellationTokenOnDestroy());
+        await UniTask.Delay(2500);
         
         // リソースを解放
         Addressables.Release(gameClearSe1);
         Addressables.Release(gameClearSe2);
         Addressables.Release(particlePrefab);
         Addressables.Release(separatedGashaPrefab);
+    }
+    
+    private void HideUISlideAnimationsAsync()
+    {
+        var uiAnimations = _uiCanvas.GetComponentsInChildren<UISlideAnimation>();
+        foreach (var animation in uiAnimations)
+        {
+            animation.StartSlideOutAnimationAsync().Forget();
+        }
     }
     
     /// <summary>
@@ -183,14 +196,9 @@ public class GameClearSequence
     /// </summary>
     private void HidePlayerGasha()
     {
-        if (_player)
-        {
-            var playerMeshRenderer = _player.GetComponent<MeshRenderer>();
-            if (playerMeshRenderer)
-            {
-                playerMeshRenderer.enabled = false;
-            }
-        }
+        _player.GetComponent<MeshRenderer>().enabled = false;
+        _player.GetComponent<Collider>().enabled = false;
+        _player.GetComponent<Rigidbody>().isKinematic = true;
     }
     
     /// <summary>

@@ -100,7 +100,8 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         var gameClearSequence = new GameClearSequence(
             player,
             playerCamera,
-            foxGameObject
+            foxGameObject,
+            uiCanvas
         );
         
         // クリア演出を実行
