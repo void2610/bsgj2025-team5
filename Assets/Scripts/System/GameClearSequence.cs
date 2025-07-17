@@ -11,8 +11,8 @@ public class GameClearSequence
 {
     // 演出定数
     private const float CAMERA_ANIMATION_DURATION = 3.5f;    // カメラ演出の継続時間
-    private const float CAMERA_DISTANCE = 3.5f;              // カメラとプレイヤーの距離
-    private const float CAMERA_HEIGHT_OFFSET = 1f;           // カメラの高さオフセット
+    private const float FRONT_VIEW_DISTANCE = 6f;            // プレイヤー正面からの距離
+    private const float FRONT_VIEW_HEIGHT_OFFSET = 1.25f;    // プレイヤー正面からの高さオフセット
     private const float SHAKE_AMOUNT = 0.1f;                 // 振動の強度
     private const float SHAKE_DURATION = 1f;                 // 振動の継続時間
     private const float BASE_EXPLOSION_FORCE = 6f;           // ガシャ玉が飛ぶ力
@@ -51,18 +51,20 @@ public class GameClearSequence
         var particleTask = Addressables.LoadAssetAsync<GameObject>(PARTICLE_ADDRESSABLE_KEY).ToUniTask();
         var separatedGashaTask = Addressables.LoadAssetAsync<GameObject>(SEPARATED_GASHA_ADDRESSABLE_KEY).ToUniTask();
         
-        await UniTask.WhenAll(seData1Task, seData2Task, particleTask, separatedGashaTask);
-        
-        var gameClearSe1 = seData1Task.GetAwaiter().GetResult();
-        var gameClearSe2 = seData2Task.GetAwaiter().GetResult();
-        var particlePrefab = particleTask.GetAwaiter().GetResult();
-        var separatedGashaPrefab = separatedGashaTask.GetAwaiter().GetResult();
+        // 並行してアセットを読み込み
+        var gameClearSe1 = await seData1Task;
+        var gameClearSe2 = await seData2Task;
+        var particlePrefab = await particleTask;
+        var separatedGashaPrefab = await separatedGashaTask;
         
         // プレイヤーの動きを完全に停止
         _player.StopMovement();
         await UniTask.Delay(100);
         
         var currentGashaPosition = _player.transform.position;
+        
+        // プレイヤーの回転を初期状態に戻す
+        await ResetPlayerRotationAsync();
         
         // カメラをプレイヤーの正面に移動させる
         await MoveCameraToFrontAsync(_foxGameObject);
@@ -123,16 +125,17 @@ public class GameClearSequence
         // カメラの通常更新を停止
         _playerCamera.SetIntroMode(true);
         
-        // 狐の位置と向きを取得
-        var foxPosition = foxGameObjectPrefab.transform.position;
-        var foxForward = foxGameObjectPrefab.transform.forward;
-        
-        // 正面の位置と回転を計算
-        var finalCameraPosition = foxPosition - foxForward * CAMERA_DISTANCE + Vector3.up * CAMERA_HEIGHT_OFFSET;
-        var finalCameraRotation = Quaternion.LookRotation(foxPosition - finalCameraPosition);
-        
+        // 現在のTPSカメラの位置と回転を開始位置とする
         var startPosition = _playerCamera.transform.position;
         var startRotation = _playerCamera.transform.rotation;
+        
+        // プレイヤーの位置と向きを取得
+        var playerPosition = _player.transform.position;
+        var playerForward = _player.transform.forward;
+        
+        // 正面カメラの位置と回転を計算（プレイヤーの前方から見る）
+        var finalCameraPosition = playerPosition + playerForward * FRONT_VIEW_DISTANCE + Vector3.up * FRONT_VIEW_HEIGHT_OFFSET;
+        var finalCameraRotation = Quaternion.LookRotation(-playerForward);
         
         // 位置と回転のアニメーションを同時実行
         var positionTask = LMotion.Create(startPosition, finalCameraPosition, CAMERA_ANIMATION_DURATION)
@@ -146,6 +149,20 @@ public class GameClearSequence
             .ToUniTask();
         
         await UniTask.WhenAll(positionTask, rotationTask);
+    }
+    
+    /// <summary>
+    /// プレイヤーの回転を初期状態（前方向）に戻す
+    /// </summary>
+    private async UniTask ResetPlayerRotationAsync()
+    {
+        var currentRotation = _player.transform.rotation;
+        var targetRotation = Quaternion.identity; // 初期回転（前方向）
+        
+        await LMotion.Create(currentRotation, targetRotation, 1f)
+            .WithEase(Ease.OutQuart)
+            .Bind(rot => _player.transform.rotation = rot)
+            .ToUniTask();
     }
     
     /// <summary>
