@@ -49,13 +49,9 @@ public class GameClearSequence
     public async UniTask StartSequenceAsync()
     {
         _player.StopMovement();
+        var currentGashaPosition = _player.transform.position;
         HideUISlideAnimationsAsync();
         var shakeMotion = StartGashaShake(_player.transform);
-        
-        await UniTask.Delay(100);
-        
-        // BGMを小さくする
-        BGMManager.Instance.FadeOutBGM(0.1f, 0.5f);
         
         // プレイヤーの回転を初期状態に戻す
         await ResetPlayerRotationAsync();
@@ -74,9 +70,7 @@ public class GameClearSequence
         
         await UniTask.Delay(100);
         
-        var currentGashaPosition = _player.transform.position;
-        
-        // カメラをプレイヤーの正面に移動させる
+        BGMManager.Instance.FadeOutBGM(0.1f, 1.5f);
         await MoveCameraToFrontAsync(_foxGameObject);
         await UniTask.Delay(500);
         
