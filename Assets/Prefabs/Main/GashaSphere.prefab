@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1551825575292809446}
   - component: {fileID: 6883920764469968040}
   - component: {fileID: 2915758770078705743}
+  - component: {fileID: 5584835775150369619}
   m_Layer: 0
   m_Name: GashaSphere
   m_TagString: Untagged
@@ -118,9 +119,9 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7433976897722441484}
   serializedVersion: 4
-  m_Mass: 1
+  m_Mass: 10
   m_Drag: 0
-  m_AngularDrag: 3
+  m_AngularDrag: 0.1
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -136,4 +137,17 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 1
+  m_CollisionDetection: 2
+--- !u!114 &5584835775150369619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7433976897722441484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a60a7a68e4b9521499101fea5abb268d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destroyTime: 17
