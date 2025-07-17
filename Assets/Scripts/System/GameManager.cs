@@ -11,8 +11,6 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     [SerializeField] private Player player;
     [Tooltip("プレイヤーカメラの参照")] 
     [SerializeField] private PlayerCamera playerCamera;
-    [Tooltip("キツネのGameObject")]
-    [SerializeField] private GameObject foxGameObject;
     [Tooltip("UIのキャンバス")]
     [SerializeField] private Canvas uiCanvas;
     [Tooltip("敵の参照")] 
@@ -100,7 +98,6 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
         var gameClearSequence = new GameClearSequence(
             player,
             playerCamera,
-            foxGameObject,
             uiCanvas
         );
         

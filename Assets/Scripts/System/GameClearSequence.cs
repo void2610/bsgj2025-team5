@@ -28,18 +28,15 @@ public class GameClearSequence
     
     private readonly Player _player;
     private readonly PlayerCamera _playerCamera;
-    private readonly GameObject _foxGameObject;
     private readonly Canvas _uiCanvas;
     
     public GameClearSequence(
         Player player,
         PlayerCamera playerCamera,
-        GameObject foxGameObject,
         Canvas uiCanvas)
     {
         this._player = player;
         this._playerCamera = playerCamera;
-        this._foxGameObject = foxGameObject;
         this._uiCanvas = uiCanvas;
     }
     
@@ -49,7 +46,6 @@ public class GameClearSequence
     public async UniTask StartSequenceAsync()
     {
         _player.StopMovement();
-        var currentGashaPosition = _player.transform.position;
         HideUISlideAnimationsAsync();
         var shakeMotion = StartGashaShake(_player.transform);
         
@@ -71,14 +67,14 @@ public class GameClearSequence
         await UniTask.Delay(100);
         
         BGMManager.Instance.FadeOutBGM(0.1f, 1.5f);
-        await MoveCameraToFrontAsync(_foxGameObject);
+        await MoveCameraToFrontAsync();
         await UniTask.Delay(500);
         
         // ガシャ玉振動と力溜めSE
         var powerChargeSeTask = SeManager.Instance.PlaySeAsync(gameClearSe1, pitch: 1.0f, important: true);
         
         // パーティクル再生
-        var particleInstance = Object.Instantiate(particlePrefab, currentGashaPosition, Quaternion.identity);
+        var particleInstance = Object.Instantiate(particlePrefab, _player.transform.position, Quaternion.identity);
         var particleSystem = particleInstance.GetComponent<ParticleSystem>();
         
         await UniTask.Delay(1300);
@@ -86,7 +82,7 @@ public class GameClearSequence
         // 割れるガシャ玉に切り替え
         shakeMotion.Cancel();
         HidePlayerGasha();
-        var separatedGashaInstance = Object.Instantiate(separatedGashaPrefab, currentGashaPosition, Quaternion.identity);
+        var separatedGashaInstance = Object.Instantiate(separatedGashaPrefab, _player.transform.position, Quaternion.identity);
         separatedGashaInstance.transform.rotation = _player.transform.rotation;
         shakeMotion = StartGashaShake(separatedGashaInstance.transform);
         
@@ -103,7 +99,7 @@ public class GameClearSequence
         
         // ガシャ玉を飛ばす
         ExplodeGashaPieces(separatedGashaInstance);
-        // ガシャ玉が割れるSE再生
+        _playerCamera.ShakeCamera(0.5f, 0.3f);
         await SeManager.Instance.PlaySeAsync(gameClearSe2, pitch: 1.0f, important: true);
         // 演出終了待機
         await UniTask.Delay(2500);
@@ -127,7 +123,7 @@ public class GameClearSequence
     /// <summary>
     /// カメラを狐の正面に移動させる
     /// </summary>
-    private async UniTask MoveCameraToFrontAsync(GameObject foxGameObjectPrefab)
+    private async UniTask MoveCameraToFrontAsync()
     {
         // カメラの通常更新を停止
         _playerCamera.SetIntroMode(true);
