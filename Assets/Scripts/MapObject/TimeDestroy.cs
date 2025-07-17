@@ -11,9 +11,5 @@ public class TimeDestroy : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+// Removed the empty Update() method as it is unnecessary.
 }
