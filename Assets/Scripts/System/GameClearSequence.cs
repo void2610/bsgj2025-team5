@@ -11,7 +11,7 @@ public class GameClearSequence
 {
     // 演出定数
     private const float CAMERA_ANIMATION_DURATION = 3.5f;    // カメラ演出の継続時間
-    private const float FRONT_VIEW_DISTANCE = 6f;            // プレイヤー正面からの距離
+    private const float FRONT_VIEW_DISTANCE = 4f;            // プレイヤー正面からの距離
     private const float FRONT_VIEW_HEIGHT_OFFSET = 1.25f;    // プレイヤー正面からの高さオフセット
     private const float BASE_EXPLOSION_FORCE = 6f;           // ガシャ玉が飛ぶ力
     private const float UPWARD_FORCE_MULTIPLIER = 1.0f;     // 上方向への力の倍率
@@ -46,6 +46,7 @@ public class GameClearSequence
     /// </summary>
     public async UniTask StartSequenceAsync()
     {
+        var playerPos = _player.transform.position;
         _player.StopMovement();
         HideUISlideAnimationsAsync();
         
@@ -75,7 +76,7 @@ public class GameClearSequence
         var powerChargeSeTask = SeManager.Instance.PlaySeAsync(gameClearSe1, pitch: 1.0f, important: true);
         
         // パーティクル再生
-        var particleInstance = Object.Instantiate(particlePrefab, _player.transform.position, Quaternion.identity);
+        var particleInstance = Object.Instantiate(particlePrefab, playerPos, Quaternion.identity);
         var particleSystem = particleInstance.GetComponent<ParticleSystem>();
         
         await UniTask.Delay(1300);
@@ -83,7 +84,7 @@ public class GameClearSequence
         // 割れるガシャ玉に切り替え
         shakeMotion.Cancel();
         HidePlayerGasha();
-        var separatedGashaInstance = Object.Instantiate(separatedGashaPrefab, _player.transform.position, Quaternion.identity);
+        var separatedGashaInstance = Object.Instantiate(separatedGashaPrefab, playerPos, Quaternion.identity);
         separatedGashaInstance.transform.rotation = _player.transform.rotation;
         shakeMotion = StartGashaShake(separatedGashaInstance.transform);
         
@@ -177,7 +178,7 @@ public class GameClearSequence
     {
         var originalPosition = target.position;
         
-        return LMotion.Shake.Create(Vector3.one * 0.3f, Vector3.one * 0.3f, 1f)
+        return LMotion.Shake.Create(Vector3.one * 0.2f, Vector3.one * 0.2f, 1f)
             .WithLoops(-1, LoopType.Flip)
             .WithFrequency(25)
             .WithDampingRatio(0.2f)
