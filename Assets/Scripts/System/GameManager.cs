@@ -21,6 +21,10 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     [Header("ゲーム設定")]
     [SerializeField] private float countDownDuration = 180f;
     [SerializeField] private Vector3 defaultRespawnPosition;
+    
+    [Header("アイテム設定")]
+    [Tooltip("取得すべきアイテムの順番リスト")]
+    [SerializeField] private Transform[] itemTargets;
 
     [Header("SE設定")] [SerializeField] private SeData timePenaltySe;
     [SerializeField] private SeData timeBonusSe;
@@ -44,6 +48,16 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     public Observable<float> OnHappenTimeBonus => _onHappenTimeBonus.AsObservable();
     public ReadOnlyReactiveProperty<int> ItemCount => _itemCount;
     public Player Player => player;
+    
+    /// <summary>
+    /// 現在取得すべきアイテムのTransformを取得
+    /// </summary>
+    public Transform GetCurrentTargetItem()
+    {
+        if (itemTargets == null || itemTargets.Length == 0) return null;
+        if (_itemCount.Value >= itemTargets.Length) return null;
+        return itemTargets[_itemCount.Value];
+    }
 
     public void AddItemCount(Vector3 itemPositon)
     {
