@@ -48,6 +48,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager>
     public Observable<float> OnHappenTimeBonus => _onHappenTimeBonus.AsObservable();
     public ReadOnlyReactiveProperty<int> ItemCount => _itemCount;
     public Player Player => player;
+    public bool IsGameStarted => _isGameStarted;
     
     /// <summary>
     /// 現在取得すべきアイテムのTransformを取得

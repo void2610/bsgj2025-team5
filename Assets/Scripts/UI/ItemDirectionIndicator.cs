@@ -58,6 +58,13 @@ public class ItemDirectionIndicator : MonoBehaviour
     
     private void Update()
     {
+        // ゲームが開始されていない場合は非表示
+        if (!GameManager.Instance.IsGameStarted)
+        {
+            _indicator.anchoredPosition = new Vector2(9999, 9999);
+            return;
+        }
+        
         if (_currentTarget == null) return;
         
         var screenPos = mainCamera.WorldToScreenPoint(_currentTarget.position);
