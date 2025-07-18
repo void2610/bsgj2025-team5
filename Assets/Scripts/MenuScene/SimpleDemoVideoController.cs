@@ -75,8 +75,12 @@ public class SimpleDemoVideoController : MonoBehaviour
         _isDemoPlaying = false;
         
         // キャンセル
-        _demoCancellationTokenSource?.Cancel();
-        _demoCancellationTokenSource?.Dispose();
+        if (_demoCancellationTokenSource != null)
+        {
+            _demoCancellationTokenSource.Cancel();
+            _demoCancellationTokenSource.Dispose();
+            _demoCancellationTokenSource = null;
+        }
         
         // フェードハンドルをキャンセル
         if (_fadeHandle.IsActive()) _fadeHandle.Cancel();
@@ -146,8 +150,12 @@ public class SimpleDemoVideoController : MonoBehaviour
     private void OnDestroy()
     {
         // クリーンアップ
-        _demoCancellationTokenSource?.Cancel();
-        _demoCancellationTokenSource?.Dispose();
+        if (_demoCancellationTokenSource != null && !_demoCancellationTokenSource.IsCancellationRequested)
+        {
+            _demoCancellationTokenSource.Cancel();
+            _demoCancellationTokenSource.Dispose();
+            _demoCancellationTokenSource = null;
+        }
         
         if (_fadeHandle.IsActive()) _fadeHandle.Cancel();
     }
