@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2708750946794674802}
   - component: {fileID: 5644418022986281604}
   m_Layer: 0
-  m_Name: TimeBonusItem
+  m_Name: TimeBonusItemStage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
