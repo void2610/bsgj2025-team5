@@ -102,6 +102,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5947b0c2f9b0a408e82703b569074013, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlacedOnStage: 1
   timeBonus: 20
   particlePrefab: {fileID: 0}
   rotationSpeed: 90
@@ -141,5 +142,5 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 10
+  m_Radius: 70
   m_Center: {x: 0, y: 0, z: 0}

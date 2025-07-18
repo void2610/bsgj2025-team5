@@ -4,6 +4,9 @@ using LitMotion;
 public class TimeBonusItem : MonoBehaviour
 {
     [Header("アイテム設定")]
+    [Tooltip("ステージに直接置かれるかどうか")]
+    [SerializeField] private bool isPlacedOnStage = true;
+    
     [Tooltip("取得時に増加する時間（秒）")]
     [SerializeField] private float timeBonus = 10f;
     
@@ -23,12 +26,31 @@ public class TimeBonusItem : MonoBehaviour
     private Vector3 _startPosition;
     private MotionHandle _rotationHandle;
     private MotionHandle _floatHandle;
+    private bool _isInitialized;
     
     // BreakableObjectから呼び出される初期化メソッド
     public void Initialize()
     {
         _startPosition = this.transform.position;
+        _isInitialized = true;
         StartAnimations();
+        
+        // プレイヤーが既に範囲内にいるかチェック
+        var myCollider = GetComponent<Collider>();
+        if (myCollider && myCollider.isTrigger)
+        {
+            var bounds = myCollider.bounds;
+            var results = new Collider[10];
+            var count = Physics.OverlapBoxNonAlloc(bounds.center, bounds.extents, results, transform.rotation);
+            for (int i = 0; i < count; i++)
+            {
+                if (results[i].TryGetComponent<Player>(out _))
+                {
+                    HandleTrigger(results[i]);
+                    break;
+                }
+            }
+        }
     }
     
     private void StartAnimations()
@@ -60,21 +82,65 @@ public class TimeBonusItem : MonoBehaviour
             .AddTo(this);
     }
     
+    private void HandleTrigger(Collider other)
+    {
+        if (other.TryGetComponent<Player>(out var player))
+        {
+            // アニメーションを停止
+            StopAnimations();
+            
+            // コライダーを無効化して重複取得を防ぐ
+            GetComponent<Collider>().enabled = false;
+            
+            // プレイヤーに向かって移動するアニメーション
+            LMotion.Create(transform.position, player.transform.position, 0.3f)
+                .WithEase(Ease.InQuad)
+                .WithOnComplete(() =>
+                {
+                    // 時間ボーナスを追加
+                    GameManager.Instance.IncreaseTime(timeBonus);
+                    
+                    // パーティクルエフェクトを生成
+                    if (particlePrefab)
+                    {
+                        Instantiate(particlePrefab, transform.position, Quaternion.identity);
+                    }
+                    
+                    // オブジェクトを破棄
+                    Destroy(gameObject);
+                })
+                .Bind(position => 
+                {
+                    if (this && transform)
+                    {
+                        transform.position = position;
+                    }
+                })
+                .AddTo(this);
+            
+            // 同時にスケールを小さくするアニメーション
+            LMotion.Create(transform.localScale, Vector3.zero, 0.3f)
+                .WithEase(Ease.InQuad)
+                .Bind(scale =>
+                {
+                    if (this && transform)
+                    {
+                        transform.localScale = scale;
+                    }
+                })
+                .AddTo(this);
+        }
+    }
+
+    private void Awake()
+    {
+        if (isPlacedOnStage) Initialize();
+    }
+    
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent<Player>(out _))
-        {
-            GameManager.Instance.IncreaseTime(timeBonus);
-            
-            if (particlePrefab)
-            {
-                Instantiate(particlePrefab, transform.position, Quaternion.identity);
-            }
-            
-            // アニメーションを停止してからオブジェクトを破棄
-            StopAnimations();
-            Destroy(gameObject);
-        }
+        if (!_isInitialized) return;
+        HandleTrigger(other);
     }
     
     /// <summary>
