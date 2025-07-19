@@ -66,7 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: f224bfd122877a34aa49c63693fc317b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 57bc858e36cd841429466ce55e66d8e3, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -91,7 +91,7 @@ MonoBehaviour:
   player: {fileID: 0}
   mainCamera: {fileID: 0}
   canvasRect: {fileID: 0}
-  yawOffset: -90
+  yawOffset: 90
   indicatorRadius: 300
   minScale: 0.8
   maxScale: 1.5
