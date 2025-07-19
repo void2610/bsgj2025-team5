@@ -1,5 +1,6 @@
 using UnityEngine;
 using LitMotion;
+using Cysharp.Threading.Tasks;
 
 public class TimeBonusItem : MonoBehaviour
 {
@@ -82,7 +83,7 @@ public class TimeBonusItem : MonoBehaviour
             .AddTo(this);
     }
     
-    private void HandleTrigger(Collider other)
+    private async void HandleTrigger(Collider other)
     {
         if (other.TryGetComponent<Player>(out var player))
         {
@@ -93,22 +94,8 @@ public class TimeBonusItem : MonoBehaviour
             GetComponent<Collider>().enabled = false;
             
             // プレイヤーに向かって移動するアニメーション
-            LMotion.Create(transform.position, player.transform.position, 0.3f)
+            var moveHandle = LMotion.Create(transform.position, player.transform.position, 0.3f)
                 .WithEase(Ease.InQuad)
-                .WithOnComplete(() =>
-                {
-                    // 時間ボーナスを追加
-                    GameManager.Instance.IncreaseTime(timeBonus);
-                    
-                    // パーティクルエフェクトを生成
-                    if (particlePrefab)
-                    {
-                        Instantiate(particlePrefab, transform.position, Quaternion.identity);
-                    }
-                    
-                    // オブジェクトを破棄
-                    Destroy(gameObject);
-                })
                 .Bind(position => 
                 {
                     if (this && transform)
@@ -119,7 +106,7 @@ public class TimeBonusItem : MonoBehaviour
                 .AddTo(this);
             
             // 同時にスケールを小さくするアニメーション
-            LMotion.Create(transform.localScale, Vector3.zero, 0.3f)
+            var scaleHandle = LMotion.Create(transform.localScale, Vector3.zero, 0.3f)
                 .WithEase(Ease.InQuad)
                 .Bind(scale =>
                 {
@@ -129,6 +116,28 @@ public class TimeBonusItem : MonoBehaviour
                     }
                 })
                 .AddTo(this);
+            
+            // 両方のアニメーションが完了するまで待機
+            await UniTask.WhenAll(
+                moveHandle.ToUniTask(cancellationToken: this.GetCancellationTokenOnDestroy()),
+                scaleHandle.ToUniTask(cancellationToken: this.GetCancellationTokenOnDestroy())
+            );
+            
+            // アニメーション完了後の処理
+            if (this != null && gameObject != null)
+            {
+                // 時間ボーナスを追加
+                GameManager.Instance.IncreaseTime(timeBonus);
+                
+                // パーティクルエフェクトを生成
+                if (particlePrefab)
+                {
+                    Instantiate(particlePrefab, transform.position, Quaternion.identity);
+                }
+                
+                // オブジェクトを破棄
+                Destroy(gameObject);
+            }
         }
     }
 
