@@ -50,6 +50,9 @@ public class BreakableObject : MonoBehaviour
     [Tooltip("アイテムをドロップする確率（0〜1）")]
     [SerializeField, Range(0f, 1f)] private float dropChance = 0.3f;
     
+    [Tooltip("吹っ飛び時のドロップ力")]
+    [SerializeField] private float dropForce = 15f;
+    
     [Tooltip("ドロップするアイテムの高さオフセット")]
     [SerializeField] private float dropHeightOffset = 0.5f;
     
@@ -170,7 +173,7 @@ public class BreakableObject : MonoBehaviour
         // 放射状に散らばるためのランダムな角度を追加
         var dropDirection = Quaternion.AngleAxis(Random.Range(-15f, 15f), Vector3.up) * dir;
         // 最終的なドロップ位置を計算
-        var finalDropPosition = this.transform.position + dropDirection * 15f;
+        var finalDropPosition = this.transform.position + dropDirection * dropForce;
         // オブジェクトの底面位置を基準にしてY座標を設定
         var bounds = _collider.bounds;
         finalDropPosition.y = bounds.min.y + dropHeightOffset;

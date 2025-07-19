@@ -40,15 +40,6 @@ public class RemainingTimeText : MonoBehaviour
             int minutes = Mathf.FloorToInt(_remainingTime / 60);
             int seconds = Mathf.FloorToInt(_remainingTime % 60);            
             remainingTimeText.text = $"Time: {minutes:00}:{seconds:00}";
-            
-            // デバッグ用
-            Debug.Log($"クリアシーンで読み込んだクリア時残りタイム: {_remainingTime:F2}秒");
         }
-        else
-        {
-            Debug.LogWarning("PlayerPrefsに残り時間のデータが見つからないか、値が0未満で登録されています。");
-        }
-        
-        
     }
 }

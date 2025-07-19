@@ -4,6 +4,7 @@ using R3;
 using LitMotion;
 using LitMotion.Extensions;
 using System;
+using Cysharp.Threading.Tasks;
 
 public class TimerUI : MonoBehaviour
 {
@@ -92,7 +93,7 @@ public class TimerUI : MonoBehaviour
         }
     }
 
-    private void ShowTimeChangeAnimation(float amount, Color color, string prefix)
+    private async void ShowTimeChangeAnimation(float amount, Color color, string prefix)
     {
         TextMeshProUGUI textPrefab = color == _timeBonusColor && timeBonusTextPrefab != null 
             ? timeBonusTextPrefab 
@@ -107,17 +108,27 @@ public class TimerUI : MonoBehaviour
         textInstance.text = $"{prefix}{Mathf.CeilToInt(amount)}";
         textInstance.color = color;
         
-        LMotion.Create(textInstance.rectTransform.anchoredPosition,
+        var moveHandle = LMotion.Create(textInstance.rectTransform.anchoredPosition,
                 textInstance.rectTransform.anchoredPosition + new Vector2(0, _timeMoveAmount),
                 _timeAnimationDuration)
             .BindToAnchoredPosition(textInstance.rectTransform)
-            .AddTo(this);
+            .AddTo(textInstance.gameObject);
         
-        LMotion.Create(color, new Color(color.r, color.g, color.b, 0f),
+        var fadeHandle = LMotion.Create(color, new Color(color.r, color.g, color.b, 0f),
                 _timeAnimationDuration)
             .BindToColor(textInstance)
-            .AddTo(this);
+            .AddTo(textInstance.gameObject);
         
-        Destroy(textInstance.gameObject, _timeAnimationDuration);
+        // 両方のアニメーションが完了するまで待機
+        await UniTask.WhenAll(
+            moveHandle.ToUniTask(cancellationToken: this.GetCancellationTokenOnDestroy()),
+            fadeHandle.ToUniTask(cancellationToken: this.GetCancellationTokenOnDestroy())
+        );
+        
+        // オブジェクトがまだ存在していれば破棄
+        if (textInstance != null && textInstance.gameObject != null)
+        {
+            Destroy(textInstance.gameObject);
+        }
     }
 }

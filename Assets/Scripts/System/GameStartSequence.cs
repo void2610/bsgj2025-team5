@@ -103,15 +103,11 @@ public class GameStartSequence
         // uiCanvas内の全てのUISlideAnimationコンポーネントを取得
         var slideAnimations = _uiCanvas.GetComponentsInChildren<UISlideAnimation>(true);
         
-        if (slideAnimations.Length == 0)
-        {
-            // スライドアニメーションが無い場合は即座に完了
-            return;
-        }
+        if (slideAnimations.Length == 0) return;
         
         // 全てのスライドアニメーションを並行実行
         var slideTasks = new UniTask[slideAnimations.Length];
-        for (int i = 0; i < slideAnimations.Length; i++)
+        for (var i = 0; i < slideAnimations.Length; i++)
         {
             slideTasks[i] = slideAnimations[i].StartSlideAnimationAsync();
         }

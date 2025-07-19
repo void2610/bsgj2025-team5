@@ -229,9 +229,10 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 972606d094d364cbf88a2057b8fb38b8, type: 3}
   - {fileID: 21300000, guid: d31cbeeb5219f44429244fc5c5d6af89, type: 3}
   - {fileID: 21300000, guid: 967deeaba1206497db5d29422863c7ef, type: 3}
-  displayTimePerImage: 4
+  displayTimePerImage: 3.5
   transitionDuration: 0.5
   frontImage: {fileID: 3311853290226965678}
+  slideSeData: {fileID: 0}
   slideInAngle: 30
   slideInDistance: 300
   rotationAmount: 15
