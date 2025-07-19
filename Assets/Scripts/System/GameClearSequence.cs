@@ -97,7 +97,7 @@ public class GameClearSequence
         
         shakeMotion.Cancel();
         
-        await UniTask.Delay(2000);
+        await UniTask.Delay(1500);
         
         // ガシャ玉を飛ばす
         ExplodeGashaPieces(separatedGashaInstance);

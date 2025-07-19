@@ -149,10 +149,11 @@ MonoBehaviour:
     slowdownForceMultiplier: 0.1
   - blowForceMultiplier: 1
     slowdownForceMultiplier: 0.1
-  dropItemPrefab: {fileID: 2797429370328665877, guid: acb7c4ee58a11412cbc0a86534af216a, type: 3}
+  dropItemPrefab: {fileID: 2797429370328665877, guid: e2b88a5e58e5f46bf960d77415ed41a3, type: 3}
   dropChance: 1
+  dropForce: 30
   dropHeightOffset: 1
-  dropAnimationDuration: 1.5
+  dropAnimationDuration: 0.75
   dropArchHeight: 7
   dropArchEase: 11
 --- !u!65 &3943559155358807395
