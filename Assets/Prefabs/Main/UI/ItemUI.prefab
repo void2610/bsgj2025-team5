@@ -253,7 +253,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slideDirection: 3
   slideDistance: 200
-  duration: 1
+  duration: 0.6
   delay: 0
   ease: 8
   autoStart: 0

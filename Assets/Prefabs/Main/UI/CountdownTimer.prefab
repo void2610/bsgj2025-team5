@@ -53,7 +53,7 @@ MonoBehaviour:
   slideDirection: 2
   slideDistance: 200
   duration: 1
-  delay: 1.5
+  delay: 1
   ease: 8
   autoStart: 0
 --- !u!1 &6663556875125753263
