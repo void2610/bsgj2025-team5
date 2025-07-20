@@ -637,13 +637,17 @@ PrefabInstance:
       propertyPath: m_Radius
       value: 35
       objectReference: {fileID: 0}
+    - target: {fileID: 2100953558038830523, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -139.75
+      objectReference: {fileID: 0}
     - target: {fileID: 3689726924706664400, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
       propertyPath: m_Name
       value: MainGameLevel
       objectReference: {fileID: 0}
     - target: {fileID: 3928104232743386994, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
       propertyPath: m_Radius
-      value: 35
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 4498886090805602823, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
       propertyPath: m_Radius
