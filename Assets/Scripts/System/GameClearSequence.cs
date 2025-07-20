@@ -101,10 +101,10 @@ public class GameClearSequence
         
         // ガシャ玉を飛ばす
         ExplodeGashaPieces(separatedGashaInstance);
-        _playerCamera.ShakeCamera(0.5f, 0.3f);
+        _playerCamera.ShakeCamera(0.75f, 0.3f);
         await SeManager.Instance.PlaySeAsync(gameClearSe2, pitch: 1.0f, important: true);
         // 演出終了待機
-        await UniTask.Delay(2500);
+        await UniTask.Delay(1500);
         
         // リソースを解放
         Addressables.Release(gameClearSe1);
