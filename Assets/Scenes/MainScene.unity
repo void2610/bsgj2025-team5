@@ -633,9 +633,29 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 901982944242648144, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
+      propertyPath: m_Radius
+      value: 35
+      objectReference: {fileID: 0}
     - target: {fileID: 3689726924706664400, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
       propertyPath: m_Name
       value: MainGameLevel
+      objectReference: {fileID: 0}
+    - target: {fileID: 3928104232743386994, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
+      propertyPath: m_Radius
+      value: 35
+      objectReference: {fileID: 0}
+    - target: {fileID: 4498886090805602823, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
+      propertyPath: m_Radius
+      value: 35
+      objectReference: {fileID: 0}
+    - target: {fileID: 7577151991582088985, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
+      propertyPath: m_Radius
+      value: 35
+      objectReference: {fileID: 0}
+    - target: {fileID: 7608956489049054421, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
+      propertyPath: m_Radius
+      value: 35
       objectReference: {fileID: 0}
     - target: {fileID: 9186623462167224120, guid: 333c5d12783cc6a408cb3df8d3d22907, type: 3}
       propertyPath: m_LocalPosition.x
