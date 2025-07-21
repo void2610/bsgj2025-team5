@@ -161,10 +161,10 @@ public class Player : MonoBehaviour
     private void Update()
     {
         // Tキーで水平方向の反転を切り替え
-        if (Keyboard.current?.tKey.wasPressedThisFrame ?? false)
-        {
-            isHorizontalInverted = !isHorizontalInverted;
-        }
+        // if (Keyboard.current?.tKey.wasPressedThisFrame ?? false)
+        // {
+        //     isHorizontalInverted = !isHorizontalInverted;
+        // }
         
         // 入力が無効な場合は処理しない
         if (!_inputEnabled) return;
